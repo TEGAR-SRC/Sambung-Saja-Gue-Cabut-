@@ -1,0 +1,422 @@
+type ThemeOption {
+    id: Int
+    options: Json
+}
+
+type LogoOption {
+    header_logo_id: Int
+    footer_logo_id: Int
+    favicon_icon_id: Int
+    header_logo:Attachment
+    footer_logo:Attachment
+    favicon_icon:Attachment
+}
+
+type Options {
+    logo:LogoOption
+    general: GeneralOptions
+    seo: SeoOptions
+    footer: FooterOptions
+    header: HeaderOptions
+    blog: BlogOptions
+    error_page: ErrorPageOptions
+    page_layout: PageLayoutOptions
+}
+
+type GeneralOptions {
+    site_title: String
+    site_tagline: String
+    sticky_cart_enable: Boolean
+    cart_style: String
+    back_to_top_enable: Boolean
+    cookie_message: String
+    language_direction: String
+    primary_color: String
+    mode: String
+    seller_register_url: String
+}
+
+type SeoOptions {
+    front_meta_title: String
+    front_meta_description: String
+    front_meta_tags: String
+    front_og_title: String
+    front_og_description: String
+    og_image_id: Int
+    og_image: Attachment
+}
+
+type FooterOptions {
+    footer_style:String
+    footer_copyright:Boolean
+    copyright_content: String
+    payment_enable:Int
+    footer_about: String
+    about_address: String
+    about_email:String
+    footer_categories:[Int]
+    footer_pages: String
+    useful_link: [Json]
+    support_number:String
+    support_email: String
+    play_store_url: String
+    social_media_enable: String
+    facebook: String
+    instagram: String
+    twitter: String
+    pinterest: String
+}
+
+type HeaderOptions {
+    sticky_header_enable: Boolean
+    header_options: String
+    page_top_bar_enable: Int
+    top_bar_content: Json
+    page_top_bar_dark: Boolean
+    support_number: String
+    today_deals: [Int]
+    category_ids: [Int]
+}
+
+type BlogOptions {
+    blog_style: String
+    blog_sidebar_type: String
+    blog_author_enable: Int
+    read_more_enable: Int
+}
+
+type ErrorPageOptions {
+    error_page_content: String
+    back_button_enable: Int
+    back_button_text: String
+    button_redirect_link: String
+}
+
+type PageLayoutOptions {
+    shop_layout: String
+    product_layout: String
+}
+
+input ThemeOptionsInput {
+    options: OptionsInput
+}
+
+input OptionsInput {
+    general: GeneralOptionsInput
+    logo: LogoOptionsInput
+    header: HeaderOptionsInput
+    footer:FooterOptionsInput
+    collection: CollectionOptionsInput
+    product: ProductOptionsInput
+    blog: BlogOptionsInput
+    seller: SellerOptionsInput
+    contact_us: ContactUsOptionsInput
+    about_us: AboutUsOptionsInput
+    error_page: ErrorPageOptionsInput
+    seo: SeoOptionsInput
+}
+
+input GeneralOptionsInput {
+    site_title: String
+    site_tagline: String
+    sticky_cart_enable: Boolean
+    cart_style: String
+    back_to_top_enable: Boolean
+    language_direction: String
+    seller_register_url: String
+    primary_color: String
+    mode: String
+}
+
+input LogoOptionsInput {
+    header_logo_id: Int
+    footer_logo_id: Int
+    favicon_icon_id: Int
+}
+
+input HeaderOptionsInput {
+    sticky_header_enable: Boolean
+    header_options: String
+    page_top_bar_enable: Boolean
+    page_top_bar_dark: Boolean
+    support_number: String
+    today_deals:[Int]
+    category_ids:[Int]
+    top_bar_content: [HeaderTopBarContents]
+}
+
+input HeaderTopBarContents {
+    content: String
+}
+
+input FooterOptionsInput {
+    footer_style: String
+    footer_copyright: Boolean
+    copyright_content: String
+    footer_about: String
+    about_address: String
+    about_email: String
+    footer_categories: [Int]
+    useful_link: [FooterUseFulLinksInput]
+    help_center: [FooterHelpCentersInput]
+    support_number:String
+    support_email: String
+    play_store_url: String
+    app_store_url: String
+    social_media_enable: Boolean
+    facebook: String
+    instagram: String
+    twitter: String
+    pinterest: String
+}
+
+input FooterUseFulLinksInput {
+    id: Int
+    value: String
+    name: String
+}
+
+input FooterHelpCentersInput {
+    id: Int
+    value: String
+    name: String
+}
+
+input CollectionOptionsInput {
+    collection_layout: String
+    collection_banner_image_url: String
+}
+
+input ProductOptionsInput {
+    product_layout: String
+    is_trending_product: Boolean
+    banner_enable: Boolean
+    banner_image_url: String
+    safe_checkout: Boolean
+    safe_checkout_image: String
+    secure_checkout: Boolean
+    secure_checkout_image: String
+    encourage_order: Boolean
+    encourage_max_order_count: Int
+    encourage_view: Boolean
+    encourage_max_view_count: Int
+    sticky_checkout: Boolean
+    sticky_product: Boolean
+    social_share: Boolean
+    shipping_and_return: String
+}
+
+input BlogOptionsInput {
+    blog_style: String
+    blog_sidebar_type: String
+    blog_author_enable: Boolean
+    read_more_enable: Boolean
+}
+
+input SellerOptionsInput {
+    about: SellerAboutInput
+    services: SellerServicesInput
+    steps: SellerStepsInput
+    start_selling:SellerStartSellingInput
+    store_layout:String
+    store_details: String
+}
+
+input SellerAboutInput {
+    status: Boolean
+    title: String
+    description: String
+    image_url: String
+}
+
+input SellerServicesInput {
+    status: Boolean
+    title: String
+    service_1: Service1Input
+    service_2: Service2Input
+    service_3: Service3Input
+    service_4: Service4Input
+}
+
+input Service1Input {
+    title: String
+    description: String
+    image_url: String
+}
+
+input Service2Input {
+    title: String
+    description: String
+    image_url: String
+}
+
+input Service3Input {
+    title: String
+    description: String
+    image_url: String
+}
+
+input Service4Input {
+    title: String
+    description: String
+    image_url: String
+}
+
+input SellerStepsInput {
+    status: Boolean
+    title: String
+    step_1: Step1Input
+    step_2: Step2Input
+    step_3: Step3Input
+}
+
+input Step1Input {
+    title: String
+    description: String
+}
+
+input Step2Input {
+    title: String
+    description: String
+}
+
+input Step3Input {
+    title: String
+    description: String
+}
+
+input SellerStartSellingInput {
+    status: Boolean
+    title: String
+    description: String
+}
+
+input ContactUsOptionsInput {
+    contact_image_url: String
+    detail_1: ContactDetail1Input
+    detail_2: ContactDetail2Input
+    detail_3: ContactDetail3Input
+    detail_4: ContactDetail4Input
+}
+
+input ContactDetail1Input {
+    label: String
+    icon: String
+    text: String
+}
+
+input ContactDetail2Input {
+    label: String
+    icon: String
+    text: String
+}
+
+input ContactDetail3Input {
+    label: String
+    icon: String
+    text: String
+}
+
+input ContactDetail4Input {
+    label: String
+    icon: String
+    text: String
+}
+
+input AboutUsOptionsInput {
+    about: AboutUsAboutInput
+    clients: AboutUsClientInput
+    team: AboutUsTeamInput
+    testimonial: AboutUsTestimonialInput
+    blog: AboutUsBlogInput
+}
+
+input AboutUsAboutInput {
+    status: Boolean
+    content_left_image_url: String
+    content_right_image_url: String
+    sub_title: String
+    title: String
+    description: String
+    futures: [AboutUsFuturesInput]
+}
+
+input AboutUsFuturesInput {
+    icon: String
+    title: String
+}
+
+input AboutUsClientInput {
+    status: Boolean
+    title: String
+    sub_title: String
+    content: [AboutUsClientContentInput]
+}
+
+input AboutUsClientContentInput {
+    icon: String
+    title: String
+    description: String
+}
+
+input AboutUsTeamInput {
+    status: Boolean
+    title: String
+    sub_title: String
+    members: [AboutUsTeamMemberInput]
+}
+
+input AboutUsTeamMemberInput {
+    profile_image_url: String
+    name: String
+    designation: String
+    description: String
+    instagram: String
+    twitter: String
+    pinterest: String
+    facebook: String
+}
+
+input AboutUsTestimonialInput {
+    status: Boolean
+    sub_title: String
+    title: String
+    reviews: [AboutUsTestimonialReviewsInput]
+}
+
+input AboutUsTestimonialReviewsInput {
+    title: String
+    name: String
+    review: String
+    designation: String
+    profile_image_url: String
+}
+
+input AboutUsBlogInput {
+    status: Boolean
+    blog_ids: [Int]
+}
+
+input ErrorPageOptionsInput {
+    error_page_content: String
+    back_button_enable: Boolean
+    back_button_text: String
+}
+
+input SeoOptionsInput {
+    meta_tags: String
+    meta_title: String
+    meta_description: String
+    og_title: String
+    og_description: String
+    og_image_id: Int
+}
+
+extend type Mutation {
+    updateThemeOption(input: ThemeOptionsInput @spread): Json
+        @field(resolver: "ThemeOptionMutator@update")
+}
+
+extend type Query {
+    themeOptions: ThemeOption @field(resolver: "App\\GraphQL\\Queries\\ThemeOptionQuery@index")
+}

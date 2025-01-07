@@ -1,0 +1,55 @@
+<ng-template #mediaModal let-modal>
+   <div class="modal-header">
+      <h2>{{ 'insert_media' | translate }}</h2>
+      <app-button [class]="'btn btn-close'" [spinner]="false" [id]="'media_close_btn'" (click)="modal.dismiss('Cross click')">
+         <i class="ri-close-line"></i>
+      </app-button>
+   </div>
+   <div class="modal-body">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+         @if(selectMedia){
+            <li [ngbNavItem]="'select'">
+               <a ngbNavLink>{{ 'select_file' | translate }}</a>
+               <ng-template ngbNavContent>
+                  <app-media-box [multiple]="multipleImage" [url]="url" [accept]="accept" [selectedImages]="selectedImages" [deleteAction]="false" (setImage)="setImage($event)">
+                  </app-media-box>
+               </ng-template>
+            </li>
+         }
+         <li [ngbNavItem]="'upload'" *hasPermission="'attachment.create'">
+            <a ngbNavLink>{{ 'upload_new' | translate }}</a>
+            <ng-template ngbNavContent>
+               <div class="content-section drop-files-sec" ngx-dropzone accept="{{ accept?.join() }}" (change)="onSelect($event)">
+                  <ngx-dropzone-label>
+                     <div>
+                        <h2>{{ 'drop_files_here' | translate }}</h2>
+                     </div>
+                  </ngx-dropzone-label>
+                  @for(f of files; track f){
+                     @if(f && f.type.startsWith('image')){
+                        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" [file]="f" [removable]="true" (removed)="onRemove(f)">
+                           <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                        </ngx-dropzone-image-preview>
+                     }
+
+                     @if(f && !f.type.startsWith('image')){
+                        <ngx-dropzone-preview [removable]="true" (removed)="onRemove(f)">
+                           <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                        </ngx-dropzone-preview>
+                     }
+                  }
+               </div>
+            </ng-template>
+         </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+   </div>
+   <div class="modal-footer">
+      <div class="left-part"></div>
+      <div class="right-part">
+         <app-button [class]="'align-items-center btn btn-theme d-flex'" [id]="'media_btn'" (click)="active == 'upload' ? addMedia(nav) : selectedMedia(modal)">
+            {{ 'insert_media' | translate }}
+         </app-button>
+      </div>
+   </div>
+</ng-template>

@@ -1,0 +1,27 @@
+type Subscribe {
+    id: Int
+    email: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateSubscribeInput {
+    email: String
+}
+
+extend type Mutation {
+    createSubscribe(input: CreateSubscribeInput @spread): Subscribe
+        @can(ability: "subscribe.create")
+        @field(resolver: "SubscribeMutator@store")
+}
+
+extend type Query {
+    subscribes(
+        search: String @where(operator: "like", key: "email")
+        sort: String
+        field: String
+        paginate: Int
+    ): [Subscribe!]! @paginate(resolver: "App\\GraphQL\\Queries\\SubscribeQuery@index" defaultCount:15)
+    subscribe(id: Int @eq): Subscribe @find
+    getSubscribesExportUrl: String @field(resolver: "App\\GraphQL\\Queries\\SubscribeQuery@getSubscribesExportUrl") @guard
+}

@@ -1,0 +1,19 @@
+type AppSetting {
+    id: Int
+    values: Json
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input AppSettingInput {
+    values: Json
+}
+
+extend type Mutation {
+    updateAppSettings(input: AppSettingInput @spread): Json
+        @field(resolver: "AppSettingMutator@update")
+}
+
+extend type Query {
+    appSettings: Json @field(resolver: "App\\GraphQL\\Queries\\AppSettingsQuery@index") @can(ability: "app_setting.index", model: "App\\Models\\AppSetting")
+}

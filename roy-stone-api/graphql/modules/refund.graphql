@@ -1,0 +1,64 @@
+type Refund {
+    id: Int
+    product_id: Int
+    consumer_id: Int
+    store_id: Int
+    order_id:Int
+    variation_id:Int
+    refund_image_id: Int
+    reason: String
+    amount:Float
+    payment_type:String
+    status:String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    order:Order
+    total_pending_refunds: Int
+    total_pending_withdraw_requests: Int
+    refund_image: Attachment
+    user:User
+    product:Product
+    store: Store
+}
+
+input CreateRefundInput {
+    reason:String
+    product_id: Int
+    order_id: Int
+    payment_type: String
+    refund_image_id: Int
+}
+
+input UpdateRefundInput {
+    id: Int!
+    status: String
+}
+
+input DeleteRefundInput {
+    id: Int!
+}
+
+extend type Mutation @guard {
+    createRefund(input: CreateRefundInput @spread): Refund
+        @can(ability: "refund.create")
+        @field(resolver: "RefundMutator@store")
+
+    updateRefund(input: UpdateRefundInput @spread): Refund
+        @can(ability: "refund.edit")
+        @field(resolver: "RefundMutator@update")
+
+    deleteRefund(input: DeleteReviewInput @spread): Boolean!
+        @can(ability: "refund.destroy", model: "App\\Models\\Refund")
+        @field(resolver: "RefundMutator@destroy")
+
+}
+
+extend type Query @guard {
+    refunds(
+        search: String
+        sort: String
+        field: String
+        status: String
+        paginate: Int
+    ): [Refund!]! @paginate(resolver: "App\\GraphQL\\Queries\\RefundQuery@index" defaultCount:15)
+}

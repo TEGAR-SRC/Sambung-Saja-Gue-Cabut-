@@ -1,0 +1,26 @@
+<div class="theme-tree-box">
+  <input class="form-control" placeholder="{{ 'search_category' | translate }}" [formControl]="treeSearch">
+  @if(dataToShow?.length){
+  <ul class="tree-main-ul">
+    <li class="cursor-pointer">
+      <div>
+        <i class="tree-icon folder-icon" role="presentation"></i>
+        <span>{{ 'categories' | translate }}</span>
+      </div>
+      <ul class="child-tree-list">
+        @for(node of dataToShow; track node){
+        <app-tree-node [node]="node" [displayKey]="displayKey" [recursionKey]="recursionKey"
+          [categoryType]="categoryType">
+        </app-tree-node>
+        }
+      </ul>
+    </li>
+  </ul>
+  }
+</div>
+
+@if(!dataToShow?.length){
+<app-no-data [class]="'no-data-added category-no-data'" [image]="'assets/svg/no-category.png'"
+  [text]="'no_categories_found'">
+</app-no-data>
+}

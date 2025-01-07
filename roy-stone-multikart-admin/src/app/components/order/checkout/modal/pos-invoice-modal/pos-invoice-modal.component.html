@@ -1,0 +1,74 @@
+<ng-template #posInvoice let-modal>
+  <div class="modal-body">
+    <div class="ticket">
+      <div class="title-text text-center">
+        <h4>{{(setting$ | async)?.general?.site_name ? (setting$ | async)?.general?.site_name : ''}}</h4>
+      </div>
+      <ul class="centered">
+        <li>{{ 'order_number' | translate}}: {{ order?.order_number }}</li>
+        <li>{{ 'date' | translate}}: <span>{{ order.created_at | date: 'dd MMM yyyy hh:mm:a'}}</span></li>
+        @if(!order?.is_digital_only){
+          <li>{{ 'address'  | translate}}: <span>
+              {{ order?.shipping_address?.street }}
+              {{ order?.shipping_address?.city }} {{ order?.shipping_address?.state?.name }} {{
+                          order?.shipping_address?.country?.name }}
+              {{ order?.shipping_address?.pincode }}
+            </span>
+          </li>
+        }
+        <li>{{ 'email' | translate}}: <span>{{ order?.consumer?.email }}</span></li>
+        <li>{{ 'phone' | translate}}: <span>{{ order?.shipping_address?.phone }}</span></li>
+        <li>{{ 'customer' |translate }}: <span>{{order?.consumer?.name}}</span></li>
+      </ul>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="quantity">{{ 'qty' |translate }}.</th>
+            <th class="description">{{ 'product_name' |translate}}</th>
+            <th class="price">{{ 'price' |translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(product of order?.products; track product){
+            <tr>
+              <td class="quantity">{{ product?.pivot?.quantity }}</td>
+              <td class="description">{{ product?.pivot?.variation ? product?.pivot?.variation?.name :
+                              product?.name }}</td>
+              <td class="price">{{ product?.pivot?.subtotal | currencySymbol }}</td>
+            </tr>
+          }
+          <tr class="total-box">
+            <td colspan="2" class="text-end description">{{ 'total' | translate }}:</td>
+            <td class="price">{{ (order?.amount ? order?.amount : 0) | currencySymbol }}</td>
+          </tr>
+
+          @if(!order?.is_digital_only){
+            <tr class="total-box">
+              <td colspan="2" class="text-end description">{{ 'shipping' | translate }}:</td>
+              <td class="price">{{ (order?.shipping_total ? order?.shipping_total : 0) | currencySymbol }}</td>
+            </tr>
+          }
+          <tr class="total-box">
+            <td colspan="2" class="text-end description">{{ 'tax' | translate }}:</td>
+            <td class="price">{{ (order?.tax_total ? order?.tax_total : 0) | currencySymbol }}</td>
+          </tr>
+          <tr class="total-box">
+            <td colspan="2" class="text-end description">{{ 'discount' | translate }}:</td>
+            <td class="price">{{ (order?.coupon_total_discount ? order?.coupon_total_discount : 0) |
+                            currencySymbol }}</td>
+          </tr>
+          <tr class="total-box">
+            <td colspan="2" class="text-end description">{{ 'grandtotal' | translate }}:</td>
+            <td class="price">{{ (order?.total ? order?.total : 0) | currencySymbol }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-point">{{ 'thank_you_for_shopping' | translate }}</p>
+      <div class="modal-btn-group d-flex align-items-center gap-2 justify-content-center">
+        <button class="btn btn-sm btn-animation print-btn" onclick="window.print();">{{ 'print' |translate}}</button>
+        <button class="btn btn-sm btn-light-bg" (click)="modal.dismiss('Cross click')">{{ 'cancel' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+ 

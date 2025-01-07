@@ -1,0 +1,73 @@
+type Permission {
+    id: Int
+    name: String
+    guard_name: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+type Role {
+    id: Int
+    name: String
+    guard_name: String
+    system_reserve:Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    pivot:Pivot
+    permissions: [Permission]
+}
+
+type Pivot {
+    role_id: Int
+    model_id:Int
+    model_type:String
+}
+
+input CreateRoleInput {
+    name: String!
+    permissions: [Int]
+}
+
+input UpdateRoleInput {
+    id: Int!
+    name: String!
+    permissions: [Int]
+}
+
+input DeleteRoleInput {
+    id: Int!
+}
+
+input DeleteAllRolesInput {
+    ids: [Int]
+}
+
+
+extend type Mutation {
+    createRole(input: CreateRoleInput @spread): Role
+        @can(ability: "role.create",  model: "Spatie\\Permission\\Models\\Role")
+        @field(resolver: "RoleMutator@store")
+
+    updateRole(input: UpdateRoleInput @spread): Role
+        @can(ability: "role.edit",  model: "Spatie\\Permission\\Models\\Role")
+        @field(resolver: "RoleMutator@update")
+
+    deleteRole(input: DeleteRoleInput @spread): Boolean!
+        @can(ability: "role.destroy", model: "Spatie\\Permission\\Models\\Role")
+        @field(resolver: "RoleMutator@destroy")
+
+    deleteAllRoles(input: DeleteAllRolesInput @spread): Boolean!
+        @can(ability: "role.destroy", model: "Spatie\\Permission\\Models\\Role")
+        @field(resolver: "RoleMutator@deleteAll")
+}
+
+extend type Query {
+    roles(
+        search: String @where(operator: "like", key: "name")
+        sort: String
+        field: String
+        paginate: Int
+    ): [Role!]! @paginate(resolver: "App\\GraphQL\\Queries\\RoleQuery@index" defaultCount:15)
+    @can(ability: "role.index",  model: "Spatie\\Permission\\Models\\Role")
+    role(id: Int @eq): Role  @find(model: "Spatie\\Permission\\Models\\Role") @can(ability: "role.index", model: "Spatie\\Permission\\Models\\Role")
+}

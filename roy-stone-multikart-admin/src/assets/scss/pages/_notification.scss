@@ -1,0 +1,83 @@
+/**=====================
+    Notification CSS start
+==========================**/
+.notification-setting {
+    li {
+        padding: 14px;
+        border-radius: 5px;
+        position: relative;
+        background-color: #f8f8f8;
+        text-transform: capitalize;
+
+        h4 {
+            margin-bottom: 6px;
+            color: $grey-3;
+            font-size: calc(15px + (17 - 15) * ((100vw - 320px) / (1920 - 320)));
+            font-weight: 500;
+        }
+
+        h5 {
+            color: $grey-9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 15px;
+        }
+
+        .delete-icon {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 18px;
+            color: #222;
+
+            i {
+                padding: 2px;
+                background-color: $white;
+                border-radius: 3px;
+                box-shadow: 0 0 8px #e3e3e3;
+            }
+        }
+
+        &.unread {
+            background-color: rgba(26, 164, 136, 0.07);
+            border-left: 2px solid var(--theme-color);
+        }
+
+        +li {
+            margin-top: 18px;
+        }
+    }
+    &.notification-page {
+        .notice-section {
+            .icon-box {
+                width: 60px;
+                height: 63px;
+            }
+            p {
+                display: inline-block;
+                margin-bottom: -7px;
+            }
+            .notice-box {
+                width: calc(100% - 60px);
+                padding-top: 6px;
+            }
+            .notice-content {
+                align-items: flex-start;
+                width: 100%;
+            }
+        }
+        &.notification-setting {
+            li {
+                padding: 0;
+                margin-block: 14px;
+                &:first-child {
+                    margin-top: 0;
+                }
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}

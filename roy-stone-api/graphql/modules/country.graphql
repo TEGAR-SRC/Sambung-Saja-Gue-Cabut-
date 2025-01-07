@@ -1,0 +1,36 @@
+type Country {
+    id: Int
+    capital: String
+    citizenship: String
+    country_code: String
+    currency: String
+    currency_code: String
+    currency_sub_unit: String
+    currency_symbol: String
+    currency_decimals: String
+    full_name: String
+    iso_3166_2: String
+    iso_3166_3: String
+    name: String
+    state: [State]
+}
+
+type State {
+    id: Int
+    name: String
+    country_id: Int
+}
+
+extend type Query {
+    countries(
+        search: String @where(operator: "like", key: "name")
+        orderBy: _ @orderBy(columns: ["name", "full_name", "code", "iso_3166_2","iso_3166_3"], order: DESC)
+    ): [Country!]! @all
+    country(id: Int @eq): Country @find
+
+    states(
+        search: String @where(operator: "like", key: "name")
+        orderBy: _ @orderBy(columns: ["name"], order: DESC)
+    ): [State!]! @all
+    state(id: Int @eq): State @find
+}

@@ -1,0 +1,188 @@
+/**=====================
+    Shipping CSS Start
+==========================**/
+
+.no-data-added {
+    text-align: center;
+    padding: 60px 0;
+
+    img {
+        width: 24%;
+        margin-bottom: 20px;
+
+        @media (max-width: 991px) {
+            width: 42%;
+        }
+
+        @media (max-width: 576px) {
+            width: 50%;
+        }
+
+        @media (max-width: 420px) {
+            width: 80%;
+        }
+    }
+
+    h4 {
+        font-weight: 500;
+        color: #9f9b9b;
+        font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320)));
+    }
+
+    &.shipping-no-data {
+        padding: 110px 0;
+    }
+
+    &.category-no-data {
+        img {
+            width: 64%;
+        }
+    }
+
+    &.no-shipping {
+        img {
+            width: 32%;
+
+            @media (max-width: 991px) {
+                width: 42%;
+            }
+
+            @media (max-width: 576px) {
+                width: 50%;
+            }
+
+            @media (max-width: 420px) {
+                width: 80%;
+            }
+        }
+    }
+}
+
+.shipping-content {
+    margin-bottom: -30px;
+}
+
+.shipping-box {
+    padding: 0;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.btn-option {
+    display: flex;
+    align-items: center;
+    gap: 6px 15px;
+    flex-wrap: wrap;
+}
+
+.shipping-accordion {
+    margin-top: 0;
+    display: block;
+
+    .accordion-item {
+        margin-bottom: 14px;
+        border: 1px solid #eee;
+        border-radius: 0;
+
+        .accordion-button {
+            border-radius: 0;
+            overflow: hidden;
+            text-transform: capitalize;
+            box-shadow: none;
+            border: none;
+            background-color: #f8f8f8;
+            border-radius: 0;
+            z-index: 0;
+            color: #222;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 12px 18px;
+            border-radius: 12px 12px 0 0;
+
+            &:after {
+                width: 16px;
+                height: 16px;
+                background-size: contain;
+                filter: grayscale(1);
+
+                [dir="rtl"] & {
+                    margin-left: unset;
+                    margin-right: auto;
+                }
+            }
+        }
+
+        .accordion-body {
+            border-top: none;
+            padding: 20px;
+        }
+    }
+
+    &.variant-accordion {
+        .accordion-item {
+            &:last-of-type {
+                >.accordion-header {
+                    .accordion-button {
+                        &.collapsed {
+                            border-radius: 0;
+                        }
+                    }
+                }
+            }
+
+            .accordion-button {
+                font-weight: 400;
+                font-size: 16px;
+                padding: 10px 18px;
+                color: #4a5568;
+                border-radius: 0;
+            }
+        }
+    }
+}
+
+.country-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+
+    li {
+        padding: 34px 20px;
+        border: 1px solid #eee;
+        border-radius: 0;
+        display: flex;
+        font-size: 16px;
+        text-transform: capitalize;
+        align-items: center;
+        gap: 10px;
+        line-height: 1;
+        width: calc(25% - 12px);
+        text-align: center;
+        justify-content: space-between;
+
+        @media (max-width: 767px) {
+            width: calc(50% - 12px);
+        }
+
+        @media (max-width: 480px) {
+            width: 100%;
+        }
+
+        h5,
+        a {
+            width: 100%;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            [dir="rtl"] & {
+                text-align: right;
+            }
+        }
+
+        a {
+            color: #585858;
+        }
+    }
+}

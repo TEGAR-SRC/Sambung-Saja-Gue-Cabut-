@@ -1,0 +1,26 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+
+  <app-form-fields [label]="'tag_name' | translate " [for]="'name'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{ 'enter_tag_name' | translate }}" name="name" formControlName="name">
+    @if(form.controls['name'].touched && form.controls['name'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{'tag_name_is_required' |  translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'description' | translate" [for]="'description'" [required]="false">
+    <textarea class="form-control" placeholder="{{'enter_description' | translate }}" formControlName="description" rows="3"></textarea>
+  </app-form-fields>
+
+  <app-form-fields [label]="'status' | translate" [for]="'status'" [required]="false">
+    <div class="form-check form-switch ps-0">
+      <label class="switch">
+        <input type="checkbox" id="status" formControlName="status">
+        <span class="switch-state"></span>
+      </label>
+    </div>
+  </app-form-fields>
+
+  <app-button [id]="'tag_btn'">{{ (type == 'create' ? 'save_tag' : 'update_tag') | translate }}</app-button>
+</form>

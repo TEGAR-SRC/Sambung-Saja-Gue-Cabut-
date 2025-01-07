@@ -1,0 +1,429 @@
+<!-- notice section -->
+@if((notice$ | async)){
+  <section>
+    <div class="container-fluid">
+      <div class="notice-section" [class.warning]="notice.priority === 'low'">
+        <div class="notice-content">
+          <div class="icon-box">
+            <i class="ri-error-warning-line"></i>
+          </div>
+          <div class="notice-box">
+            <h3>{{ notice?.title }}</h3>
+            <p [innerHTML]="notice?.description"></p>
+          </div>
+        </div>
+        <a [routerLink]="['/notice']">{{ 'see_all' | translate }}</a>
+        <a class="close-icon" (click)="markAsRead(notice?.id)"><i class="ri-close-line"></i></a>
+      </div>
+    </div>
+  </section>
+}
+<!-- notice section -->
+
+<!-- tiles section -->
+<section class="dashboard-tiles ">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 welcome-tiles">
+        <div class="card">
+          <img src="assets/images/bg.jpg" class="img-fluid">
+          <div class="card-body">
+              <h2>Welcome Back Admin </h2>
+              <p>Manage application's data and operations with real time analystics, user management tools and customizable reports.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <div class="title-header">
+              <div class="d-flex align-items-center">
+                <h5>{{ 'order_status' | translate }}</h5>
+              </div>
+              <div button>
+                <select2 class="custom-select min-w-cls" [data]="filter?.length ? filter : []" [placeholder]="'filter_by' | translate" (update)="filterOrder($event)">
+                </select2>
+              </div>
+            </div>
+            <div class="row g-sm-4 g-3 booking-status-main">
+              <div class="col-xxl-4 col-sm-6 booking-status-card">
+                <a href="javascript:void(0)" [routerLink]="['/order']" [queryParams]="{ status: 'pending'}" class="booking-widget-card card">
+                  <div class="booking-widget-icon">
+                    <img src="assets/images/svg/box-time.svg" class="img-fluid" alt="box-time">
+                  </div>
+                  <div>
+                    <h6>{{ 'pending' | translate }}</h6>
+                    <h2>{{ (statistics$ | async)?.total_pending_orders }}</h2>
+                  </div>
+                  <img src="assets/images/tiles-bg.png" class="img-fluid abs-icon" alt="box-time">
+                </a>
+              </div>
+              <div class="col-xxl-4 col-sm-6 booking-status-card">
+                <a href="javascript:void(0)" [routerLink]="['/order']" [queryParams]="{ status: 'processing'}" class="booking-widget-card card">
+                  <div class="booking-widget-icon">
+                    <img src="assets/images/svg/note.svg" class="img-fluid" alt="note">
+                  </div>
+                  <div>
+                    <h6>{{ 'processing' | translate }}</h6>
+                    <h2>{{ (statistics$ | async)?.total_processing_orders }}</h2>
+                  </div>
+                  <img src="assets/images/tiles-bg.png" class="img-fluid abs-icon" alt="box-time">
+                </a>
+              </div>
+              <div class="col-xxl-4 col-sm-6 booking-status-card">
+                <a href="javascript:void(0)" [routerLink]="['/order']" [queryParams]="{ status: 'cancelled'}" class="booking-widget-card card">
+                  <div class="booking-widget-icon">
+                    <img src="assets/images/svg/box-remove.svg" class="img-fluid" alt="box-1">
+                  </div>
+                  <div>
+                    <h6>{{ 'cancelled' | translate }}</h6>
+                    <h2>{{ (statistics$ | async)?.total_cancelled_orders }}</h2>
+                  </div>
+                  <img src="assets/images/tiles-bg.png" class="img-fluid abs-icon" alt="box-time">
+                </a>
+              </div>
+              <div class="col-xxl-4 col-sm-6 booking-status-card">
+                <a href="javascript:void(0)" [routerLink]="['/order']" [queryParams]="{ status: 'shipped'}" class="booking-widget-card card">
+                  <div class="booking-widget-icon">
+                    <img src="assets/images/svg/box.svg" class="img-fluid" alt="group">
+                  </div>
+                  <div>
+                    <h6>{{ 'shipped' | translate }}</h6>
+                    <h2>{{ (statistics$ | async)?.total_shipped_orders }}</h2>
+                  </div>
+                  <img src="assets/images/tiles-bg.png" class="img-fluid abs-icon" alt="box-time">
+                </a>
+              </div>
+              <div class="col-xxl-4 col-sm-6 booking-status-card">
+                <a href="javascript:void(0)" [routerLink]="['/order']" [queryParams]="{ status: 'out_for_delivery'}" class="booking-widget-card card">
+                  <div class="booking-widget-icon">
+                    <img src="assets/images/svg/group.svg" class="img-fluid" alt="shop">
+                  </div>
+                  <div>
+                    <h6>{{ 'out_for_delivery' | translate }}</h6>
+                    <h2>{{ (statistics$ | async)?.total_out_of_delivery_orders }}</h2>
+                  </div>
+                  <img src="assets/images/tiles-bg.png" class="img-fluid abs-icon" alt="box-time">
+                </a>
+              </div>
+              <div class="col-xxl-4 col-sm-6 booking-status-card">
+                <a href="javascript:void(0)" [routerLink]="['/order']" [queryParams]="{ status: 'delivered'}" class="booking-widget-card card">
+                  <div class="booking-widget-icon">
+                    <img src="assets/images/svg/shop.svg" class="img-fluid" alt="box-remove">
+                  </div>
+                  <div>
+                    <h6>{{ 'delivered' | translate }}</h6>
+                    <h2>{{ (statistics$ | async)?.total_delivered_orders }}</h2>
+                  </div>
+                  <img src="assets/images/tiles-bg.png" class="img-fluid abs-icon" alt="box-time">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-bottom-space">
+      <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-sm-2 row-cols-1 g-sm-4 g-3">
+        <div class="widget-card-box">
+          <a href="javascript:void(0)" class="widget-card card">
+            <div class="widget-icon">
+              <img src="assets/images/svg/empty-wallet.svg" class="img-fluid" alt="empty-wallet">
+            </div>
+            <div>
+              <h6>{{ 'total_revenue' | translate }}</h6>
+              <h2>{{ (statistics$ | async)?.total_revenue | currencySymbol }}</h2>
+            </div>
+          </a>
+        </div>
+        @if(( user$ | async )?.role?.name !== 'vendor'){
+          <div class="widget-card-box">
+            <a [routerLink]="['/product']" class="widget-card card">
+              <div class="widget-icon">
+                <img src="assets/images/svg/receipt-2.svg" class="img-fluid" alt="receipt">
+              </div>
+              <div>
+                <h6>{{ 'total_products' | translate }}</h6>
+                <h2>{{ (statistics$ | async)?.total_products }}</h2>
+              </div>
+            </a>
+          </div>
+          <div class="widget-card-box">
+            <a [routerLink]="['/order']" class="widget-card card">
+              <div class="widget-icon">
+                <img src="assets/images/svg/medal-star.svg" class="img-fluid" alt="medal-star">
+              </div>
+              <div>
+                <h6>{{ 'total_orders' | translate }}</h6>
+                <h2>{{ (statistics$ | async)?.total_orders }}</h2>
+              </div>
+            </a>
+          </div>
+          <div class="widget-card-box">
+            <a [routerLink]="['/store']" class="widget-card card">
+              <div class="widget-icon">
+                <img src="assets/images/svg/shop-white.svg" class="img-fluid" alt="shop-white">
+              </div>
+              <div>
+                <h6>{{ 'total_stores' | translate }}</h6>
+                <h2>{{ (statistics$ | async)?.total_stores }}</h2>
+              </div>
+            </a>
+          </div>
+          <div class="widget-card-box">
+            <a [routerLink]="['/user']" class="widget-card card">
+              <div class="widget-icon">
+                <img src="assets/images/svg/people.svg" class="img-fluid" alt="people">
+              </div>
+              <div>
+                <h6>{{ 'total_user' | translate }}</h6>
+                <h2>{{ (statistics$ | async)?.total_users }}</h2>
+              </div>
+            </a>
+          </div>
+        }
+
+        @if(( user$ | async )?.role?.name == 'vendor'){
+          <div class="widget-card-box">
+            <a href="javascript:void(0)" class="widget-card card">
+              <div class="widget-icon">
+                <img src="assets/images/svg/people.svg" class="img-fluid" alt="people">
+              </div>
+              <div>
+                <h6>{{ 'total_refunds' | translate }}</h6>
+                <h2>{{ (statistics$ | async)?.total_refunds }}</h2>
+              </div>
+            </a>
+          </div>
+          <div class="widget-card-box">
+            <a href="javascript:void(0)" class="widget-card card">
+              <div class="widget-icon">
+                <img src="assets/images/svg/medal-star.svg" class="img-fluid" alt="medal-star">
+              </div>
+              <div>
+                <h6>{{ 'total_orders' | translate }}</h6>
+                <h2>{{ (statistics$ | async)?.total_orders }}</h2>
+              </div>
+            </a>
+          </div>
+          <div class="widget-card-box">
+            <a href="javascript:void(0)" class="widget-card card">
+              <div class="widget-icon">
+                <img src="assets/images/svg/receipt-2.svg" class="img-fluid" alt="receipt">
+              </div>
+              <div>
+                <h6>{{ 'total_product' | translate }}</h6>
+                <h2>{{ (product$ | async)?.total }}</h2>
+              </div>
+            </a>
+          </div>
+          <div class="widget-card-box">
+            <a href="javascript:void(0)" class="widget-card card">
+              <div class="widget-icon">
+                <img src="assets/images/svg/empty-wallet.svg" class="img-fluid" alt="empty-wallet">
+              </div>
+              <div>
+                <h6>{{ 'total_balance' | translate }}</h6>
+                <h2>{{ ( user$ | async )?.vendor_wallet?.balance }}</h2>
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- revenue & top vendor -->
+<section>
+  <div class="row m-0">
+    <div [class]="
+      (user$ | async)?.role?.name === 'vendor'
+        ? 'col-xl-12 col-md-6 p-0'
+        : 'col-xl-7 col-md-6 p-0'
+    ">
+      <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'Average Revenue'">
+        <apx-chart [series]="chartOptions?.series" [chart]="chartOptions?.chart" [xaxis]="chartOptions?.xaxis" [yaxis]="chartOptions?.yaxis" [dataLabels]="chartOptions?.dataLabels" [stroke]="chartOptions?.stroke" [title]="chartOptions?.title" [legend]="chartOptions?.legend" [fill]="chartOptions?.fill" [markers]="chartOptions?.markers" [grid]="chartOptions?.grid">
+        </apx-chart>
+      </app-page-wrapper>
+    </div>
+
+    @if((user$ | async)?.role?.name !== 'vendor'){
+      <div class="col-xl-5 col-md-6 p-0" *hasPermission="'store.index'">
+        <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'top_stores'">
+          <div button>
+            <select2 class="custom-select min-w-cls" [data]="filter?.length ? filter : []" [placeholder]="'filter_by' | translate" (update)="filterSeller($event)">
+            </select2>
+          </div>
+          <app-table [tableConfig]="sellerTableConfig" (tableChanged)="onSellerTableChange($event)" [pagination]="false" [topbar]="false" [loading]="topSellerLoader" [hasCheckbox]="false">
+          </app-table>
+        </app-page-wrapper>
+      </div>
+    }
+  </div>
+  <div class="row m-0">
+    <div class="col-xl-12 col-md-6 p-0" *hasPermission="'order.index'">
+      <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'recent_orders'">
+        <app-table [tableConfig]="orderTableConfig" (tableChanged)="onOrderTableChange($event)" (rowClicked)="orderView($event)" (action)="onOrderActionClicked($event)" [loading]="false" [pagination]="false" [topbar]="false" [hasCheckbox]="false">
+        </app-table>
+      </app-page-wrapper>
+    </div>
+    <!-- <div class="col-xl-4">
+      <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'order summary'">
+        <apx-chart
+          [series]="charts.series"
+          [chart]="charts.chart"
+          [labels]="charts.labels"
+          [responsive]="charts.responsive"
+          [colors]="charts?.colors"
+          [stroke]="charts?.stroke"
+          [xaxis]="charts?.xaxis"
+          [yaxis]="charts?.yaxis"
+          [plotOptions]="charts?.plotOptions"></apx-chart>
+      </app-page-wrapper>
+    </div> -->
+  </div>
+  <div class="row m-0">
+    <div class="col-md-6 p-0" *hasPermission="'product.index'">
+      <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'product_stock_report'">
+        <div button>
+          <select2 class="custom-select min-w-cls" [data]="(category$ | async)?.length ? (category$ | async) : []" [placeholder]="'select_category' | translate" (update)="filterProduct($event)" resettable>
+          </select2>
+        </div>
+        <app-table [tableConfig]="productStockTableConfig" [pagination]="false" [topbar]="false" [hasCheckbox]="false" [loading]="productStockLoader" (tableChanged)="onProductTableChange($event)" (rowClicked)="productEdit($event)" (action)="onProductActionClicked($event)">
+        </app-table>
+      </app-page-wrapper>
+    </div>
+    <div class="overflow-hidden col-md-6 p-0">
+      <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'latest_reviews'" *hasPermission="'review.index'">
+        <div button>
+          <a [routerLink]="['/review']" class="txt-primary">{{
+          "view_all" | translate
+        }}</a>
+        </div>
+        <div class="review-box table-responsive">
+          <table>
+            @for(review of (review$ | async)?.data | slice : 0 : 4; track review){
+              <tr>
+                <td>
+                  <div class="review-content">
+                    <div class="img-box">
+                      <img [src]="
+                        review?.product?.product_thumbnail
+                          ? review?.product?.product_thumbnail?.original_url
+                          : 'assets/images/product.png'
+                      " class="img-fluid" [alt]="'review'" />
+                    </div>
+                    <span>{{ review?.product?.name }}</span>
+                  </div>
+                </td>
+                <td>
+                  {{ review?.consumer?.name }}
+                </td>
+                <td>
+                  <ngb-rating class="rating-sec" [rate]="review?.rating"></ngb-rating>
+                </td>
+              </tr>
+            }
+          </table>
+
+          @if(!(review$ | async)?.data?.length){
+            <div class="no-data-added">
+              <h4>{{ "no_records_found" | translate }}</h4>
+            </div>
+          }
+        </div>
+      </app-page-wrapper>
+      <!-- <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'latest_blogs'" *hasPermission="'blog.index'">
+        @if((blog$ | async)?.data?.length){
+          <div class="row g-3">
+
+            @for(blog of (blog$ | async)?.data; track blog){
+              <div class="col-xxl-6">
+                <div class="blog-box">
+                  <a [routerLink]="['/blog/edit', blog.id]" class="blog-img">
+                    @if(blog?.blog_thumbnail){
+                      <img [src]="blog?.blog_thumbnail?.original_url" class="img-fluid" alt="blog" />
+                    }
+                  </a>
+                  <div class="blog-content">
+                    <a [routerLink]="['/blog/edit', blog.id]">{{ blog?.title }}</a>
+                    <h6>{{ blog?.created_at | date : "dd MMM yyyy hh:mm:a" }}</h6>
+                  </div>
+                </div>
+              </div>
+
+            }
+          </div>
+        }
+
+        @if(!(blog$ | async)?.data?.length){
+          <div class="no-data-added">
+            <h4>{{ "no_records_found" | translate }}</h4>
+          </div>
+        }
+      </app-page-wrapper> -->
+      <div *hasPermission="'product.index'">
+        <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'top_selling_products'">
+          <div button>
+            <select2 class="custom-select min-w-cls" [data]="filter?.length ? filter : []" [placeholder]="'filter_by' | translate" (update)="filterTopProduct($event)">
+            </select2>
+          </div>
+          <div class="top-selling-table datatable-wrapper table-responsive">
+            @if(topProductLoader){
+              <div class="table-loader">
+                <span>{{ "please_wait" | translate }}...</span>
+              </div>
+            }
+            <table>
+  
+              @for(product of topProduct$ | async; track product){
+                <tr>
+                  <td>
+                    <div class="img-info cursor-pointer" (click)="redirectToProduct(product.id)">
+                      <img [src]="
+                        product?.product_thumbnail
+                          ? product?.product_thumbnail.original_url
+                          : 'assets/images/product.png'
+                      " class="img-fluid" alt="product" />
+                      <div>
+                        <h6>{{ product?.created_at | date : "dd MMM yyyy" }}</h6>
+                        <h5>{{ product?.name }}</h5>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <h6>{{ "price" | translate }}</h6>
+                    <h5>{{ product?.sale_price | currencySymbol }}</h5>
+                  </td>
+                  <td>
+                    <h6>{{ "orders" | translate }}</h6>
+                    <h5>{{ product?.orders_count }}</h5>
+                  </td>
+                  <td>
+                    <h6>{{ "stock" | translate }}</h6>
+                    <h5>{{ product?.quantity }}</h5>
+                  </td>
+                  <td>
+                    <h6>{{ "amount" | translate }}</h6>
+                    <h5>{{ +product?.order_amount | currencySymbol }}</h5>
+                  </td>
+                </tr>
+              }
+  
+              @if(!(topProduct$ | async)?.length){
+                <tr>
+                  <td>
+                    <div class="no-data-added">
+                      <h4>{{ "no_records_found" | translate }}</h4>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </table>
+          </div>
+        </app-page-wrapper>
+      </div>
+    </div>
+  </div>
+</section>

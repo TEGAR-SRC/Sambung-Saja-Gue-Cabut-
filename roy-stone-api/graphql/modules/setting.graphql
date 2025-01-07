@@ -1,0 +1,239 @@
+type Setting {
+    id: Int
+    values: Json
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input SettingInput {
+    values: Json
+}
+
+input SettingValuesInput {
+    general: GeneralSettingInput
+    activation: ActivationSettingInput
+    wallet_points: WalletPointsSettingInput
+    vendor_commissions:VendorCommissionsSettingInput
+    email: EmailSettingInput
+    delivery: DeliverySettingInput
+    payment_methods: PaymentMethodSettingInput
+    analytics: AnalyticsSettingInput
+    newsletter: NewsLetterSettingInput
+    google_reCaptcha: GoogleReCaptchaSettingInput
+    refund: RefundSettingInput
+    maintenance: MaintenanceSettingInput
+}
+
+input GeneralSettingInput {
+    site_name: String
+    site_title: String
+    site_tagline: String
+    site_url: String
+    mode: String
+    default_timezone: String
+    default_currency_id: Int
+    default_language: String
+    product_sku_prefix: String
+    min_order_amount: Int
+    front_site_language_direction: String
+    admin_site_language_direction: String
+    copyright: String
+    light_logo_image_id: Int
+    dark_logo_image_id: Int
+    favicon_image_id: Int
+    tiny_logo_image_id:Int
+    min_order_free_shipping: Int
+}
+
+input ActivationSettingInput {
+    catalog_enable: Boolean
+    multivendor: Boolean
+    store_auto_approve: Boolean
+    product_auto_approve: Boolean
+    wallet_enable: Boolean
+    point_enable: Boolean
+    coupon_enable: Boolean
+    stock_product_hide: Boolean
+}
+
+input WalletPointsSettingInput {
+    min_per_order_amount: Int
+    reward_per_order_amount: Int
+    point_currency_ratio: Int
+    signup_points: Int
+}
+
+input VendorCommissionsSettingInput {
+    status: Boolean
+    min_withdraw_amount: Float
+    default_commission_rate: Float
+    is_category_based_commission: Boolean
+}
+
+input EmailSettingInput {
+    mail_mailer: String
+    mail_host: String
+    mail_port: Int
+    mail_username: String
+    mail_password: String
+    mail_encryption: String
+    mail_from_address: String
+    mail_from_name: String
+    mailgun_domain: String
+    mailgun_secret: String
+}
+
+input DeliverySettingInput {
+    default_delivery:Int
+    same_day_delivery:Boolean
+    default:DefaultDeliverySettingInput
+    same_day:SameDayDeliverySettingInput
+    same_day_intervals:[SameDayDeliveryIntervalsSettingInput]
+}
+
+input DefaultDeliverySettingInput {
+    title: String
+    description: String
+}
+
+input SameDayDeliverySettingInput {
+    title: String
+    description: String
+}
+
+input SameDayDeliveryIntervalsSettingInput {
+    title: String
+    description: String
+}
+
+input PaymentMethodSettingInput {
+    stripe:StripeSettingInput
+    paypal:PaypalSettingInput
+    razorpay:RazorpaySettingInput
+    mollie:MollieSettingInput
+    phonepe: PhonePeSettingInput
+    instamojo: InstaMojoSettingInput
+    ccavenue:CCAvenueSettingInput
+    bkash: bKashSettingInput
+    cod:CashOnDeliverySettingInput
+}
+
+input StripeSettingInput {
+    title: String
+    key: String
+    secret: String
+    status: Boolean
+}
+
+input PaypalSettingInput {
+    title: String
+    client_id: String
+    client_secret: String
+    sandbox_mode: Boolean
+    status: Boolean
+}
+
+input RazorpaySettingInput {
+    title: String
+    key: String
+    secret: String
+    status: Boolean
+}
+
+input MollieSettingInput {
+    title: String
+    secret_key: String
+    status: Boolean
+}
+
+input PhonePeSettingInput {
+    title: String
+    merchant_id: String
+    salt_key: String
+    salt_index: String
+    sandbox_mode: Boolean
+    status: Boolean
+}
+
+input InstaMojoSettingInput {
+    title: String
+    client_id: String
+    client_secret: String
+    salt_key: String
+    sandbox_mode: Boolean
+    status: Boolean
+}
+
+input CCAvenueSettingInput {
+    title: String
+    merchant_id: String
+    working_key: String
+    access_code: String
+    status: Boolean
+    sandbox_mode: Boolean
+}
+
+input bKashSettingInput {
+    title: String
+    app_key: String
+    app_secret: String
+    username: String
+    password: String
+    status: Boolean
+    sandbox_mode: Boolean
+}
+
+input CashOnDeliverySettingInput {
+    title: String
+    status: Boolean
+}
+
+input AnalyticsSettingInput {
+    facebook_pixel: [FacebookPixelSettingInput]
+    google_analytics: [GoogleAnalyticsSettingInput]
+}
+
+input FacebookPixelSettingInput {
+    pixel_id: String
+    status: Boolean
+}
+
+input GoogleAnalyticsSettingInput {
+    tracking_id: String
+    view_id: String
+    status: Boolean
+}
+
+input GoogleReCaptchaSettingInput {
+    secret: String
+    site_key: String
+    status: Boolean
+}
+
+input NewsLetterSettingInput {
+    mailchip_api_key: String
+    mailchip_list_id: String
+    status: Boolean
+}
+
+input RefundSettingInput {
+    status: Boolean
+    refundable_days: Int
+}
+
+input MaintenanceSettingInput {
+    title: String
+    maintenance_mode: Boolean
+    maintenance_image_id: Int
+    description: String
+}
+
+extend type Mutation {
+    updateSettings(input: SettingInput @spread): Json
+        @field(resolver: "SettingMutator@update")
+}
+
+extend type Query {
+    frontSettings: Json @field(resolver: "App\\GraphQL\\Queries\\SettingsQuery@frontSettings")
+    settings: Json @field(resolver: "App\\GraphQL\\Queries\\SettingsQuery@index") @can(ability: "setting.index", model: "App\\Models\\Setting")
+}

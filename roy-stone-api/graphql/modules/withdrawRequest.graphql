@@ -1,0 +1,55 @@
+type WithdrawRequest {
+    id: Int
+    vendor_id: Int
+    amount: Float
+    message:String
+    payment_type:String
+    vendor_wallet_id: Int
+    is_used: Int
+    status: String
+    user:User
+    total_pending_withdraw_requests: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateWithdrawRequestInput {
+    vendor_id: Int
+    payment_type:String
+    amount: Float
+    message:String
+}
+
+input UpdateWithdrawRequestInput {
+    id: Int!
+    status: String
+    total_pending_withdraw_requests: Int
+}
+
+input DeleteWithdrawRequestInput {
+    id: Int!
+}
+
+extend type Query @guard {
+    withdrawRequests (
+        start_date:String
+        status:String
+        search: String
+        sort: String
+        field: String
+        end_date:String
+        paginate: Int
+    ): [WithdrawRequest] @paginate(resolver: "App\\GraphQL\\Queries\\WithdrawRequestQuery@index" defaultCount:15)
+
+    withdrawRequest(id: Int @eq): WithdrawRequest @find
+}
+
+extend type Mutation @guard {
+    createWithdrawRequest(input: CreateWithdrawRequestInput @spread): WithdrawRequest
+        @can(ability: "withdraw_request.create")
+        @field(resolver: "WithdrawRequestMutator@store")
+
+    updateWithdrawRequest(input: UpdateWithdrawRequestInput @spread): WithdrawRequest
+        @can(ability: "withdraw_request.edit")
+        @field(resolver: "WithdrawRequestMutator@update")
+}

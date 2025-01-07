@@ -1,0 +1,5 @@
+name,style,values,status
+Weight,rectangle,"1 KG,5 KG,10 KG",1
+Size,circle,"S,M,L,XL",1
+Colour,color,"Red,Blue,Green",1
+Litre,dropdown,"5 Litre,10 Litre",1

@@ -1,0 +1,25 @@
+type DownloadFile{
+    id: Int
+    item_name: String
+    item_image: String
+    can_download_file: Boolean
+    can_download_license: Boolean
+}
+
+input AdminDownloadZipInput {
+    product_id: Int
+    variation_id: Int
+}
+
+extend type Query @guard {
+    download(
+        search: String
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [DownloadFile!]!  @paginate(resolver: "App\\GraphQL\\Queries\\DownloadQuery@index" defaultCount:15)
+    downloadZipLink(id: Int): String @field(resolver: "App\\GraphQL\\Queries\\DownloadQuery@downloadZipLink")
+    downloadKeyLink(id: Int): String @field(resolver: "App\\GraphQL\\Queries\\DownloadQuery@downloadKeyLink")
+    adminDownloadZipLink(input: AdminDownloadZipInput): String @field(resolver: "App\\GraphQL\\Queries\\DownloadQuery@adminDownloadZipLink")
+}

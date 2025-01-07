@@ -1,0 +1,98 @@
+type Category {
+    id: Int
+    name: String
+    slug: String
+    description: String
+    parent_id: Int
+    commission_rate: Float
+    category_image_id: Int
+    category_icon_id: Int
+    status: Int
+    type: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    category_image: Attachment
+    category_icon: Attachment
+    subcategories: [Category]
+    parent:Category
+}
+
+input CreateCategoryInput {
+    name: String
+    slug: String
+    description: String
+    type: String
+    status: Int
+    commission_rate: Float
+    category_image_id: Int
+    category_icon_id: Int
+    parent_id: Int
+}
+
+input UpdateCategoryInput {
+    id: Int
+    name: String
+    slug: String
+    description: String
+    type: String
+    status: Int
+    commission_rate: Float
+    category_image_id: Int
+    category_icon_id: Int
+    parent_id: Int
+}
+
+input DeleteCategoryInput {
+    id: Int!
+}
+
+input StatusCategoryInput {
+    id: Int!
+    status: Int
+}
+
+input ImportCategoriesInput {
+    categories: Upload
+}
+
+type CategoryPayload {
+    success: Boolean
+    message: String
+}
+
+extend type Mutation {
+    createCategory(input: CreateCategoryInput @spread): Category
+        @can(ability: "category.create")
+        @field(resolver: "CategoryMutator@store")
+
+    updateCategory(input: UpdateCategoryInput @spread): Category
+        @can(ability: "category.edit")
+        @field(resolver: "CategoryMutator@update")
+
+    deleteCategory(input: DeleteCategoryInput @spread): Boolean!
+        @can(ability: "category.destroy", model: "App\\Models\\Category")
+        @field(resolver: "CategoryMutator@destroy")
+
+    statusCategory(input: StatusCategoryInput @spread): Category
+        @can(ability: "category.edit", model: "App\\Models\\Category")
+        @field(resolver: "CategoryMutator@status")
+
+    importCategories(input: ImportCategoriesInput @spread): [Category]
+        @can(ability: "category.create", model: "App\\Models\\Category")
+        @field(resolver: "CategoryMutator@import")
+}
+
+extend type Query {
+    categories(
+        search: String @where(operator: "like", key: "name")
+        type: String
+        sort: String
+        field: String
+        status: Int
+        store_slug: String
+        paginate: Int
+        store_slug: String
+    ): Json
+    @paginate(resolver: "App\\GraphQL\\Queries\\CategoryQuery@index" defaultCount:15)
+    category(id: Int @eq): Category @find
+}

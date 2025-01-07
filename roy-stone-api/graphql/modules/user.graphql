@@ -1,0 +1,118 @@
+type User {
+    id: Int
+    name: String
+    email: String
+    country_code: String
+    phone: String
+    status: Int
+    role_id: Int
+    role: Role
+    order_amount: Float
+    orders_count: Int
+    profile_image_id: Int
+    permission: [Permission]
+    address: [Address]
+    wallet: Wallet
+    point: Point
+    store: Store
+    vendor_wallet: SelfVendorWallet
+    profile_image: Attachment
+    payment_account: PaymentAccount
+    system_reserve:Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateUserInput {
+    name: String
+    email: String
+    country_code: String
+    phone: String
+    password: String
+    password_confirmation: String
+    role_id: Int
+    status: Int
+}
+
+input UpdateUserInput {
+    id: Int
+    name: String
+    country_code: String
+    phone: String
+    role_id: Int
+    status: Int
+    email: String
+}
+
+input ChangePasswordInput {
+    current_password: String
+    password: String
+    password_confirmation: String
+}
+
+input DeleteUserInput {
+    id: Int
+}
+
+input DeleteAllUsersInput {
+    ids: [Int]
+}
+
+input StatusUserInput {
+    id: Int
+    status: Int
+}
+
+input ImportUsersInput {
+    users: Upload
+}
+
+type UserPayload {
+    access_token: String
+    permissions: [String]
+    success: Boolean
+    message: String
+}
+
+extend type Mutation {
+    createUser(input: CreateUserInput @spread): User
+        @can(ability: "user.create")
+        @field(resolver: "UserMutator@store")
+
+    updateUser(input: UpdateUserInput @spread): User
+        @can(ability: "user.edit")
+        @field(resolver: "UserMutator@update")
+
+    deleteUser(input: DeleteUserInput @spread): Boolean!
+        @can(ability: "user.destroy", model: "App\\Models\\User")
+        @field(resolver: "UserMutator@destroy")
+
+    deleteAllUsers(input: DeleteAllUsersInput @spread): Boolean!
+        @can(ability: "user.destroy", model: "App\\Models\\User")
+        @field(resolver: "UserMutator@deleteAll")
+
+    statusUser(input: StatusUserInput @spread): User
+        @can(ability: "user.edit", model: "App\\Models\\User")
+        @field(resolver: "UserMutator@status")
+
+    changePassword(input: ChangePasswordInput @spread): Boolean!
+        @field(resolver: "UserMutator@changePassword")
+
+    importUsers(input: ImportUsersInput @spread): [User]
+        @can(ability: "user.create", model: "App\\Models\\User")
+        @field(resolver: "UserMutator@import")
+}
+
+extend type Query @guard {
+    users(
+        search: String
+        role: String
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [User!]!  @paginate(resolver: "App\\GraphQL\\Queries\\UserQuery@index" defaultCount:15)
+    @can(ability: "user.index", model: "App\\Models\\User")
+    user(id: Int @eq): User @can(ability: "user.index") @find
+    getUsersExportUrl: String @field(resolver: "App\\GraphQL\\Queries\\UserQuery@getUsersExportUrl") @guard
+}

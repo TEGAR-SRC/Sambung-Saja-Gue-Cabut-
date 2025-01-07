@@ -1,0 +1,79 @@
+{
+  "name": "multikart-admin-res",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^17.0.0",
+    "@angular/cdk": "^17.3.5",
+    "@angular/common": "^17.0.0",
+    "@angular/compiler": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@angular/forms": "^17.0.0",
+    "@angular/platform-browser": "^17.0.0",
+    "@angular/platform-browser-dynamic": "^17.0.0",
+    "@angular/router": "^17.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "@ngx-loading-bar/core": "^6.0.2",
+    "@ngx-loading-bar/http-client": "^6.0.2",
+    "@ngx-loading-bar/router": "^6.0.2",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
+    "@ngxs/storage-plugin": "^3.8.2",
+    "@ngxs/store": "^3.8.2",
+    "bootstrap": "^5.3.3",
+    "feather-icons": "^4.29.1",
+    "ng-apexcharts": "1.10.0",
+    "ng-recaptcha": "^13.2.1",
+    "ng-select2-component": "^10.0.0",
+    "ngx-dropzone": "^3.1.0",
+    "ngx-editor": "^16.0.1",
+    "ngx-owl-carousel-o": "^17.0.0",
+    "ngx-toastr": "^18.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.2"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.0.4",
+    "@angular/cli": "^17.0.4",
+    "@angular/compiler-cli": "^17.0.0",
+    "@types/feather-icons": "^4.29.4",
+    "@types/jasmine": "~5.1.0",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.2.2"
+  },
+  "overrides": {
+    "@ngxs/devtools-plugin": {
+      "@angular/core": "$@angular/core"
+    },
+    "@ngxs/form-plugin": {
+      "@angular/core": "$@angular/core",
+      "@angular/forms": "$@angular/forms"
+    },
+    "@ngxs/logger-plugin": {
+      "@angular/core": "$@angular/core"
+    },
+    "@ngxs/router-plugin": {
+      "@angular/core": "$@angular/core",
+      "@angular/router": "$@angular/router"
+    },
+    "@ngxs/storage-plugin": {
+      "@angular/core": "$@angular/core"
+    },
+    "@ngxs/store": {
+      "@angular/core": "$@angular/core"
+    }
+  }
+}

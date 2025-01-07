@@ -1,0 +1,55 @@
+type Cart {
+    items:[CartItems]
+    total: Float
+}
+
+type CartItems {
+    id: Int
+    consumer_id: Int
+    product_id: Int
+    variation_id: Int
+    quantity: Int
+    sub_total: Float
+    product:Product
+    variation:Variation
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input AddToCartInput {
+    id: Int
+    product_id: Int
+    variation_id: Int
+    quantity: Int
+}
+
+input UpdateCartInput {
+    id: Int
+    product_id: Int
+    variation_id: Int
+    quantity: Int
+}
+
+input ReplaceCartInput {
+    id: Int
+    product_id: Int
+    variation_id: Int
+    quantity: Int
+}
+
+input DeleteCartInput {
+    id: Int
+}
+
+extend type Query @guard {
+   cart: Cart! @field(resolver: "App\\GraphQL\\Queries\\CartQuery@index" defaultCount:15)
+}
+
+extend type Mutation @guard {
+    addToCart(input: AddToCartInput @spread): Cart @field(resolver: "CartMutator@store")
+    syncCart(input: [AddToCartInput]): [Cart] @field(resolver: "CartMutator@sync")
+    replaceCart(input: ReplaceCartInput! @spread): Cart @field(resolver: "CartMutator@replace")
+    updateCart(input: UpdateCartInput @spread): Cart @field(resolver: "CartMutator@update")
+    deleteCart(input: DeleteCartInput @spread): Boolean @field(resolver: "CartMutator@destroy")
+    clearCart: Boolean @field(resolver: "CartMutator@clear")
+}

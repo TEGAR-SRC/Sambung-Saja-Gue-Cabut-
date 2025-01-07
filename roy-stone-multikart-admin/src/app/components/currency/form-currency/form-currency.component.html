@@ -1,0 +1,67 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+
+  <app-form-fields [label]="'code'" [for]="'code'" [required]="true">
+    <select2 class="custom-select"
+      [placeholder]="'select_currency_code' | translate "
+      [data]="currency_dropdown?.length ? currency_dropdown : []"
+      formControlName="code"
+      (update)="changeCurrency($event)">
+    </select2>
+    @if(form.controls['code'].touched && form.controls['code'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'currency_code_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'symbol'" [for]="'symbol'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{ 'enter_symbol' | translate }}" name="symbol" formControlName="symbol">
+    @if(form.controls['symbol'].touched && form.controls['symbol'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'currency_symbol_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'decimal_number'" [for]="'no_of_decimal'" [required]="false">
+    <input class="form-control" type="number" placeholder="{{ 'enter_number_of_decimal' | translate }}" name="no_of_decimal" formControlName="no_of_decimal">
+  </app-form-fields>
+
+  <app-form-fields [label]="'exchange_rate'" [for]="'exchange_rate'" [required]="true">
+    <input class="form-control" type="number" placeholder="{{'enter_exchange_rate' | translate}}" name="exchange_rate" formControlName="exchange_rate">
+    <p class="help-text">{{ '*Specify the exchange rate for converting other currencies to US Dollars (USD).' }}</p>
+
+    @if(form.controls['exchange_rate'].touched && form.controls['exchange_rate'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'exchange_rate_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'symbol_position'" [for]="'symbol_position'" [required]="true">
+    <select2 class="custom-select"
+      [placeholder]="'select_position' | translate"
+      [data]="symbolPosition?.length ? symbolPosition : []"
+      formControlName="symbol_position">
+    </select2>
+
+    @if(form?.controls['symbol_position']?.touched && form?.controls['symbol_position']?.errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'symbol_position_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'status'" [for]="'status'" [required]="false">
+    <div class="form-check form-switch ps-0">
+      <label class="switch">
+        <input type="checkbox" id="status" formControlName="status">
+        <span class="switch-state"></span>
+      </label>
+    </div>
+  </app-form-fields>
+
+  <app-button [id]="'currency_btn'">
+    {{ (type == 'create' ? 'save_currency' : 'update_currency') | translate }}
+  </app-button>
+</form>

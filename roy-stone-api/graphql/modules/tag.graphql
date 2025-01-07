@@ -1,0 +1,83 @@
+type Tag {
+    id: Int
+    name: String
+    description: String
+    slug: String
+    status: Int
+    type: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateTagInput {
+    name: String!
+    slug: String
+    description: String
+    type: String
+    status: Int
+}
+
+input UpdateTagInput {
+    id: Int!
+    name: String!
+    slug: String
+    type: String
+    description: String
+    status: Int
+}
+
+input DeleteTagInput {
+    id: Int!
+}
+
+input DeleteAllTagsInput {
+    ids: [Int]
+}
+
+input StatusTagInput {
+    id: Int!
+    status: Int
+}
+
+input ImportTagsInput {
+    tags: Upload
+}
+
+extend type Mutation {
+    createTag(input: CreateTagInput @spread): Tag
+        @can(ability: "tag.create")
+        @field(resolver: "TagMutator@store")
+
+    updateTag(input: UpdateTagInput @spread): Tag
+        @can(ability: "tag.edit")
+        @field(resolver: "TagMutator@update")
+
+    deleteTag(input: DeleteTagInput @spread): Boolean!
+        @can(ability: "tag.destroy", model: "App\\Models\\Tag")
+        @field(resolver: "TagMutator@destroy")
+
+    statusTag(input: StatusTagInput @spread): Tag
+        @can(ability: "tag.edit", model: "App\\Models\\Tag")
+        @field(resolver: "TagMutator@status")
+
+    deleteAllTags(input: DeleteAllTagsInput @spread): Boolean!
+        @can(ability: "tag.destroy", model: "Spatie\\Permission\\Models\\Role")
+        @field(resolver: "TagMutator@deleteAll")
+
+    importTags(input: ImportTagsInput @spread): [Tag]
+        @can(ability: "tag.create", model: "App\\Models\\Tag")
+        @field(resolver: "TagMutator@import")
+}
+
+extend type Query {
+    tags(
+        search: String @where(operator: "like", key: "name")
+        type: String
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [Tag!]! @paginate(resolver: "App\\GraphQL\\Queries\\TagQuery@index" defaultCount:15)
+    tag(id: Int @eq): Tag @find
+    getTagsExportUrl: String @field(resolver: "App\\GraphQL\\Queries\\TagQuery@getTagsExportUrl") @guard
+}

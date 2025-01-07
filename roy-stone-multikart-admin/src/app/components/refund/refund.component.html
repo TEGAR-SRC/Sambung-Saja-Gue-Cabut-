@@ -1,0 +1,16 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'refund'">
+
+  <app-table
+    [tableConfig]="tableConfig"
+    (tableChanged)="onTableChange($event)"
+    (action)="onActionClicked($event)">
+  </app-table>
+
+</app-page-wrapper>
+
+<app-payout-modal
+  #payoutModal
+  [label]="'refund'"
+  [action]="false"
+  (payout)="approved($event)">
+</app-payout-modal>

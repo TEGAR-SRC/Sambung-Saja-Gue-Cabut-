@@ -1,0 +1,50 @@
+@if((roleName$ | async) === 'vendor'){
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xxl-8 col-lg-7 col-sm-6">
+        <div class="pending-balance-sec card">
+          <div class="card-body">
+            <div class="wallet-sec theme-form">
+              <div class="wallet-amount w-100">
+                <div class="wallet-icon">
+                  <i class="ri-wallet-line"></i>
+                </div>
+                <div>
+                  <h2 class="fw-semibold">
+                    {{ (wallet$ | async)?.balance | currencySymbol}}
+                  </h2>
+                  <h5>{{ 'pending_balance' | translate }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-5 col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <a class="withdraw-btn" (click)="RequestModal.openModal()">
+              <div class="plus-icon">
+                <i class="ri-add-line"></i>
+              </div>
+              <h3>{{ 'send_withdraw_request' | translate }}</h3>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'withdrawal'">
+  <app-table
+    [tableConfig]="tableConfig"
+    (tableChanged)="onTableChange($event)"
+    [dateRange]="true"
+    (action)="onActionClicked($event)">
+  </app-table>
+</app-page-wrapper>
+
+<app-payout-modal #payoutModal [label]="'withdrawal'" [action]="true" (payout)="approved($event)"></app-payout-modal>
+
+<app-withdraw-request-modal #requestModal></app-withdraw-request-modal>

@@ -1,0 +1,29 @@
+<app-page-wrapper [gridClass]="'col-12'" [title]="'media_library'">
+  <div option class="selected-options" *hasPermission="'attachment.destroy'">
+    @if(images?.length){
+      <ul>
+        <li>{{ 'selected' | translate }}({{images.length ? images.length : 0}})</li>
+        <li>
+          <a href="javascript:void(0)" (click)="DeleteModal.openModal('deleteAll', [])">
+            <i class="ri-delete-bin-line"></i>
+          </a>
+        </li>
+      </ul>
+    }
+  </div>
+  <div button>
+    <a *hasPermission="'attachment.create'" (click)="MediaModal.openModal()" class="align-items-center btn btn-theme d-flex">
+      <i class="ri-add-line"></i> {{ 'add_media' | translate }}
+    </a>
+  </div>
+  <app-media-box
+    [loading]="false"
+    [selectedImages]="images"
+    [multiple]="true"
+    (setDeleteImage)="deleteImage($event)"
+    (setImage)="selectImage($event)">
+  </app-media-box>
+</app-page-wrapper>
+
+<app-media-modal [selectMedia]="false" #mediaModal></app-media-modal>
+<app-delete-modal #deleteModal (deleteItem)="onActionClicked($event.actionToPerform)"></app-delete-modal>

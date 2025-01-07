@@ -1,0 +1,22 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'orders'">
+  <div *hasPermission="'order.create'" button>
+    <a [routerLink]="['/order/create']" class="align-items-center btn btn-theme d-flex">
+      <i class="ri-add-line"></i> {{ 'add_order' | translate }}
+    </a>
+  </div>
+  <app-table [tableConfig]="tableConfig" [dateRange]="true" (tableChanged)="onTableChange($event)" (rowClicked)="view($event)" (action)="onActionClicked($event)">
+    <div advanceFilter class="show-box mb-4 d-block">
+      <ul class="order-tab-content">
+        <li [class.active]="!selectedStatus">
+          <a href="javascript:void(0)" (click)="filterOrder('')">{{ 'all' | translate}}<span>{{ (statistics$ | async)?.total_orders }}</span></a>
+        </li>
+
+        @for(status of filterPills; track status){
+          <li [class.active]="selectedStatus === status.value ? 'active' : ''" [class]="status.color">
+            <a href="javascript:void(0)" (click)="filterOrder(status.value)">{{ status.label }} <span>{{status.count}}</span></a>
+          </li>
+        }
+      </ul>
+    </div>
+  </app-table>
+</app-page-wrapper>

@@ -1,0 +1,11 @@
+<div class="home-slider fullpage full-slider">
+  @if(filteredBanners && filteredBanners.length){
+    <swiper [direction]="'vertical'" [loop]="true" [autoHeight]="true" class="height-vh" [mousewheel]="true" [allowTouchMove]="true" [scrollbar]="{ draggable: true }" [autoplay]="{ delay: 1000, disableOnInteraction: false }">
+      @for(item of filteredBanners; track item; let i = $index){
+        <ng-template [attr.data-swiper-autoplay]="2000 * (i+1)" swiperSlide>
+          <app-image-link [image]="item"></app-image-link>
+        </ng-template>
+      }
+    </swiper>
+  }
+</div>

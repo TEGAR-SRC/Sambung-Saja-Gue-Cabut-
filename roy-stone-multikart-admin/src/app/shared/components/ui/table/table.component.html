@@ -1,0 +1,221 @@
+@if(topbar){
+   <div class="show-box">
+      <div class="selection-box">
+         <label>{{ 'show' | translate }} :</label>
+         <select class="form-control" (change)="onChangeTable($event, 'paginate')">
+            @for(item of rows; track item){
+               <option [value]="item">{{item}}</option>
+            }
+         </select>
+         <label>{{ 'items_per_page' | translate }}</label>
+         @if(deleteButtonStatus){
+            <a href="javascript:void(0)" class="align-items-center btn btn-light-bg btn-sm d-flex" (click)="DeleteModal.openModal('deleteAll', selected)">
+               <i [class]="'ri-delete-bin-line'"></i> {{ 'delete' | translate }}
+            </a>
+         }
+
+         @if(duplicateButtonStatus && hasDuplicate){
+            <a href="javascript:void(0)" class="align-items-center btn btn-light-bg btn-sm d-flex" (click)="ConfirmationModal.openModal('duplicate', selected); 
+                      $event.preventDefault(); $event.stopPropagation()">
+               <i [class]="'ri-file-copy-line'"></i> {{ 'duplicate' | translate }}
+            </a>
+         }
+      </div>
+      <div class="role-search">
+         @if(dateRange){
+            <div class="dp-hidden position-absolute custom-dp-dropdown">
+               <div class="input-group">
+                  <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" [footerTemplate]="footerTemplate" id="start_date" tabindex="-1" readonly />
+                  <ng-template #t let-date let-focused="focused">
+                     <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)" [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+                        {{ date.day }}
+                     </span>
+                  </ng-template>
+               </div>
+            </div>
+            <div class="search-input">
+               <div class="input-group custom-dt-picker">
+                  <input #dpFromDate class="form-control" placeholder="{{'yyyy-mm-dd' | translate}}" name="dpFromDate" [value]="formatter.format(fromDate)" id="end_date" (input)="fromDate = validateInput(fromDate, dpFromDate.value)" readonly />
+                  <button class="btn btn-light-bg-secondary " (click)="datepicker.toggle()" type="button">
+                     <i class="ri-calendar-line"></i>
+                  </button>
+               </div>
+   
+               <div class="input-group custom-dt-picker">
+                  <input #dpToDate class="form-control" placeholder="{{'yyyy-mm-dd' | translate}}" name="dpToDate" [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)" readonly />
+                  <button class="btn btn-light-bg-secondary" (click)="datepicker.toggle()" type="button">
+                     <i class="ri-calendar-line"></i>
+                  </button>
+               </div>
+            </div>
+   
+            <ng-template #footerTemplate>
+               <hr class="my-0" />
+               <button class="btn btn-primary btn-sm m-2 float-start" (click)="clearDateRange(); datepicker.close()">{{"clear" | translate}}</button>
+               <button class="btn btn-secondary btn-sm m-2 float-end" (click)="datepicker.close()">{{'close' | translate}}</button>
+            </ng-template>
+         }
+         <div class="role-search product-search justify-content-end w-auto">
+            <label for="role-search" class="form-label">{{ 'search' | translate }} :</label>
+            <input type="search" class="form-control" id="role-search" [formControl]="term">
+         </div>
+         <ng-content select="[filter]"></ng-content>
+      </div>
+   </div>
+}
+<ng-content select="[advanceFilter]"></ng-content>
+<div>
+   <div class="table-responsive datatable-wrapper border-table">
+      @if((loadingStatus$ | async) && loading){
+         <div class="table-loader">
+            <span>{{ 'please_wait' | translate }}...</span>
+         </div>
+      }
+      <table class="table all-package theme-table no-footer">
+         <thead>
+            <tr>
+               @if(hasCheckbox){
+                  <th class="sm-width">
+                     <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input checkbox_animated" id="table-checkbox" [checked]="(tableConfig?.data?.length && selected?.length == tableConfig?.data?.length) || false" (change)="checkUncheckAll($event)">
+                        <label class="custom-control-label" for="table-checkbox">&nbsp;</label>
+                     </div>
+                  </th>
+               }
+
+               @for(columnHead of tableConfig?.columns; track columnHead){
+                  @if(!columnHead?.canAllow || (columnHead?.canAllow?.length && role && columnHead?.canAllow?.includes(role))){
+                     <th [ngClass]="{'sm-width': columnHead?.type == 'no' || columnHead?.type == 'image'}" [class.cursor-pointer]="columnHead?.sortable" (click)="columnHead?.sortable && onChangeTable(columnHead, 'sort')">
+                        {{ columnHead?.title | translate }}
+                        @if(columnHead?.sortable){
+                           <div class="filter-arrow">
+                              <div>
+                                 @if(columnHead?.sort_direction && columnHead?.sort_direction === 'desc'){
+                                    <i class="ri-arrow-up-s-fill"></i>
+                                 }
+      
+                                 @if(columnHead?.sort_direction && columnHead?.sort_direction === 'asc'){
+                                    <i class="ri-arrow-down-s-fill"></i>
+                                 }
+                              </div>
+                           </div>
+                        }
+                     </th>
+                  }
+               }
+
+               @if(tableConfig?.rowActions?.length){
+                  <th>{{ 'actions' | translate }}</th>
+               }
+            </tr>
+         </thead>
+         <tbody>
+            @for(columnData of tableConfig?.data; track columnData; let i = $index){
+               <tr>
+                  @if(hasCheckbox){
+                     <td class="sm-width">
+                        <div class="custom-control custom-checkbox">
+                           <input type="checkbox" class="custom-control-input checkbox_animated" id="table-checkbox-item-{{columnData.id}}" [disabled]="columnData['system_reserve'] == '1'" [value]="columnData?.id" [checked]="columnData['system_reserve'] != '1' && selected?.length && selected.includes(columnData?.id)" (change)="onItemChecked($event)">
+                           <label class="custom-control-label" for="table-checkbox-item-{{columnData.id}}">&nbsp;</label>
+                        </div>
+                     </td>
+                  }
+
+                  @for(columnHead of tableConfig?.columns; track columnHead){
+                     @if(!columnHead?.canAllow || (columnHead?.canAllow?.length && role && columnHead?.canAllow?.includes(role))){
+                        <td [ngClass]="{'sm-width': columnHead?.type == 'no' || columnHead?.type == 'image'}" class="cursor-pointer" (click)="columnHead.type != 'switch' && columnData['system_reserve'] != '1' ? onRowClicked(columnData) : true">
+                           @if(columnHead?.type && columnHead?.type == 'no'){
+                              {{ i + 1 + (tableData['page'] - 1) * tableData['paginate'] }}
+                           }
+                           @else if(columnHead?.type && columnHead?.type == 'image'){
+                              @if(columnData[columnHead?.dataField.toString()]){
+                                 <img [class]="columnHead?.class" [src]="columnData[columnHead?.dataField.toString()]?.original_url" alt="image">
+                              }
+                              @else if(columnHead?.placeholder){
+                                 <img [class]="columnHead?.class" [src]="columnHead?.placeholder" alt="placeholder">
+                              }
+                              @else {
+                                 <div class="user-round">
+                                    <h4>{{ columnData?.[columnHead?.key ? columnHead?.key?.toString() : 'name'].charAt(0).toString().toUpperCase() || 'F' }}</h4>
+                                 </div>
+                              }
+                           }
+                           @else if(columnHead?.type && columnHead?.type == 'switch'){
+                              <div class="form-check form-switch ps-0">
+                                 <label class="switch switch-sm">
+                                    <input type="checkbox" id="status-{{i}}" [disabled]="columnData['system_reserve'] == '1' || !hasPermission(['edit'])" [value]="columnData[columnHead?.dataField.toString()] == '1' ? 0 : 1" [checked]="columnData[columnHead?.dataField.toString()] == '1' ? true : false" (click)="ConfirmationModal.openModal(columnHead?.dataField.toString(), columnData, 
+                                                                                     columnData[columnHead?.dataField.toString()] == '1' ? 0 : 1); 
+                                                                                     $event.preventDefault(); $event.stopPropagation()">
+                                    <span class="switch-state" [class.disabled]="columnData['system_reserve'] == '1' || !hasPermission(['edit'])"></span>
+                                 </label>
+                              </div>
+                           }
+                           @else if(columnHead?.type && columnHead?.type == 'price'){
+                              {{ columnData[columnHead?.dataField] | currencySymbol }}
+                           }
+                           @else if (columnHead?.type && columnHead?.type == 'date') {
+                              {{ columnData[columnHead?.dataField.toString()] | date: columnHead?.date_format ? columnHead?.date_format : 'dd MMM yyyy hh:mm:a' }}
+                           }
+                           @else if (columnHead?.type && columnHead?.type == 'rating') {
+                              <ngb-rating class="rating-sec" [rate]="columnData[columnHead?.dataField]"></ngb-rating>
+                           }
+                           @else {
+                              <div [innerHtml]="getNestedPropertyValue(columnHead?.dataField.toString(), columnData)"></div>
+                           }
+                        </td>
+                     }
+                  }
+
+                  @if(tableConfig?.rowActions?.length){
+                     <td>
+                        <ul id="actions">
+                           @if(columnData['system_reserve'] == '1'){
+                              <a href="javascript:void(0)">
+                                 <i [class]="'ri-lock-line'"></i>
+                              </a>
+                           }@else {
+                              @for(action of tableConfig?.rowActions; track action){
+                                 @if((action?.conditional && isConditionMet(action?.conditional, columnData)) || !action?.conditional){
+                                    <li>
+                                       <a href="javascript:void(0)" (click)="action?.actionToPerform == 'delete' 
+                                                          ? DeleteModal.openModal('delete', columnData) 
+                                                          : onActionClicked(action?.actionToPerform.toString(), columnData)">
+                                          <i [class]="action?.icon"></i>
+                                       </a>
+                                    </li>
+                                 }
+                              }
+                           }
+                        </ul>
+                     </td>
+                  }
+               </tr>
+            }
+
+            @if(!tableConfig?.data?.length){
+               <tr>
+                  <td [attr.colspan]="(hasCheckbox ? (tableConfig?.rowActions?.length ? (tableConfig?.columns?.length + 1) : tableConfig?.columns?.length) + 1 
+                                                       : (tableConfig?.rowActions?.length ? (tableConfig?.columns?.length + 1) : tableConfig?.columns?.length)) - (checkIsCanAllow() ? 1 : 0)">
+                     <div class="no-data-added">
+                        <h4>{{ 'no_records_found' | translate }}</h4>
+                     </div>
+                  </td>
+               </tr>
+            }
+         </tbody>
+      </table>
+   </div>
+</div>
+
+@if(pagination){
+   <nav class="custom-pagination">
+      <app-pagination [total]="tableConfig?.total" [currentPage]="tableData['page']" [pageSize]="tableData['paginate']" (setPage)="onChangeTable($event, 'page')">
+      </app-pagination>
+   </nav>
+}
+
+<app-delete-modal #deleteModal (deleteItem)="onActionClicked($event?.actionToPerform, $event?.data)">
+</app-delete-modal>
+
+<app-confirmation-modal #confirmationModal (confirmed)="onActionClicked($event?.actionToPerform, $event?.data, $event?.value)">
+</app-confirmation-modal>

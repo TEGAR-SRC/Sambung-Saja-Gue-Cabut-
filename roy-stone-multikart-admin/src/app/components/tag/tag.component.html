@@ -1,0 +1,28 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'tags'">
+  <div class="d-flex flex-wrap gap-2" button *hasPermission="'tag.create'">
+    <a href="javascript:void(0)" class="align-items-center btn btn-light-bg me-2" (click)="CSVModal.openModal()">
+      <i class="ri-upload-2-line"></i> {{ 'import' | translate }}
+    </a>
+
+    @if(tagType == 'product'){
+      <a href="javascript:void(0)" class="align-items-center btn btn-light-bg me-2" (click)="export()">
+        <i class="ri-download-2-line"></i> {{ 'export' | translate }}
+      </a>
+    }
+    <a [routerLink]="[tagType == 'post' ? '/blog/tag/create' :'/tag/create']" class="align-items-center btn btn-theme d-flex">
+      <i class="ri-add-line"></i> {{ 'add_tag' | translate }}
+    </a>
+  </div>
+  <app-table
+    [tableConfig]="tableConfig"
+    [hasCheckbox]="true"
+    (tableChanged)="onTableChange($event)"
+    (rowClicked)="edit($event)"
+    (action)="onActionClicked($event)">
+  </app-table>
+</app-page-wrapper>
+
+<app-import-csv-modal
+  [module]="'tag'"
+  #csvModal>
+</app-import-csv-modal>

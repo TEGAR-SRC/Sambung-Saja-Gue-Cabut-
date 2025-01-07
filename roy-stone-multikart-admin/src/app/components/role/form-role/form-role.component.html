@@ -1,0 +1,23 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="row">
+    <app-form-fields [label]="'name'" [for]="'name'" [required]="true">
+      <input class="form-control" type="text" placeholder="{{ 'enter_name' | translate }}" name="name" formControlName="name">
+      @if(form.controls['name'].touched && form.controls['name'].errors?.['required']){
+        <div class="invalid-feedback">
+          {{ 'name_is_required' | translate }}
+        </div>
+      }
+    </app-form-fields>
+    <div class="mb-3 d-flex">
+      <h4 class="form-label-title">{{ 'permissions' | translate }} <span class="theme-color ms-2 required-dot">*</span></h4>
+      @if(form.controls['permissions'].touched && form.controls['permissions'].invalid){
+        <div class="mt-0 ms-4 invalid-feedback">
+          {{ 'permissions_is_required' | translate }}
+        </div>
+      }
+    </div>
+    <app-permissions [selectedPermission]="permissions" (setPermissions)="setPermissions($event)">
+    </app-permissions>
+  </div>
+  <app-button [id]="'role_btn'">{{ 'save' | translate }}</app-button>
+</form>

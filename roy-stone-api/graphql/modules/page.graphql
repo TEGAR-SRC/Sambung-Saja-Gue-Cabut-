@@ -1,0 +1,82 @@
+type Page {
+    id: Int
+    title: String
+    slug: String
+    content: String
+    meta_title: String
+    meta_description: String
+    page_meta_image_id: Int
+    status: Int
+    page_meta_image: Attachment
+    created_by: User
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreatePageInput {
+    title: String
+    content: String
+    meta_title: String
+    meta_description: String
+    page_meta_image_id: Int
+    status: Int
+}
+
+input UpdatePageInput {
+    id: Int!
+    title: String
+    content: String
+    meta_title: String
+    meta_description: String
+    page_meta_image_id: Int
+    status: Int
+}
+
+input DeletePageInput {
+    id: Int!
+}
+
+input DeleteAllPagesInput {
+    ids: [Int]
+}
+
+input StatusPageInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createPage(input: CreatePageInput @spread): Page
+        @can(ability: "page.create")
+        @field(resolver: "PageMutator@store")
+
+    updatePage(input: UpdatePageInput @spread): Page
+        @can(ability: "page.edit")
+        @field(resolver: "PageMutator@update")
+
+    deletePage(input: DeletePageInput @spread): Boolean!
+        @can(ability: "page.destroy", model: "App\\Models\\Page")
+        @field(resolver: "PageMutator@destroy")
+
+    deleteAllPages(input: DeleteAllBlogsInput @spread): Boolean!
+        @can(ability: "page.destroy", model: "App\\Models\\Page")
+        @field(resolver: "PageMutator@deleteAll")
+
+    statusPage(input: StatusPageInput @spread): Page
+        @can(ability: "page.edit", model: "App\\Models\\Page")
+        @field(resolver: "PageMutator@status")
+}
+
+extend type Query {
+    pages(
+        search: String @where(operator: "like", key: "title")
+        type: String @where(operator: "like", key: "type")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [Page!]!
+    @paginate(resolver: "App\\GraphQL\\Queries\\PageQuery@index" defaultCount:15)
+    page(id: Int @eq): Page @find
+    pageBySlug(slug: String): Page @field(resolver: "App\\GraphQL\\Queries\\PageQuery@getPagesBySlug")
+}

@@ -1,0 +1,70 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+
+  <app-form-fields [label]="'attribute_name' | translate" [for]="'name'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{ 'attribute_name' | translate }}" name="name" formControlName="name">
+    @if(form.controls['name'].touched && form.controls['name'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'attribute_name_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'style'" [for]="'style'" [required]="true">
+    <select2 class="custom-select d-block"
+      [data]="variantStyle?.length ? variantStyle : []"
+      [placeholder]="'select_style' | translate"
+      formControlName="style"
+      noResultMessage="{{ 'no_data_found' | translate }}">
+    </select2>
+    <p class="help-text">{{ '*Choose the desired shape style, such as rectangle or circle. Based on your selection, variant options will be displayed on product page.' }}</p>
+  </app-form-fields>
+
+  <ng-container formArrayName='value'>
+    @for(val of valueControl.controls; track val; let index = $index){
+
+      <app-form-fields [label]="'value' | translate" [for]="'value'" [required]="true" formGroupName='{{ index }}'>
+        <div class="row g-sm-4 g-3 align-items-center">
+          <div [class]="form.get('style').value === 'color' ? 'col-sm-7 col-9': 'col-sm-10 col-9'">
+            <input class="form-control" type="text" formControlName="value" placeholder="{{ 'attribute_value' | translate }}">
+            @if(val.get('value').touched && val.get('value').errors?.['required']){
+              <div class="invalid-feedback">
+                {{ 'value_is_required' | translate }}
+              </div>
+            }
+          </div>
+
+          @if(form.get('style').value === 'color'){
+            <div class="col-sm-3 col-9">
+              <div class="color-box">
+                <input class="form-control" type="color" formControlName="hex_color">
+                <h6>{{ val.get('hex_color')?.value }}</h6>
+              </div>
+            </div>
+          }
+
+          @if(valueControl?.controls?.length > 1){
+            <div class="col-sm-2 col-3">
+              <a class="invalid-feedback h-100 w-100 cursor-pointer" (click)="remove(index)">{{ 'remove' | translate }}</a>
+            </div>
+          }
+        </div>
+      </app-form-fields>
+    }
+  </ng-container>
+
+  <div class="row">
+
+    <div class="col-2 offset-sm-2">
+      <app-button [id]="'add_value_btn'" [class]="'btn btn-theme'" [spinner]="false" (click)="add($event)">
+        {{ 'add_value' | translate }}
+      </app-button>
+    </div>
+  </div>
+
+  <div class="border-up-class mt-4">
+    <app-button [id]="'attribute_btn'">
+      {{ (type == 'create' ? 'save_attribute' : 'update_attribute') | translate}}
+    </app-button>
+  </div>
+
+</form>

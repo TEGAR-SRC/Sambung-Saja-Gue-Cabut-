@@ -1,0 +1,17 @@
+<li>
+   @if(showImage){
+      <div class="image">
+         <img class="img-fluid selection-image" [src]="data?.category_icon ? data?.category_icon.original_url : 'assets/images/category.png'" />
+      </div>
+   }
+   {{ data[key] }}
+   <a href="javascript:void(0)" class="select-btn" [class.selected]="selectedPillIds.includes(data.id) || parentId.includes(data.id)" (click)="select(data)">
+      {{ selectedPillIds.includes(data.id) ? 'Selected' : 'Select' }}
+   </a>
+
+   @if(data[subArrayKey]?.length){
+      <a href="javascript:void(0)" class="right-arrow" (click)="onArrowClick($event, data)">
+         <i class="ri-arrow-right-s-line"></i>
+      </a>
+   }
+</li>

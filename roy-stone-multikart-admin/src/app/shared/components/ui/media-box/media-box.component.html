@@ -1,0 +1,59 @@
+<div class="select-top-panel">
+   <div>
+      <input type="text" class="form-control" placeholder="{{ 'search_your_files' | translate }}" [formControl]="term">
+   </div>
+   <select class="form-select" (change)="onMediaChange($event)">
+      <option value="">{{ 'sort_by_desc' | translate }}</option>
+      <option value="newest">{{ 'sort_by_newest' | translate }}</option>
+      <option value="oldest">{{ 'sort_by_oldest' | translate }}</option>
+      <option value="smallest">{{ 'sort_by_smallest' | translate }}</option>
+      <option value="largest">{{ 'sort_by_largest' | translate }}</option>
+   </select>
+</div>
+<div class="content-section select-file-section py-0 ratio2_3 custom-box-loader">
+   @if(loading){
+   <div class="box-loader">
+      <app-loader [loaderClass]="'custom-loader-wrapper'"></app-loader>
+   </div>
+   }@else {
+   @if((attachment$ | async)?.data?.length){
+   <div
+      class="row row-cols-xxl-6 row-cols-xl-5 row-cols-lg-4 row-cols-sm-3 row-cols-2 g-sm-3 g-2 media-library-sec ratio_square">
+      @for(attachment of (attachment$ | async)?.data; track attachment; let i = $index;){
+      <div>
+         <div class="library-box">
+            <input type="{{ !multiple ? 'radio' : 'checkbox' }}"
+               [checked]="selected?.includes(attachment.id) || selected?.includes(attachment.original_url) ? true : false"
+               name="attachment" [value]="attachment?.id" class="media-checkbox" id="attachment-{{attachment?.id}}"
+               (change)="selectImage($event, attachment, url)" />
+            <label for="attachment-{{attachment?.id}}">
+               <div class="ratio ratio-1x1">
+                  @if(attachment.mime_type && attachment.mime_type.startsWith('image')){
+                  <img [src]="attachment.original_url" class="img-fluid" alt="attachment">
+                  }@else {
+                  <img [src]="getMimeTypeImage(attachment.mime_type)" class="img-fluid" alt="attachment">
+                  }
+               </div>
+            </label>
+         </div>
+      </div>
+      }
+   </div>
+   }
+   }
+
+   @if((attachment$ | async)?.data?.length){
+   <nav class="custom-pagination">
+      <app-pagination [total]="totalItems" [currentPage]="filter['page']" [pageSize]="filter['paginate']"
+         (setPage)="setPaginate($event)">
+      </app-pagination>
+   </nav>
+   }
+
+   @if(!(attachment$ | async)?.data?.length && !loading){
+   <app-no-data [image]="'assets/svg/no-media.png'" [text]="'No Media Found'">
+   </app-no-data>
+   }
+</div>
+<app-delete-modal #deleteModal (deleteItem)="onActionClicked($event.actionToPerform,$event.data)">
+</app-delete-modal>

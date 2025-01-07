@@ -1,0 +1,38 @@
+<ng-template #answersModal let-modal>
+  <div class="modal-header">
+    <h3 class="mb-1 fw-semibold">{{ 'answers' | translate }}</h3>
+    <app-button [class]="'btn btn-close'" [spinner]="false" [id]="'payout_close_btn'" (click)="modal.dismiss('Cross click')">
+      <i class="ri-close-line"></i>
+    </app-button>
+  </div>
+  <div class="modal-body qa-modal">
+    <div class="border rounded-3 mb-4 dark-border-color">
+      <table class="table all-package theme-table no-footer">
+        <tbody>
+          <tr>
+            <td class="text-start fw-semibold">{{ 'question' | translate }}</td>
+            <td class="text-start">
+              {{ qna?.question }}
+            </td>
+          </tr>
+          <tr>
+            <td class="text-start fw-semibold">{{ 'answers' | translate }}</td>
+            <td class="text-start">
+              <textarea class="form-control" placeholder="{{'enter_answers' | translate}}" [formControl]="answers"></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="button-box">
+        <app-button [class]="'btn-md fw-bold btn btn-secondary'" [id]="'close_answers_modal_btn'" (click)="modal.dismiss('cancel')">
+          {{ 'close' | translate }}
+        </app-button>
+        <app-button [class]="'btn-theme btn-md fw-bold btn'" [id]="'submit_answers_btn'" (click)="submit()">
+          {{ 'submit' | translate }}
+        </app-button>
+      </div>
+    </div>
+  </div>
+</ng-template>

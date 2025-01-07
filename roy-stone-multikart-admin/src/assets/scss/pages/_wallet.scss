@@ -1,0 +1,198 @@
+/**=====================
+    Wallet CSS start
+==========================**/
+.wallet-sec {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+
+  @media (max-width: 1511px) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
+
+  input {
+    width: 40%;
+
+    @media (max-width: 1511px) {
+      width: 100%;
+    }
+  }
+
+  .wallet-amount {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    @media (max-width: 1511px) {
+      width: auto;
+    }
+
+    h5 {
+      margin-top: 5px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 500;
+    }
+  }
+
+  .wallet-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 40px;
+      color: var(--theme-color);
+    }
+  }
+
+  .btn-sec {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+}
+
+.withdraw-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  h3 {
+    color: #555 !important;
+    font-weight: 400;
+    width: calc(100% - 50px - 15px);
+    font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320)));
+  }
+
+  .plus-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+
+    i {
+      font-size: 40px;
+      color: var(--theme-color);
+    }
+  }
+}
+
+.pending-balance-sec {
+  position: relative;
+  z-index: 1;
+
+  &:after {
+    @include pos;
+    background-image: url("../../images/withdraw-bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.1;
+  }
+}
+
+.wallet-search {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  .custom-select {
+    width: 75%;
+  }
+
+  .btn-animation {
+    width: calc(25% - 15px);
+  }
+}
+
+.vendor-wallet-table {
+  .custom-dt-picker {
+    input {
+      padding-right: 10px !important;
+      width: 130px;
+    }
+  }
+}
+
+.badge-color-list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 9px;
+
+  li {
+    width: auto;
+
+    .selection-box {
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #ddd;
+
+      body.dark-only & {
+        border-color: #404040;
+      }
+
+      input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+
+        &:checked {
+          ~label {
+            &::before {
+              width: calc(100% - 2px);
+              border: 2px solid #ececec;
+              height: calc(100% - 2px);
+            }
+          }
+        }
+      }
+
+      label {
+        width: 100%;
+        height: 100%;
+
+        &::before {
+          border: 0 solid #ececec;
+          width: 100%;
+          height: 100%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: transparent;
+          transition: all 0.08s ease-in-out;
+          @include pos;
+        }
+
+        &::after {
+          content: unset;
+        }
+      }
+    }
+  }
+}

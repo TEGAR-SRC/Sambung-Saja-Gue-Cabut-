@@ -1,0 +1,60 @@
+<div class="theme-tree-box">
+    <i class="fas fa-yin-yang"></i>
+    <input class="form-control" placeholder="{{ 'search' | translate }}" [formControl]="treeSearch">
+    @if(dataToShow?.length){
+    <ul class="tree-main-ul">
+        <li class="cursor-pointer">
+            <div>
+                <i class="tree-icon folder-icon" role="presentation"></i>
+                <span class="me-auto">{{ 'menu' | translate }}</span>
+                <app-button [class]="'btn btn-sm me-2 ms-auto btn-theme'" (click)="saveChanges()" [type]="'submit'"
+                    [spinner]="true" [id]="'update_menu'">{{'save_changes'| translate}}</app-button>
+            </div>
+            <ng-container cdkDropListGroup>
+                <ng-container *ngTemplateOutlet="renderMenuLevel; context: { $implicit: dataToShow }"></ng-container>
+            </ng-container>
+
+            <ng-template #renderMenuLevel let-items>
+                <ul cdkDropList class="menu-level" (cdkDropListDropped)="drop($event, items)">
+                    @for(node of items; track node){
+                    <li class="cursor-pointer" [class.inside-ul]="node.child && node.child.length" cdkDrag>
+                        <div>
+                            @if(node.child && node.child.length){
+                            <i class="file-icon ri-arrow-down-s-line ms-0" role="presentation"
+                                (click)="onShowChildrenNode(node)"></i>
+                            }
+                            <span [class]="node.id == id ? 'active' : ''">{{ node[displayKey] || node?.title}}</span>
+                            <div class="tree-options">
+                                <a href="javascript:void(0)" *hasPermission="'category.edit'"
+                                    [routerLink]="['/menu/edit', node?.id]">
+                                    <i class="ri-pencil-line text-success"></i>
+                                </a>
+                                <a href="javascript:void(0)" *hasPermission="'category.destroy'"
+                                    (click)="DeleteModal.openModal('delete', node)">
+                                    <i class="ri-delete-bin-7-line text-danger"></i>
+                                </a>
+                            </div>
+                            <i class="tree-icon file-icon" role="presentation" (click)="onShowChildrenNode(node)"></i>
+                        </div>
+                        <ng-container *ngIf="node.child && node.child.length && node?.show">
+                            <ng-container *ngTemplateOutlet="renderMenuLevel; context: { $implicit: node.child }">
+                            </ng-container>
+                        </ng-container>
+                    </li>
+                    }
+                </ul>
+            </ng-template>
+        </li>
+    </ul>
+    }
+</div>
+<app-no-data [class]="'no-data-added category-no-data'" [image]="'assets/svg/no-category.png'" [text]="'no_menu_found'"
+    *ngIf="!dataToShow?.length">
+</app-no-data>
+
+
+
+
+<!-- Delete Modal -->
+<app-delete-modal #deleteModal (deleteItem)="delete($event.actionToPerform,$event.data)">
+</app-delete-modal>

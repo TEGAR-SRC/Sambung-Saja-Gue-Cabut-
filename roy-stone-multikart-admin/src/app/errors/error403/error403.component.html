@@ -1,0 +1,14 @@
+<section class="error-section section-lg-space">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-xl-6 col-lg-7 m-auto">
+            <div class="error-content">
+               <img src="assets/svg/401.png" class="img-fluid blur-up lazyload" alt="error-page">
+               <h2>{{ 'access_denied' | translate }}</h2>
+               <h3 class="text-content">{{ 'access_denied_text' | translate }}</h3>
+               <a [routerLink]="['/']" class="btn btn-animation mt-4 mx-auto btn-md">{{'back_to_page' | translate}}</a>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>

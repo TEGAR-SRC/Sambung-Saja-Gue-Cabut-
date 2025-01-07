@@ -1,0 +1,63 @@
+<div class="header-wrapper m-0" [class.skeleton-header]="navServices.sidebarLoading">
+   <div class="header-logo-wrapper p-0">
+      <div class="toggle-sidebar" checked="checked">
+         <i (click)="sidebarToggle()" class="ri-apps-line status_toggle middle sidebar-toggle"></i>
+
+         @if((setting$ | async)?.general?.dark_logo_image){
+            <a [routerLink]="['/dashboard']">
+               <img [src]="(setting$ | async)?.general?.dark_logo_image?.original_url" class="img-fluid" alt="header-logo">
+            </a>
+         }@else {
+            <a [routerLink]="['/dashboard']">
+               <h2 class="">
+                  {{(setting$ | async)?.general?.site_title ? (setting$ | async)?.general?.site_title.split(' ')[0] : 'Logo Here'}}
+               </h2>
+            </a>
+         }  
+      </div>
+   </div>
+   <app-search></app-search>
+   <div class="nav-right right-header p-0">
+      <div class="header-btns d-none d-lg-flex">
+         <app-quick-view></app-quick-view>
+         <a [routerLink]="['/order/create']" class="btn btn-animation" *hasPermission="'order.create'">
+            {{ 'pos' | translate }}
+         </a>
+      </div>
+      <ul class="nav-menus">
+         <li>
+            <span class="header-search" (click)="clickHeaderOnMobile()">
+               <i class="ri-search-line"></i>
+            </span>
+         </li>
+         @if(url){
+            <li>
+               <a href="{{url}}" target="_blank" ngbTooltip="Store">
+                  <i class="ri-global-line"></i>
+               </a>
+            </li>
+         }
+         <li>
+            <a href="javascript:void(0)" class="header-fullscreen" (click)="toggleFullScreen()">
+               @if(!navServices.fullScreen){
+                  <i class="ri-fullscreen-line"></i>
+               }
+
+               @if(navServices.fullScreen){
+                  <i class="ri-fullscreen-exit-line"></i>
+               }
+            </a>
+         </li>
+         <li>
+            <app-languages></app-languages>
+         </li>
+         <li>
+            <app-notification></app-notification>
+         </li>
+         <li>
+            <app-mode></app-mode>
+         </li>
+         <app-profile></app-profile>
+      </ul>
+   </div>
+</div>

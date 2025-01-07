@@ -1,0 +1,15 @@
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+   <div class="page-header" [class.close_icon]="navServices.collapseSidebar">
+      <app-header></app-header>
+   </div>
+   <div class="page-body-wrapper">
+      <div class="sidebar-wrapper" [class.close_icon]="navServices.collapseSidebar">
+         <app-sidebar-menu-skeleton [loading]="navServices.sidebarLoading"></app-sidebar-menu-skeleton>
+         <app-sidebar></app-sidebar>
+      </div>
+      <div class="page-body">
+         <router-outlet></router-outlet>
+         <app-footer></app-footer>
+      </div>
+   </div>
+</div>

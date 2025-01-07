@@ -1,0 +1,63 @@
+type Review {
+    id: Int
+    product_id: Int
+    consumer_id: Int
+    store_id: Int
+    review_image_id: Int
+    rating: Int
+    description: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    review_image: Attachment
+    consumer:User
+    product:Product
+    store: Store
+}
+
+input CreateReviewInput {
+    product_id: Int
+    rating: Int
+    description: String
+    review_image_id: Int
+}
+
+input UpdateReviewInput {
+    id: Int!
+    rating: Int
+    description: String
+    review_image_id: Int
+}
+
+input DeleteReviewInput {
+    id: Int!
+}
+
+input DeleteAllReviewsInput {
+    ids: [Int]
+}
+
+extend type Mutation @guard {
+    createReview(input: CreateReviewInput @spread): Review
+        @field(resolver: "ReviewMutator@store")
+
+    updateReview(input: UpdateReviewInput @spread): Review
+        @field(resolver: "ReviewMutator@update")
+
+    deleteReview(input: DeleteReviewInput @spread): Boolean!
+        @field(resolver: "ReviewMutator@destroy")
+
+    deleteAllReviews(input: DeleteAllReviewsInput @spread): Boolean!
+        @field(resolver: "ReviewMutator@deleteAll")
+
+}
+
+extend type Query {
+    reviews(
+        search: String
+        sort: String
+        field: String
+        status: Int
+        product_id: Int
+        paginate: Int
+    ): [Review!]! @paginate(resolver: "App\\GraphQL\\Queries\\ReviewQuery@index" defaultCount:15)
+}

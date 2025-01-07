@@ -1,0 +1,26 @@
+<section class="coming-soon-section bg-size pt-0"
+    [ngStyle]="{'background-image': 'url(' + (setting$ | async)?.maintenance?.maintenance_image?.original_url + ')'}">
+    <div class="bg-black"></div>
+    <div class="container">
+       <div class="row">
+        <div class="col-5 offset-2">
+            <div class="coming-box">
+                <div>
+                    <div class="coming-title">
+                        <h2>{{ (setting$ | async)?.maintenance?.title }}</h2>
+                    </div>
+                    <p class="coming-text">
+                        {{ (setting$ | async)?.maintenance?.description }}
+                    </p>
+                    <div>
+                        <app-sale-timer [startDate]="(setting$ | async)?.maintenance?.start_date!"
+                            [endDate]="(setting$ | async)?.maintenance?.end_date!"
+                            *ngIf="(setting$ | async)?.maintenance?.start_date && (setting$ | async)?.maintenance?.end_date">
+                        </app-sale-timer>
+                    </div>
+                </div>
+            </div>
+        </div>
+       </div>
+    </div>
+</section>

@@ -1,0 +1,14 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'blog'">
+  <div *hasPermission="'blog.create'" button>
+    <a [routerLink]="['/blog/create']" class="align-items-center btn btn-theme d-flex">
+      <i class="ri-add-line"></i> {{ 'add_blog' | translate }}
+    </a>
+  </div>
+  <app-table
+    [tableConfig]="tableConfig"
+    [hasCheckbox]="true"
+    (tableChanged)="onTableChange($event)"
+    (rowClicked)="edit($event)"
+    (action)="onActionClicked($event)">
+  </app-table>
+</app-page-wrapper>

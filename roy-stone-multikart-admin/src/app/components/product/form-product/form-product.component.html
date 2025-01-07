@@ -1,0 +1,1232 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit(true)">
+  <div class="vertical-tabs">
+    <div class="row">
+      <div class="col-xl-3 col-lg-4">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" orientation="vertical">
+          <li ngbNavItem="general" id="general" [class.is-invalid]="tabError.includes('general')">
+            <a ngbNavLink><i class="ri-settings-line"></i>{{ 'general' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="general">
+                @if(type == 'create'){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'product_type'" [for]="'product_type'" [required]="true">
+                    <select2 class="custom-select"
+                      [placeholder]="'select_product_type' | translate"
+                      [data]="mainProductType?.length ? mainProductType : []"
+                      formControlName="product_type"
+                      noResultMessage="{{ 'no_data_found' | translate }}"
+                      id="product_type">
+                    </select2>
+                    @if(form.controls['product_type'].touched && form.controls['product_type'].errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'product_type_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                }
+
+                @if((setting$ | async)?.activation?.multivendor && ((user$ | async)?.role?.name === 'admin')){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'store'" [for]="'store'" [required]="true">
+                    <select2 class="custom-select"
+                      [placeholder]="'select_store' | translate"
+                      [data]="(store$ | async)?.length ? (store$ | async) : []"
+                      formControlName="store_id"
+                      noResultMessage="{{ 'no_data_found' | translate }}"
+                      id="store_id"
+                      resettable>
+                    </select2>
+                    @if(form.controls['store_id'].touched && form.controls['store_id'].errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'store_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                }
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'name'" [for]="'name'" [required]="true">
+                  <input class="form-control" id="name" type="text" placeholder="{{ 'enter_product_name' | translate }}" formControlName="name">
+                  @if(form.controls['name'].touched && form.controls['name'].errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'name_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'short_description'" [for]="'short_description'" [required]="true">
+                  <textarea class="form-control" id="sort_description" placeholder="{{ 'enter_short_description' | translate }}" rows="3" formControlName="short_description"></textarea>
+                  <p class="help-text">{{ '*Maximum length should be 300 characters.' }}</p>
+                  @if(form.controls['short_description'].touched && form.controls['short_description'].errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'short_description_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'description'" [for]="'description'" [required]="true">
+                  <div class="custom-editor editor-checkbox">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" id="ckcheck" type="checkbox" name="isCodeEditor" [(ngModel)]="isCodeEditor" [ngModelOptions]="{standalone: true}">
+                      <label for="ckcheck" class="cursor-pointer">
+                        <span class="edit">
+                          <i class="ri-edit-box-line"></i>
+                        </span>
+                        <span class="code">
+                          <i class="ri-code-s-slash-line"></i>
+                        </span>
+                      </label>
+                    </div>
+                    <div [ngClass]="!isCodeEditor ? 'd-none' : 'd-block'">
+                      <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+                      <ngx-editor [editor]="editor" [placeholder]="'Type here...'" formControlName="description" [(ngModel)]="html" (ngModelChange)="getData($event)"></ngx-editor>
+                    </div>
+                    <div class="editor-textarea" [ngClass]="isCodeEditor ? 'd-none' : 'd-block'">
+                      <textarea class="form-control" id="sort_description" placeholder="{{ 'enter_html_content' | translate }}" rows="3" [formControl]="textArea" (keyup)="getText($event)"></textarea>
+                      <p class="mt-2">*{{"only_accept_html_tags" | translate}}</p>
+                    </div>
+                    @if(form.controls['description'].touched && form.controls['description'].errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'description_is_required' | translate }}
+                      </div>
+                    }
+                  </div>
+                </app-form-fields>
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'tax'" [for]="'tax'" [required]="true">
+                  <select2 class="custom-select"
+                    [placeholder]="'select_tax' | translate "
+                    [data]="(tax$ | async)?.length ? (tax$ | async) : []"
+                    formControlName="tax_id"
+                    [id]="'tax_id'"
+                    noResultMessage="{{ 'no_data_found' | translate }}"
+                    resettable>
+                  </select2>
+                  @if(form.controls['tax_id'].touched && form.controls['tax_id'].errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'tax_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="images" id="images" [class.is-invalid]="tabError.includes('images')">
+            <a ngbNavLink><i class="ri-image-line"></i>{{ 'product_images' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="images">
+                <app-form-fields
+                  [labelClass]="'form-label-title col-sm-3 mb-0'"
+                  [gridClass]="'col-sm-9'"
+                  [label]="'thumbnail'"
+                  [for]="'product_thumbnail_id'"
+                  [required]="false">
+
+                  <app-image-upload
+                    [multipleImage]="false"
+                    [accept]="[mediaConfig.image]"
+                    [image]="(product$ | async)?.product_thumbnail"
+                    [helpText]="'*Upload image size 600x600px recommended'"
+                    (selectedFiles)="selectThumbnail($event)">
+                  </app-image-upload>
+
+                </app-form-fields>
+
+                <app-form-fields
+                  [labelClass]="'form-label-title col-sm-3 mb-0'"
+                  [gridClass]="'col-sm-9'"
+                  [label]="'images'"
+                  [for]="'product_galleries_id'"
+                  [required]="false">
+
+                  <app-image-upload
+                    [multipleImage]="true"
+                    [accept]="[mediaConfig.image, mediaConfig.video, mediaConfig.audio]"
+                    [images]="(product$ | async)?.product_galleries"
+                    [helpText]="'*Upload image size 600x600px recommended'"
+                    (selectedFiles)="selectImages($event)">
+                  </app-image-upload>
+
+                </app-form-fields>
+
+                @if(form.controls['product_type']?.value != 'digital'){
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'size_chart'"
+                    [for]="'size_chart_image_id'"
+                    [required]="false">
+
+                    <app-image-upload
+                      [accept]="[mediaConfig.image]"
+                      [multipleImage]="false" [image]="(product$ | async)?.size_chart_image"
+                      [helpText]="'*Upload an image showcasing the size chart tailored for fashion products. A table format image is suggested for easy reference.'"
+                      (selectedFiles)="selectSizeImage($event)">
+                    </app-image-upload>
+
+                  </app-form-fields>
+                }
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'watermark'" [for]="'watermark'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="watermark" formControlName="watermark">
+                      <span class="switch-state"></span>
+                    </label>
+                    <p class="help-text">{{ '*Enabling this setting will apply a watermark to images' }}</p>
+                  </div>
+                </app-form-fields>
+
+                @if(form.controls['watermark']?.value){
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'watermark_position'"
+                    [for]="'watermark_postion'"
+                     [required]="true">
+
+                    <select2 class="custom-select"
+                      [placeholder]="'select_watermark_position' | translate"
+                      [data]="waterMakrPosition?.length ? waterMakrPosition : []"
+                      formControlName="watermark_position"
+                      noResultMessage="{{ 'no_data_found' | translate }}"
+                      id="watermark_position">
+                    </select2>
+
+                    @if(form.controls['watermark_position'].touched && form.controls['watermark_position'].errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'watermark_position_is_required' | translate }}
+                      </div>
+                    }
+
+                  </app-form-fields>
+
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'Watermark_image'"
+                    [for]="'Watermark_image'"
+                    [required]="true">
+
+                    <app-image-upload
+                      [multipleImage]="false"
+                      [accept]="[mediaConfig.image]"
+                      [image]="(product$ | async)?.watermark_image"
+                      (selectedFiles)="selectWatermarkImage($event)"
+                      [helpText]="'*Upload image size 180x50px recommended'">
+                    </app-image-upload>
+
+                    @if(form.controls['watermark_image_id'].touched && form.controls['watermark_image_id'].errors?.['required']){
+                      <div class="invalid-feedback" id='watermark_image_id'>
+                        {{ 'watermark_image_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                }
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="inventory" id="inventory" [class.is-invalid]="tabError.includes('inventory')">
+            <a ngbNavLink><i class="ri-file-list-line"></i>{{ 'inventory' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="inventory">
+
+                @if(form.controls['product_type']?.value != 'external'){
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'type'"
+                    [for]="'type'"
+                    [required]="true">
+
+                    <select2 class="custom-select"
+                      [placeholder]="'select_type' | translate"
+                      [data]="productType?.length ? productType : []"
+                      noResultMessage="{{ 'no_data_found' | translate }}"
+                      formControlName="type">
+                    </select2>
+
+                    @if(form.controls['type'].touched && form.controls['type'].errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'type_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                }
+
+                @if(form.controls['product_type']?.value == 'external'){
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'external_url'"
+                    [for]="'external_url'"
+                    [required]="true">
+                    <input class="form-control" id="external_url" type="url" placeholder="{{ 'enter_external_url' | translate }}" formControlName="external_url">
+
+                    @if(form.controls['external_url'].touched && form.controls['external_url'].errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'external_url_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'external_button_text'"
+                    [for]="'external_button_text'"
+                    [required]="false">
+
+                    <input class="form-control" id="external_button_text" type="text" placeholder="{{ 'enter_external_button_text' | translate }}" formControlName="external_button_text">
+
+                  </app-form-fields>
+                }
+
+                <app-form-fields
+                  [labelClass]="'form-label-title col-sm-3 mb-0'"
+                  [gridClass]="'col-sm-9'"
+                  [label]="'stock_status'"
+                  [for]="'stock_status'"
+                  [required]="true">
+
+                  <select2 class="custom-select"
+                    [placeholder]="'select_stock_status' | translate"
+                    [data]="stocks?.length ? stocks : []"
+                    noResultMessage="{{ 'no_data_found' | translate }}"
+                    formControlName="stock_status">
+                  </select2>
+
+                  @if(form.controls['stock_status'].touched && form.controls['stock_status'].errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'stock_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+
+                <app-form-fields
+                  [labelClass]="'form-label-title col-sm-3 mb-0'"
+                  [gridClass]="'col-sm-9'"
+                  [label]="'sku'"
+                  [for]="'sku'"
+                  [required]="true">
+
+                  <input class="form-control" id="sku" type="text" placeholder="{{ 'enter_sku' | translate }}" formControlName="sku">
+
+                  @if(form.controls['sku'].touched && form.controls['sku'].errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'sku_is_required' | translate}}
+                    </div>
+                  }
+                </app-form-fields>
+
+                <app-form-fields
+                  [labelClass]="'form-label-title col-sm-3 mb-0'"
+                  [gridClass]="'col-sm-9'"
+                  [label]="'stock_quantity'"
+                  [for]="'quantity'"
+                  [required]="true">
+
+                  <input class="form-control" id="quantity" type="number" placeholder="{{ 'enter_quantity' | translate }}" formControlName="quantity">
+
+                  @if(form.controls['quantity'].touched && form.controls['quantity'].errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'quantity_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+
+                @if(form.controls['type'].value == 'simple'){
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'price'"
+                    [for]="'price'"
+                    [required]="true">
+
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                      </span>
+                      <input class="form-control" id="price" type="number" placeholder="{{ 'enter_price' | translate }}" formControlName="price">
+                    </div>
+
+                    @if(form.controls['price'].touched && form.controls['price'].errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'price_is_required' | translate }}
+                      </div>
+                    }
+
+                    @if(form.controls['price'].touched && form.controls['price'].errors?.['invalidPrice']){
+                      <div class="invalid-feedback">
+                        {{ 'please_enter_a_valid_price' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'discount'"
+                    [for]="'discount_value'"
+                    [required]="false">
+
+                    <div class="input-group">
+                      <input class="form-control" id="discount_value" type="number" min="0" max="100" oninput="if (value > 100) value = 100; if (value < 0) value = 0;" placeholder="{{ 'enter_discount' | translate }}" formControlName="discount">
+                      <span class="input-group-text">%</span>
+                    </div>
+
+                  </app-form-fields>
+
+                  <app-form-fields
+                    [labelClass]="'form-label-title col-sm-3 mb-0'"
+                    [gridClass]="'col-sm-9'"
+                    [label]="'sale_price'"
+                    [for]="'sale_price'"
+                    [required]="false">
+
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                      </span>
+                      <input class="form-control disabled" id="sale_price" type="number" placeholder="{{'sale_price' | translate}}" value="{{ (form.get('price')?.value - (form.get('price')?.value * form.get('discount')?.value)/100).toFixed(2)}}" readonly>
+                    </div>
+
+                  </app-form-fields>
+
+                  @if(form.controls['product_type'].value != 'external'){
+                    <app-form-fields
+                      [labelClass]="'form-label-title col-sm-3 mb-0'"
+                      [gridClass]="'col-sm-9'"
+                      [label]="'wholesale_price_type'"
+                      [for]="'wholesale_price_type'"
+                      [required]="false">
+
+                      <select2 class="custom-select"
+                        [placeholder]="'select_wholesale_price_type' | translate"
+                        [data]="wholesalePriceType?.length ? wholesalePriceType : []"
+                        noResultMessage="{{ 'no_data_found' | translate }}"
+                        formControlName="wholesale_price_type"
+                        resettable>
+                      </select2>
+
+                      <p class="help-text">{{ '*Enabling this feature will present wholesale prices as a table list on the frontend.' }}</p>
+                    </app-form-fields>
+                  }
+
+                  @if(form.controls['wholesale_price_type'].value && form.controls['product_type'].value != 'external'){
+                    <ng-container formArrayName='wholesale_prices'>
+                      @for(wholesalePrice of wholesalePriceControl.controls; track wholesalePrice; let index = $index){
+                        <div class="row" formGroupName='{{ index }}'>
+                          <div class="col-sm-3 variant-row">
+                            <app-form-fields
+                              [label]="'min_qty'"
+                              [for]="'min_qty'+index">
+
+                              <input class="form-control" [id]="'min_qty'+index" type="number" placeholder="{{ 'enter_min_qty' | translate }}" formControlName="min_qty">
+                              @if(wholesalePrice.get('min_qty').touched && wholesalePrice.get('min_qty').errors?.['required']){
+                                <div class="invalid-feedback">
+                                  {{ 'min_qty_is_required' | translate }}
+                                </div>
+                              }
+                            </app-form-fields>
+                          </div>
+
+                          <div class="col-sm-3 variant-row">
+                            <app-form-fields
+                              [label]="'max_qty'"
+                              [for]="'max_qty'+index">
+
+                              <input class="form-control" [id]="'max_qty'+index" type="number" placeholder="{{ 'enter_max_qty' | translate }}" formControlName="max_qty">
+                              @if(wholesalePrice.get('max_qty').touched && wholesalePrice.get('max_qty').errors?.['required']){
+                                <div class="invalid-feedback">
+                                  {{ 'max_qty_is_required' | translate }}
+                                </div>
+                              }
+                            </app-form-fields>
+                          </div>
+
+                          <div class="col-sm-4 variant-row">
+                            <app-form-fields
+                              [label]="form.controls['wholesale_price_type'].value == 'fixed' ? 'price' : 'percentage'"
+                              [for]="'wvalue'+index">
+
+                              @if(form.controls['wholesale_price_type'].value == 'fixed'){
+                                <div class="input-group">
+                                  <span class="input-group-text">
+                                    {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                                  </span>
+                                  <input class="form-control" [id]="'wvalue'+index" type="number" placeholder="{{ 'enter_price' | translate }}" formControlName="value">
+                                </div>
+                              }
+
+                              @if(form.controls['wholesale_price_type'].value == 'percentage'){
+                                <div class="input-group">
+                                  <input class="form-control" [id]="'wvalue'+index" type="number" min="0" max="100" oninput="if (value > 100) value = 100; if (value < 0) value = 0;" placeholder="{{ 'enter_percentage_value' | translate }}" formControlName="value">
+                                  <span class="input-group-text">%</span>
+                                </div>
+                              }
+
+                              @if(wholesalePrice.get('value').touched && wholesalePrice.get('value').errors?.['required']){
+                                <div class="invalid-feedback">
+                                  {{ 'field_is_required' | translate }}
+                                </div>
+                              }
+                            </app-form-fields>
+                          </div>
+
+                          <div class="col-sm-2 delete-variant">
+                            <a href="javascript:void(0)" class="invalid-feedback" (click)="removeWholesalePrice(index)">
+                              {{ 'remove' | translate }}
+                            </a>
+                          </div>
+                        </div>
+                      }
+                    </ng-container>
+                  }
+
+                  @if(form.controls['wholesale_price_type'].value && form.controls['product_type'].value != 'external'){
+                    <button [class]="'btn btn-theme mb-4'" [id]="'add_w_more'" (click)="addWholesalePrice($event)">
+                      {{ 'add_more' | translate }}
+                    </button>
+                  }
+                }
+
+              </div>
+            </ng-template>
+          </li>
+
+          @if(form.controls['type'].value == 'classified'){
+            <li ngbNavItem="variations" [class.is-invalid]="tabError.includes('variations')">
+              <a ngbNavLink><i class="ri-database-line"></i>{{ 'variations' | translate }}</a>
+              <ng-template ngbNavContent>
+                <div class="tab" tab="variations">
+                  <div class="variant-box border-top-0" id="variations">
+                    <ng-container formArrayName='variants'>
+                      @for(variant of variantControl.controls; track variant; let index = $index){
+                        <div class="row" formGroupName='{{ index }}'>
+                          <div class="col-sm-5 variant-row">
+                            <app-form-fields
+                              [label]="'attribute'"
+                              [for]="'attribute'+index">
+
+                              <select2 class="custom-select d-block"
+                                [data]="(attribute$ | async)?.length ? (attribute$ | async) : []"
+                                [placeholder]="'select_attribute' | translate "
+                                (update)="updateAttribute($event, index)"
+                                formControlName="id"
+                                noResultMessage="{{ 'no_data_found' | translate }}"
+                                resettable>
+                              </select2>
+
+                            </app-form-fields>
+                          </div>
+
+                          <div class="col-sm-5 variant-row">
+                            <app-form-fields
+                              [label]="'value'"
+                              [for]="'value'+index">
+
+                              <select2 class="custom-select d-block"
+                                [data]="variant.get('variant_option').value?.length ? variant.get('variant_option').value : []"
+                                [placeholder]="'select_value' | translate "
+                                formControlName="attribute_values"
+                                (update)="updateAttributeValue($event, index)"
+                                noResultMessage="{{ 'no_data_found' | translate }}"
+                                [multiple]="true">
+                              </select2>
+
+                            </app-form-fields>
+                          </div>
+
+                          <div class="col-sm-2 delete-variant">
+                            <a href="javascript:void(0)" class="invalid-feedback" (click)="removeVariant(index)">
+                              {{ 'remove' | translate }}
+                            </a>
+                          </div>
+                        </div>
+                      }
+                    </ng-container>
+
+                    @if((attribute$ | async)?.length){
+                      <button [class]="'btn btn-theme mb-4'" [id]="'add_variant'" (click)="addVariant($event)">
+                        {{ 'add_variant' | translate }}
+                      </button>
+                    }
+
+                    @if(variationControl?.controls?.length){
+                      <div class="shipping-accordion variant-accordion">
+                        <h3 class="form-label-title mb-2">{{ 'variants' | translate }}</h3>
+                        <ng-container formArrayName='variations'>
+                          <div ngbAccordion>
+                            @for(variation of variationControl?.controls; track variation; let i = $index){
+                              <div ngbAccordionItem [collapsed]="false" formGroupName='{{ i }}'>
+                                <div ngbAccordionHeader>
+                                  <button ngbAccordionButton>{{ variation.get('variation_name').value }}</button>
+                                </div>
+                                <div ngbAccordionCollapse>
+                                  <div ngbAccordionBody>
+                                    <ng-template>
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'name' | translate"
+                                        [for]="'variation_name'+i"
+                                        [required]="true">
+
+                                        <input class="form-control" [id]="'variation_name'+i" type="text" placeholder="{{'enter_name' | translate}}" formControlName="name">
+
+                                        @if(variation.get('name').touched && variation.get('name').errors?.['required']){
+                                          <div class="invalid-feedback">
+                                            {{ 'name_is_required' | translate }}
+                                          </div>
+                                        }
+                                      </app-form-fields>
+
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'Price'"
+                                        [for]="'price'+i"
+                                        [required]="true">
+
+                                        <div class="input-group">
+                                          <span class="input-group-text">
+                                            {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                                          </span>
+                                          <input class="form-control" [id]="'price'+i" type="number" placeholder="{{'enter_price' | translate}}" formControlName="price">
+                                        </div>
+
+                                        @if(variation.get('price').touched && variation.get('price').errors?.['required']){
+                                          <div class="invalid-feedback">
+                                            {{ 'price_is_required' | translate }}
+                                          </div>
+                                        }
+
+                                        @if(variation.get('price').touched && variation.get('price')?.errors?.['invalidPrice']){
+                                          <div class="invalid-feedback">
+                                            {{ 'please_enter_a_valid_price' | translate }}
+                                          </div>
+                                        }
+                                      </app-form-fields>
+
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'discount' | translate "
+                                        [for]="'discount_value'+i"
+                                        [required]="false">
+
+                                        <div class="input-group">
+                                          <input class="form-control" [id]="'discount_value'+i" type="number" min=0 max=100 oninput="if (value > 100) value = 100; if (value < 0) value = 0;" placeholder="{{'enter_discount' | translate }}" formControlName="discount">
+                                          <span class="input-group-text">%</span>
+                                        </div>
+                                      </app-form-fields>
+
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'sale_price'"
+                                        [for]="'sale_price'+i"
+                                        [required]="false">
+
+                                        <div class="input-group">
+                                          <span class="input-group-text">
+                                            {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async )?.general?.default_currency.symbol : '$'}}
+                                          </span>
+                                          <input class="form-control" [id]="'sale_price'+i" type="number" placeholder="{{'enter_sale_price' | translate}}" value="{{ (variation.get('price')?.value - (variation.get('price')?.value * variation.get('discount')?.value)/100).toFixed(2)}}" readonly>
+                                        </div>
+                                      </app-form-fields>
+
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'stock_quantity' | translate"
+                                        [for]="'quantity'+i"
+                                        [required]="true">
+
+                                        <input class="form-control" [id]="'quantity'+i" type="number" placeholder="{{'enter_quantity' | translate}}" formControlName="quantity">
+
+                                        @if(variation.get('quantity').touched && variation.get('quantity').errors?.['required']){
+                                          <div class="invalid-feedback">
+                                            {{ 'quantity_is_required' | translate }}
+                                          </div>
+                                        }
+                                      </app-form-fields>
+
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'sku'"
+                                        [for]="'sku'+i"
+                                        [required]="true">
+
+                                        <input class="form-control" [id]="'sku'+i" type="text" placeholder="{{'enter_sku' | translate}}" formControlName="sku">
+
+                                        @if(variation.get('sku').touched && variation.get('sku').errors?.['required']){
+                                          <div class="invalid-feedback">
+                                            {{ 'sku_is_required' | translate }}
+                                          </div>
+                                        }
+                                      </app-form-fields>
+
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'stock_status'"
+                                        [for]="'stock_status'+i"
+                                        [required]="true">
+
+                                        <select2 class="custom-select"
+                                          [placeholder]="'select_stock_status' | translate"
+                                          [data]="stocks?.length ? stocks : []"
+                                          noResultMessage="{{ 'no_data_found' | translate }}"
+                                          formControlName="stock_status">
+                                        </select2>
+
+                                        @if(variation.get('stock_status').touched && variation.get('stock_status').errors?.['required']){
+                                          <div class="invalid-feedback">
+                                            {{ 'stock_is_required' | translate }}
+                                          </div>
+                                        }
+                                      </app-form-fields>
+
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'image'"
+                                        [for]="'variation_image_id'+i"
+                                        [required]="false">
+
+                                        <app-image-upload
+                                          [multipleImage]="false"
+                                          [accept]="[mediaConfig.image]"
+                                          [image]="variation.get('variation_image').value"
+                                          (selectedFiles)="selectVariationImage($event, i)">
+                                        </app-image-upload>
+                                      </app-form-fields>
+
+                                      <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'images'" [for]="'product_galleries_id'" [required]="false">
+                                        <app-image-upload 
+                                            [multipleImage]="true"
+                                            [accept]="[mediaConfig.image, mediaConfig.video, mediaConfig.audio]"
+                                            [images]="variation.get('variation_galleries').value"
+                                            [helpText]="'*Upload image size 600x600px recommended'"
+                                            (selectedFiles)="selectVariantGalleriesImages($event, i)">
+                                        </app-image-upload>
+                                      </app-form-fields>
+                                      @if(form.controls['product_type'].value == 'digital'){
+                                        <app-form-fields
+                                          [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                          [gridClass]="'col-sm-9'"
+                                          [label]="'upload_main_files'"
+                                          [for]="'digital_file_id'+i"
+                                          [required]="false">
+
+                                          <app-image-upload
+                                            [multipleImage]="true"
+                                            [accept]="[mediaConfig.image, mediaConfig.video, mediaConfig.audio, mediaConfig.downloadFile]"
+                                            [images]="variation.get('digital_files').value"
+                                            (selectedFiles)="selectVariationMainFiles($event, i)">
+                                          </app-image-upload>
+                                        </app-form-fields>
+
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'licensable'" [for]="'is_licensable'+i" [required]="false">
+                                          <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                              <input type="checkbox" id="is_licensable" formControlName="is_licensable">
+                                              <span class="switch-state"></span>
+                                            </label>
+                                          </div>
+                                        </app-form-fields>
+
+                                        @if(variation.get('is_licensable').value){
+                                          @if(variation.get('digital_file_ids')?.value && variation.get('digital_file_ids')?.value?.length){
+                                            <app-form-fields
+                                              [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                              [gridClass]="'col-sm-9'"
+                                              [label]="'is_licensekey_auto'"
+                                              [for]="'is_licensekey_auto'+i"
+                                              [required]="false">
+
+                                              <div class="form-check form-switch ps-0">
+                                                <label class="switch">
+                                                  <input type="checkbox" id="is_licensekey_auto" formControlName="is_licensekey_auto">
+                                                  <span class="switch-state"></span>
+                                                </label>
+                                              </div>
+                                            </app-form-fields>
+                                          }
+
+                                          @if(!variation.get('is_licensekey_auto').value){
+                                            <app-form-fields
+                                              [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                              [gridClass]="'col-sm-9'"
+                                              [label]="'separator'"
+                                              [for]="'separator'+i"
+                                              [required]="true">
+
+                                              <select2 class="custom-select d-block"
+                                                [data]="separators.length ? separators : []"
+                                                [placeholder]="'select_separator' | translate"
+                                                formControlName="separator"
+                                                noResultMessage="{{ 'no_data_found' | translate }}">
+                                              </select2>
+
+                                              @if(variation.get('separator').touched && variation.get('separator').errors?.['required']){
+                                                <div class="invalid-feedback">
+                                                  {{'separator_is_required' | translate }}
+                                                </div>
+                                              }
+                                            </app-form-fields>
+
+                                            <app-form-fields
+                                              [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                              [gridClass]="'col-sm-9'"
+                                              [label]="'license_key' | translate"
+                                              [for]="'license_key'+i"
+                                              [required]="true">
+
+                                              <textarea class="form-control" placeholder="{{'enter_license_key' | translate }}" formControlName="license_keys" rows="3"></textarea>
+
+                                              @if(variation.get('license_keys').touched && variation.get('license_keys').errors?.['required']){
+                                                <div class="invalid-feedback">
+                                                  {{'license_key_is_required' |  translate }}
+                                                </div>
+                                              }
+                                            </app-form-fields>
+                                          }
+                                        }
+                                      }
+
+                                      <app-form-fields
+                                        [labelClass]="'form-label-title col-sm-3 mb-0'"
+                                        [gridClass]="'col-sm-9'"
+                                        [label]="'status'"
+                                        [for]="'active_variation_status'+i">
+
+                                        <div class="form-check form-switch ps-0">
+                                          <label class="switch">
+                                            <input type="checkbox" [id]="'active_variation_status'+i" formControlName="status">
+                                            <span class="switch-state"></span>
+                                          </label>
+                                        </div>
+                                      </app-form-fields>
+                                    </ng-template>
+                                  </div>
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        </ng-container>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </ng-template>
+            </li>
+          }
+
+          @if(form.controls['product_type']?.value != 'external' && form.controls['product_type']?.value == 'digital'){
+            <li ngbNavItem="digital" id="digital" [class.is-invalid]="tabError.includes('digital')">
+              <a ngbNavLink><i class="ri-computer-line"></i>{{ 'digital_product' | translate }}</a>
+              <ng-template ngbNavContent>
+                <div class="tab" tab="digital">
+
+                  @if(form.controls['type']?.value == 'simple'){
+                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'upload_main_files'" [for]="'upload_main_files'" [required]="false">
+                      <app-image-upload [accept]="[mediaConfig.image, mediaConfig.video, mediaConfig.audio, mediaConfig.downloadFile]" [multipleImage]="true" [images]="(product$ | async)?.digital_files" (selectedFiles)="selectMainFiles($event)">
+                      </app-image-upload>
+                    </app-form-fields>
+
+                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'licensable'" [for]="'is_licensable'" [required]="false">
+                      <div class="form-check form-switch ps-0">
+                        <label class="switch">
+                          <input type="checkbox" id="is_licensable" formControlName="is_licensable">
+                          <span class="switch-state"></span>
+                        </label>
+                      </div>
+                    </app-form-fields>
+
+                    @if(form.controls['is_licensable']?.value){
+                      @if(form.controls['digital_file_ids'].value && form.controls['digital_file_ids']?.value?.length){
+                        <app-form-fields
+                          [labelClass]="'form-label-title col-sm-3 mb-0'"
+                          [gridClass]="'col-sm-9'"
+                          [label]="'is_licensekey_auto'" [for]="'is_licensekey_auto'" [required]="false">
+                          <div class="form-check form-switch ps-0">
+                            <label class="switch">
+                              <input type="checkbox" id="is_licensekey_auto" formControlName="is_licensekey_auto">
+                              <span class="switch-state"></span>
+                            </label>
+                          </div>
+                        </app-form-fields>
+                      }
+
+                      @if(!form.controls['is_licensekey_auto']?.value){
+                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'separator'" [for]="'separator'" [required]="true">
+                          <select2 class="custom-select d-block" [data]="separators.length ? separators : []" [placeholder]="'select_separator' | translate" formControlName="separator" id="separator" noResultMessage="{{ 'no_data_found' | translate }}">
+                          </select2>
+
+                          @if(form.controls['separator'].touched && form.controls['separator'].errors?.['required']){
+                            <div class="invalid-feedback">
+                              {{'separator_is_required' |  translate }}
+                            </div>
+                          }
+                        </app-form-fields>
+
+                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'license_key' | translate" [for]="'license_key'" [required]="true">
+                          <textarea class="form-control" placeholder="{{'enter_license_key' | translate }}" formControlName="license_key" rows="3"></textarea>
+                          @if(form.controls['license_key'].touched && form.controls['license_key'].errors?.['required']){
+                            <div class="invalid-feedback">
+                              {{'license_key_is_required' |  translate }}
+                            </div>
+                          }
+                        </app-form-fields>
+                      }
+                    }
+                  }
+
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'preview_type'" [for]="'preview_type'" [required]="true">
+                    <select2 class="custom-select d-block" [data]="previewType.length ? previewType : []" [placeholder]="'select_preview_type' | translate" formControlName="preview_type" id="preview_type" noResultMessage="{{ 'no_data_found' | translate }}">
+                    </select2>
+                  </app-form-fields>
+
+                  @if(form.controls['preview_type']?.value == 'video'){
+                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'preview_video_file'" [for]="'preview_video_file'" [required]="false">
+                      <app-image-upload [accept]="[mediaConfig.video]" [multipleImage]="false" [image]="(product$ | async)?.preview_video_file" (selectedFiles)="selectPreviewVideoFile($event)">
+                      </app-image-upload>
+                    </app-form-fields>
+                  }
+
+                  @if(form.controls['preview_type']?.value == 'audio'){
+                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'preview_audio_file'" [for]="'preview_audio_file'" [required]="false">
+                      <app-image-upload [multipleImage]="false" [accept]="[mediaConfig.audio]" [image]="(product$ | async)?.preview_audio_file" (selectedFiles)="selectPreviewAudioFile($event)">
+                      </app-image-upload>
+                    </app-form-fields>
+                  }
+
+                  @if(form.controls['preview_type']?.value == 'url'){
+                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'preview_url'" [for]="'preview_url'" [required]="false">
+                      <input class="form-control" id="preview_url" type="url" placeholder="{{ 'enter_preview_url' | translate }}" formControlName="preview_url">
+                    </app-form-fields>
+                  }
+                </div>
+              </ng-template>
+            </li>
+          }
+
+          <li ngbNavItem="setup" id="setup" [class.is-invalid]="tabError.includes('setup')">
+            <a ngbNavLink><i class="ri-tools-line"></i>{{ 'setup' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="setup">
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sale_status'" [for]="'is_sale_enable'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="is_sale_enable" formControlName="is_sale_enable">
+                      <span class="switch-state"></span>
+                    </label>
+                  </div>
+                </app-form-fields>
+
+                <div>
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sale_start_date'" [for]="'sale_starts_at'" [required]="false">
+                    <div class="dp-hidden position-absolute custom-dp-dropdown">
+                      <div class="input-group">
+                        <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" readonly />
+                        <ng-template #t let-date let-focused="focused">
+                          <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)" [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+                            {{ date.day }}
+                          </span>
+                        </ng-template>
+                      </div>
+                    </div>
+
+                    <div class="input-group custom-dt-picker">
+                      <input #dpFromDate class="form-control" placeholder="{{'yyyy-mm-dd' | translate}}" name="dpFromDate" [value]="formatter.format(fromDate)" (input)="fromDate = validateInput(fromDate, dpFromDate.value)" readonly />
+                      <button class="btn btn-light-bg-secondary" (click)="datepicker.toggle()" type="button">
+                        <i class="ri-calendar-line"></i>
+                      </button>
+                    </div>
+
+                    @if(form?.controls['sale_starts_at']?.touched && form?.controls['sale_starts_at']?.errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'start_date_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sale_end_date'" [for]="'sale_expired_at'" [required]="false">
+                    <div class="input-group custom-dt-picker">
+                      <input #dpToDate class="form-control" placeholder="{{'yyyy-mm-dd' | translate}}" name="dpToDate" [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)" readonly />
+                      <button class="btn btn-light-bg-secondary" (click)="datepicker.toggle()" type="button">
+                        <i class="ri-calendar-line"></i>
+                      </button>
+                    </div>
+
+                    @if(form?.controls['sale_expired_at']?.touched && form?.controls['sale_expired_at']?.errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'end_date_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                </div>
+
+                @if(form.controls['product_type']?.value != 'digital'){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'unit'" [for]="'unit'" [required]="false">
+                    <input class="form-control" id="unit" type="text" placeholder="{{ 'enter_unit' | translate }}" formControlName="unit">
+                    <p class="help-text">{{ '*Specify the measurement unit, such as 10 Pieces, 1 KG, 1 Ltr, etc.' }}</p>
+                  </app-form-fields>
+                }
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'tags'" [for]="'tags'" [required]="false">
+                  <app-advance-dropdown
+                    [position]="'bottom'"
+                    [selectedOption]="selectedTags"
+                    [options]="(tag$ | async )?.data?.length ? (tag$ | async )?.data : []"
+                    (selectedItem)="selectTagItem($event)">
+                  </app-advance-dropdown>
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'categories'" [for]="'categories'" [required]="true">
+                  <app-advance-dropdown
+                    [position]="'bottom'"
+                    [selectedOption]="selectedCategories"
+                    [options]="(category$ | async)?.data?.length ? (category$ | async )?.data : []"
+                    [subArrayKey]="'subcategories'"
+                    [id]="'categories'"
+                    (selectedItem)="selectCategoryItem($event)">
+                  </app-advance-dropdown>
+
+                  @if(form.controls['categories'].touched && form.controls['categories'].errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'categories_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'brand'" [for]="'brand_id'" [required]="false">
+                  <select2 class="custom-select" [placeholder]="'select_brand' | translate" [data]="(brand$ | async)?.length ? (brand$ | async) : []" formControlName="brand_id" noResultMessage="{{ 'no_data_found' | translate }}" id="brand" resettable>
+                  </select2>
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'random_related_product'" [for]="'is_random_related_products'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="is_random_related_products" formControlName="is_random_related_products">
+                      <span class="switch-state"></span>
+                    </label>
+                    <p class="help-text">{{ '*Enabling this option allows the backend to randomly select 6 products for display.' }}</p>
+                  </div>
+                </app-form-fields>
+
+                @if(!form.get('is_random_related_products')?.value){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'related_products' | translate" [for]="'related_product_id'" [required]="false">
+                    <!-- <select2 class="custom-select" [templates]="template" [data]="(products$ | async)?.length ? (products$ | async) : []" [placeholder]="'select_product' | translate" formControlName="related_products" noResultMessage="{{ 'no_data_found' | translate }}" [customSearchEnabled]="true" (close)="productDropdown($event)" (search)="searchProduct($event)" [multiple]="true">
+                      <ng-template #template let-data="data">
+                        <div class="image">
+                          <img [src]="data.image" [class]="'img-fluid selection-image'">
+                        </div>
+                        {{ data.name }}
+                      </ng-template>
+                    </select2> -->
+                    <select2 class="custom-select" [templates]="template" [data]="(products$ | async)?.length ? (products$ | async) : []" [placeholder]="'select_product' | translate " formControlName="related_products" noResultMessage="{{'no_data_found' | translate }}" [customSearchEnabled]="true" (close)="productDropdown($event)" (search)="searchProduct($event)" multiple="true" resettable>
+                      <ng-template #template let-data="data">
+                        <div class="image">
+                          <img [src]="data.image" [class]="'img-fluid selection-image'">
+                        </div>
+                        {{ data.name }}
+                      </ng-template>
+                    </select2>
+                    <p class="help-text">{{ '*Choose a maximum of 6 products for effective related products display.' }}</p>
+                  </app-form-fields>
+                }
+
+                @if(form.controls['product_type']?.value == 'physical'){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'cross_sell_products'" [for]="'cross_sell_products'" [required]="false">
+                    <select2 class="custom-select" [templates]="template" [data]="collectionProduct?.length ? collectionProduct : []" [placeholder]="'select_product' | translate" formControlName="cross_sell_products" noResultMessage="{{ 'no_data_found' | translate }}" [customSearchEnabled]="true" (close)="productDropdown($event)" (search)="searchProduct($event)" [multiple]="true">
+                      <ng-template #template let-data="data">
+                        <div class="image">
+                          <img [src]="data.image" [class]="'img-fluid selection-image'">
+                        </div>
+                        {{ data.name }}
+                      </ng-template>
+                    </select2>
+                    <p class="help-text">{{ '*Choose a maximum of 3 products for effective cross-selling display.' }}</p>
+
+                  </app-form-fields>
+                }
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="seo" id="seo" [class.is-invalid]="tabError.includes('seo')">
+            <a ngbNavLink><i class="ri-earth-line"></i>{{ 'seo' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="seo">
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'meta_title'" [for]="'meta_title'" [required]="false">
+                  <input class="form-control" id="meta_title" type="text" placeholder="{{'enter_meta_title' | translate }}" formControlName="meta_title">
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'meta_description'" [for]="'meta_desc'" [required]="false">
+                  <textarea class="form-control" id="meta_desc" placeholder="{{ 'enter_meta_description' | translate }}" rows="3" formControlName="meta_description"></textarea>
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'meta_image'" [for]="'meta_image'" [required]="false">
+                  <app-image-upload [multipleImage]="false" [accept]="[mediaConfig.image]" [image]="(product$ | async)?.product_meta_image" (selectedFiles)="selectMetaImage($event)">
+                  </app-image-upload>
+                </app-form-fields>
+
+              </div>
+            </ng-template>
+          </li>
+
+          @if(form.controls['product_type']?.value == 'physical'){
+            <li ngbNavItem="shipping" id="shipping" [class.is-invalid]="tabError.includes('shipping')">
+              <a ngbNavLink><i class="ri-truck-line"></i>{{ 'shipping' | translate }}</a>
+              <ng-template ngbNavContent>
+                <div class="tab" tab="shipping">
+
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'free_shipping'" [for]="'free_shipping'" [required]="false">
+                    <div class="form-check form-switch ps-0">
+                      <label class="switch">
+                        <input type="checkbox" id="free_shipping" formControlName="is_free_shipping">
+                        <span class="switch-state"></span>
+                      </label>
+                    </div>
+                  </app-form-fields>
+
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'weight'" [for]="'weight'" [required]="false">
+                    <input class="form-control" id="weight" type="number" placeholder="{{'enter_weight_gms'}}" formControlName="weight">
+                    <p class="help-text">{{ '*Specify the weight of this product in Gms.' }}</p>
+                  </app-form-fields>
+
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'estimated_delivery_text'" [for]="'estimated_delivery_text'" [required]="false">
+                    <input class="form-control" id="estimated_delivery_text" type="text" placeholder="{{'enter_estimated_delivery_text' | translate }}" formControlName="estimated_delivery_text">
+                    <p class="help-text">{{ '*Specify delivery text e.g Your order is likely to reach you within 5 to 10 days.' }}</p>
+                  </app-form-fields>
+
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'return'" [for]="'return'" [required]="false">
+                    <div class="form-check form-switch ps-0">
+                      <label class="switch">
+                        <input type="checkbox" id="return" formControlName="is_return">
+                        <span class="switch-state"></span>
+                      </label>
+                      <p class="help-text">{{ '*Enable to make the product eligible for returns.' }}</p>
+                    </div>
+                  </app-form-fields>
+
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'return_policy_text'" [for]="'return_policy_text'" [required]="false">
+                    <input class="form-control" id="return_policy_text" type="text" placeholder="{{'enter_return_policy_text' | translate }}" formControlName="return_policy_text">
+                    <p class="help-text">{{ '*Specify return text e.g Hassle free 7, 15 and 30 days return might be available.' }}</p>
+                  </app-form-fields>
+
+                </div>
+              </ng-template>
+            </li>
+          }
+
+          <li ngbNavItem="status" id="status" [class.is-invalid]="tabError.includes('status')">
+            <a ngbNavLink><i class="ri-checkbox-circle-line"></i>{{ 'status' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="status">
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'featured'" [for]="'product_featured'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="product_featured" formControlName="is_featured">
+                      <span class="switch-state"></span>
+                    </label>
+                    <p class="help-text">{{ '*Enabling this option will display a Featured tag on the product.' }}</p>
+                  </div>
+                </app-form-fields>
+
+                @if(form.controls['product_type']?.value != 'digital'){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'safe_checkout'" [for]="'safe_checkout'" [required]="false">
+                    <div class="form-check form-switch ps-0">
+                      <label class="switch">
+                        <input type="checkbox" id="safe_checkout" formControlName="safe_checkout">
+                        <span class="switch-state"></span>
+                      </label>
+                      <p class="help-text">{{ '*A safe checkout image will appear on the product page. Modify the image in the theme options.' }}</p>
+                    </div>
+                  </app-form-fields>
+                }
+
+                @if(form.controls['product_type']?.value != 'digital'){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secure_checkout'" [for]="'secure_checkout'" [required]="false">
+                    <div class="form-check form-switch ps-0">
+                      <label class="switch">
+                        <input type="checkbox" id="secure_checkout" formControlName="secure_checkout">
+                        <span class="switch-state"></span>
+                      </label>
+                      <p class="help-text">{{ '*A secure checkout image will appear on the product page. Modify the image in the theme options.' }}</p>
+                    </div>
+                  </app-form-fields>
+                }
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'social_share'" [for]="'social_share'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="social_share" formControlName="social_share">
+                      <span class="switch-state"></span>
+                    </label>
+                    <p class="help-text">{{ '*Enable this option to allow users to share the product on social media platforms.' }}</p>
+                  </div>
+                </app-form-fields>
+
+                @if(form.controls['product_type']?.value != 'digital'){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'encourage_order'" [for]="'encourage_order'" [required]="false">
+                    <div class="form-check form-switch ps-0">
+                      <label class="switch">
+                        <input type="checkbox" id="encourage_order" formControlName="encourage_order">
+                        <span class="switch-state"></span>
+                      </label>
+                      <p class="help-text">{{ '*A random order count between 1 and 100 will be displayed to motivate user purchases.' }}</p>
+                    </div>
+                  </app-form-fields>
+                }
+
+                @if(form.controls['product_type']?.value != 'digital'){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'encourage_view'" [for]="'encourage_view'" [required]="false">
+                    <div class="form-check form-switch ps-0">
+                      <label class="switch">
+                        <input type="checkbox" id="encourage_view" formControlName="encourage_view">
+                        <span class="switch-state"></span>
+                      </label>
+                      <p class="help-text">{{ '*this feature encourages users to view products by presenting engaging content or prompts.' }}</p>
+                    </div>
+                  </app-form-fields>
+                }
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'trending'" [for]="'is_trending'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="is_trending" formControlName="is_trending">
+                      <span class="switch-state"></span>
+                    </label>
+                    <p class="help-text">{{ '*Enabling this will showcase the product in the sidebar of the product page as a trending item.' }}</p>
+                  </div>
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'status'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="status" formControlName="status">
+                      <span class="switch-state"></span>
+                    </label>
+                    <p class="help-text">{{ '*Toggle between Enabled and Disabled to control the availability of the product for purchase.' }}</p>
+                  </div>
+                </app-form-fields>
+
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+      </div>
+      <div class="col-xl-7 col-lg-8">
+        <div [ngbNavOutlet]="nav"></div>
+      </div>
+    </div>
+    <div class="ms-auto justify-content-end d-flex gap mt-sm-4 mt-2">
+      @if(type === 'edit'){
+        <app-button [id]="'product_save_btn'" [class]="'btn btn-theme ms-auto mt-4 me-2'" [type]="'button'" (click)="submit(false)">
+          {{ 'save_and_continue' | translate }}
+        </app-button>
+      }
+      <app-button [id]="'product_btn'">
+        {{ 'save' | translate }}
+      </app-button>
+    </div>
+  </div>
+</form>

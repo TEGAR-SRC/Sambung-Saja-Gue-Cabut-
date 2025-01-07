@@ -1,0 +1,17 @@
+<div class="profile-nav onhover-dropdown translate-btn p-0">
+   <div class="media profile-media" (clickOutside)="hideDropdown()">
+      <app-button [class]="'btn dropdown-toggle p-0'" [id]="'translate_btn'" [spinner]="false" (click)="clickHeaderOnMobile()">
+         <i class="ri-translate-2"></i>
+      </app-button>
+   </div>
+   <ul class="profile-dropdown onhover-show-div" [class.active]="active">
+      @for(language of languages; track language){
+         <li>
+            <a class="dropdown-i" href="javascript:void(0)" (click)="selectLanguage(language)">
+               <div class="iti-flag {{ language.icon }}"></div>
+               <span>{{ language.language }}</span>
+            </a>
+         </li>
+      }
+   </ul>
+</div>

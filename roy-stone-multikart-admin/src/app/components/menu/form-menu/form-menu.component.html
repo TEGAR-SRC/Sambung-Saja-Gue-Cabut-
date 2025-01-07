@@ -1,0 +1,176 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()" >
+    <app-form-fields [label]="'title' | translate" [for]="'title'">
+       <input class="form-control" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title" >
+       <div class="invalid-feedback" *ngIf="form.controls['title'].touched && form.controls['title'].errors?.['required']">
+          {{ 'title_is_required' | translate }}
+       </div>
+    </app-form-fields>
+    <app-form-fields [label]="'link_type'" [for]="'type'">
+       <select2 
+          class="custom-select" 
+          [data]="link_type?.length ? link_type : []"
+          formControlName="link_type"
+          [placeholder]="'select_type' | translate " 
+          noResultMessage="{{ 'no_data_found' | translate }}">
+       </select2>
+       <div class="invalid-feedback" *ngIf="form.controls['link_type'].touched && form.controls['link_type'].errors?.['required']">
+          {{ 'link_type_is_required' | translate }}
+       </div>
+    </app-form-fields>
+ 
+    <app-form-fields  [label]="'target_blank'" [for]="'is_target_blank'" *ngIf="form.get('link_type')?.value === 'link'">
+       <div class="form-check form-switch ps-0">
+          <label class="switch">
+             <input type="checkbox" id="is_target_blank" formControlName="is_target_blank">
+             <span class="switch-state"></span>
+          </label>
+       </div>
+       <div class="invalid-feedback" *ngIf="form.controls['is_target_blank'].touched && form.controls['is_target_blank'].errors?.['required']">
+          {{ 'target_is_required' | translate }}
+       </div>
+    </app-form-fields>
+ 
+    <app-form-fields  [label]="'set_page_link'" [for]="'set_page_link'" *ngIf="form.get('link_type')?.value === 'link'">
+       <select2 class="custom-select"
+          [data]="(page$ | async) ? (page$ | async) : []"
+          [placeholder]="'select_page' | translate " formControlName="set_page_link"
+          noResultMessage="{{'no_data_found' | translate }}"
+          (update)="setPage($event)"
+          resettable
+          multiple="false">
+       </select2>
+    </app-form-fields>
+ 
+    <app-form-fields [label]="'path' | translate" [for]="'path'" *ngIf="form.get('link_type')?.value === 'link'">
+       <input class="form-control" type="text" placeholder="{{ form.get('is_target_blank')?.value === 0 || form.get('is_target_blank')?.value === false ? 'enter_path' : 'enter_url' | translate }}" formControlName="path">
+       <p class="help-text" *ngIf="form.get('is_target_blank')?.value === 0 || form.get('is_target_blank')?.value === false; else url">*{{ 'ensure_that_the_path_creates_a_route_in_the_frontend' | translate }}: "{{form.get('path')?.value }}"</p>
+       <ng-template #url>
+          <p class="help-text">{{ 'ensure_that_the_url_is_external_link_url' | translate }}</p>
+       </ng-template>
+       <div class="invalid-feedback" *ngIf="form.controls['path'].touched && form.controls['path'].errors?.['required']">
+          {{ 'path_is_required' | translate }}
+       </div>
+    </app-form-fields>
+   
+    <app-form-fields [label]="'select_parent' | translate " [for]="'category'" [required]="false">
+       <app-advance-dropdown 
+          [selectSingle]="true"
+          [selectedOption]="menu && menu.parent_id ? [menu.parent_id] : []"
+          [displayKey]="'title'"
+          [subArrayKey]="'child'"
+          [options]="(menu$ | async)?.data?.length ? (menu$ | async)?.data : []" 
+          (selectedItem)="selectItem($event)"
+          [showImage]="false">
+       </app-advance-dropdown>
+    </app-form-fields>
+ 
+    <app-form-fields  [label]="'mega_menu'" [for]="'mega_menu_enable'" *ngIf="!form.get('parent_id')?.value && form.get('link_type')?.value === 'sub'">
+       <div class="form-check form-switch ps-0">
+          <label class="switch">
+             <input type="checkbox" id="mega_menu_enable" formControlName="mega_menu">
+             <span class="switch-state"></span>
+          </label>
+       </div>
+    </app-form-fields>
+  
+    <ng-container *ngIf="form.get('mega_menu')?.value === true || form.get('mega_menu')?.value === 1 && form.get('link_type')?.value === 'sub'">
+       <app-form-fields [label]="'mega_menu_type'" [for]="'mega_menu_type'" >
+          <div>
+             <ul class="mega-menu-list">
+                @for(item of megaMenuLayout; track item ){
+                    <div class="selection-box">
+                       <input type="radio" [id]="item.value" [value]="item.value" name="mega_menu_type" formControlName="mega_menu_type" />
+                       <label [for]="item.value">
+                          <div class="circle"></div>
+                          <div>
+                             <img [src]="item.image" class="img-fluid dummy-img" [alt]="item.value">
+                             <p class="mt-1">{{item.label}}</p>
+                          </div>
+                       </label>
+                    </div>
+                }
+             </ul>
+          </div>
+       </app-form-fields>
+       <app-form-fields  [label]="'products' " [for]="'product_ids'" [required]="false" 
+       *ngIf="form.get('mega_menu_type')?.value === 'product_box'">
+          <select2 
+             class="custom-select"
+             [templates]="template" 
+             [data]="(products$ | async)?.length ? (products$ | async) : []"
+             [placeholder]="'select_product' | translate" formControlName="product_ids"
+             noResultMessage="{{ 'no_data_found' | translate }}"
+             [customSearchEnabled]="true"
+             (close)="productDropdown($event)"
+             (search)="searchProduct($event)"
+             [multiple]="true">
+             <ng-template #template let-data="data">
+                <div class="image">
+                   <img [src]="data.image" [class]="'img-fluid selection-image'">
+                </div>
+                {{ data.name }}
+             </ng-template>
+          </select2>
+       </app-form-fields>
+    
+       <app-form-fields [label]="'blogs'" [for]="'type'" 
+       *ngIf="form.get('mega_menu_type')?.value === 'blog_box'">
+          <select2 class="custom-select"
+             [data]="(blogs$ | async) ? (blogs$ | async) : []"
+             [placeholder]="'select_blogs' | translate " formControlName="blog_ids"
+             noResultMessage="{{'no_data_found' | translate }}"
+             multiple="true">
+          </select2>
+       </app-form-fields>
+    
+       <app-form-fields [label]="'banner'" [for]="'banner_image_id'" [required]="false"
+          *ngIf="form.get('mega_menu_type')?.value === 'bottom_banner' || 
+          form.get('mega_menu_type')?.value === 'side_banner'">
+          <app-image-upload 
+             [accept]="[mediaConfig.image]"
+             [image]="menu?.banner_image"
+             [multipleImage]="false"
+             (selectedFiles)="selectThumbnail($event, 'banner_image_id')">
+          </app-image-upload>
+          <div class="invalid-feedback" *ngIf="form.controls['banner_image_id'].touched && form.controls['banner_image_id'].errors?.['required']">
+             {{ 'banner_image_is_required' | translate }}
+          </div>
+       </app-form-fields>
+    
+    </ng-container>
+    <app-form-fields [label]="'link_image'" [for]="'item_image_id'" [required]="false" 
+       *ngIf="selectedMenu && selectedMenu[0]?.mega_menu_type === 'link_with_image' && form.get('parent_id')?.value">
+       <app-image-upload 
+          [accept]="[mediaConfig.image]"
+          [image]="menu?.item_image"
+          [multipleImage]="false"
+          (selectedFiles)="selectThumbnail($event, 'item_image_id')">
+       </app-image-upload>
+    </app-form-fields>
+ 
+    <app-form-fields [label]="'badge_text' | translate" [for]="'badge_text'">
+       <input class="form-control" type="text" placeholder="{{ 'enter_badge_text' | translate }}" formControlName="badge_text">
+    </app-form-fields>
+ 
+    <app-form-fields [label]="'badge_color'" [for]="'badge_color'" >
+       <div>
+          <ul class="badge-color-list">
+            @for(color of colors; track color){
+                <li>
+                   <div class="selection-box {{ color }}">
+                      <input type="radio" [id]="color" [value]="color" name="badge_color" formControlName="badge_color"/>
+                      <label [for]="color" class="cursor-pointer"></label>
+                   </div>
+                </li>
+            }
+          </ul>
+       </div>
+       <div class="invalid-feedback" *ngIf="form.controls['badge_color']?.touched && form.controls['badge_color']?.errors?.['required']">
+          {{ 'badge_color_is_required' | translate }}
+       </div>
+    </app-form-fields>
+    <app-button [id]="'category_btn'">
+       {{ (type == 'create' ? 'save_menu' : 'update_menu') | translate }}
+    </app-button>
+  </form>
+ 

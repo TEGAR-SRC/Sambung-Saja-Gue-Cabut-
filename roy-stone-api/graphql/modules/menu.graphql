@@ -1,0 +1,81 @@
+type Menu {
+    id: Int
+    title: String
+    link_type: String
+    mega_menu: String
+    set_page_link: String
+    mega_menu_type: String
+    slug: String
+    path: String
+    type: String
+    item_image_id: Int
+    badge_text: String
+    badge_color: String
+    is_target_blank: Int
+    parent_id: Int
+    banner_image_id: Int
+    item_image: Attachment
+    banner_image: Attachment
+    product_ids: [Int]
+    blog_ids: [Int]
+    child: [Menu]
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateMenuInput {
+    title: String
+    link_type: String
+    mega_menu: String
+    set_page_link: String
+    mega_menu_type: String
+    slug: String
+    path: String
+    type: String
+    item_image_id: Int
+    badge_text: String
+    badge_color: String
+    is_target_blank: Int
+    parent_id: Int
+    banner_image_id: Int
+}
+
+input UpdateMenuInput {
+    id: Int!
+    title: String
+    link_type: String
+    mega_menu: String
+    set_page_link: String
+    mega_menu_type: String
+    slug: String
+    path: String
+    type: String
+    item_image_id: Int
+    badge_text: String
+    badge_color: String
+    is_target_blank: Int
+    parent_id: Int
+    banner_image_id: Int
+}
+
+input DeleteMenuInput {
+    id: Int!
+}
+
+extend type Mutation @guard {
+    createMenu(input: CreateMenuInput @spread) : Menu
+        @can(ability: "menu.create")
+        @field(resolver: "MenuMutator@store")
+
+    updateMenu(input: UpdateMenuInput @spread) : Menu
+        @can(ability: "menu.update")
+        @field(resolver: "MenuMutator@update")
+
+    deleteMenu(input: DeleteMenuInput @spread): Boolean!
+        @can(ability: "menu.destroy", model: "App\\Models\\Menu")
+        @field(resolver: "MenuMutator@destroy")
+}
+
+extend type Query {
+    menus: [Menu!]! @field(resolver: "App\\GraphQL\\Queries\\MenusQuery@index")
+}

@@ -1,0 +1,98 @@
+type LicenseKey {
+    id: Int
+    license_key: String
+    product_id: Int
+    variation_id: Int
+    status: Int
+    purchased_by_id: Int
+    order_id: Int
+    item_name: String
+    created_by_id: Int
+    product:LicensedProduct
+    variation: LicensedVariation
+    purchased_by: LicensePurchasedBy
+    purchased_at: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+type LicensedProduct {
+    name: String
+    slug: String
+}
+
+type LicensedVariation {
+    name: String
+}
+
+type LicensePurchasedBy {
+    name: String
+    email: String
+}
+
+input CreateLicenseKeyInput {
+    license_key: String!
+    product_id: Int
+    variation_id: Int
+    separator: String
+}
+
+input UpdateLicenseKeyInput {
+    id: Int!
+    license_key: String!
+    product_id: Int
+    variation_id: Int
+}
+
+input DeleteLicenseKeyInput {
+    id: Int!
+}
+
+input DeleteAllLicenseKeysInput {
+    ids: [Int]
+}
+
+input StatusLicenseKeyInput {
+    id: Int!
+    status: Int
+}
+
+input ImportLicenseKeysInput {
+    license_keys: Upload
+}
+
+extend type Mutation @guard {
+    createLicenseKey(input: CreateLicenseKeyInput @spread): [LicenseKey]
+        @can(ability: "license_key.create")
+        @field(resolver: "LicenseKeyMutator@store")
+
+    updateLicenseKey(input: UpdateLicenseKeyInput @spread): LicenseKey
+        @can(ability: "license_key.edit")
+        @field(resolver: "LicenseKeyMutator@update")
+
+    deleteLicenseKey(input: DeleteLicenseKeyInput @spread): Boolean!
+        @can(ability: "license_key.destroy", model: "App\\Models\\LicenseKey")
+        @field(resolver: "LicenseKeyMutator@destroy")
+
+    statusLicenseKey(input: StatusLicenseKeyInput @spread): LicenseKey
+        @can(ability: "license_key.edit", model: "App\\Models\\LicenseKey")
+        @field(resolver: "LicenseKeyMutator@status")
+
+    deleteAllLicenseKeys(input: DeleteAllLicenseKeysInput @spread): Boolean!
+        @can(ability: "license_key.destroy", model: "Spatie\\Permission\\Models\\Role")
+        @field(resolver: "LicenseKeyMutator@deleteAll")
+
+    importLicenseKeys(input: ImportLicenseKeysInput @spread): [LicenseKey]
+        @can(ability: "license_key.create", model: "App\\Models\\LicenseKey")
+        @field(resolver: "LicenseKeyMutator@import")
+}
+
+extend type Query @guard {
+    licenseKeys(
+        search: String @where(operator: "like", key: "license_key")
+        status: Int
+        paginate: Int
+    ): [LicenseKey!]! @paginate(resolver: "App\\GraphQL\\Queries\\LicenseKeyQuery@index" defaultCount:15)
+    licenseKey(id: Int @eq): LicenseKey @can(ability: "license_key.index") @find
+    getLicenseKeysExportUrl: String @field(resolver: "App\\GraphQL\\Queries\\LicenseKeyQuery@getLicenseKeysExportUrl")
+}

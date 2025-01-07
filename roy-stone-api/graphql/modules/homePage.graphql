@@ -1,0 +1,26 @@
+type HomePage {
+    id: Int
+    content:Json
+    sequence: [String]
+    slug: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input UpdateHomePageInput {
+    id: Int!
+    content:Json
+    sequence: [String]!
+    slug: String
+}
+
+extend type Query {
+    homePage(slug: String): Json @field(resolver: "App\\GraphQL\\Queries\\HomePageQuery@index")
+}
+
+extend type Mutation @guard {
+    updateHomePage(input: UpdateHomePageInput @spread): HomePage
+        @can(ability: "home_page.edit")
+        @field(resolver: "HomePageMutator@update")
+}
+

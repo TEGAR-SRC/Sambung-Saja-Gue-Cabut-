@@ -1,0 +1,312 @@
+<div class="product-box">
+    <div class="product-image">
+       <img class="img-fluid" src="assets/images/product.png" alt="product">
+       <ul class="product-option">
+          <li class="">
+             <a href="javascript:void(0)">
+                <i class="ri-eye-line"></i>
+             </a>
+          </li>
+          <li class="">
+             <a href="javascript:void(0)">
+                <i class="ri-refresh-line"></i>
+             </a>
+          </li>
+          <li class="">
+             <a href="javascript:void(0)" class="notifi-wishlist">
+                <i class="ri-heart-line"></i>
+             </a>
+          </li>
+       </ul>
+    </div>
+    <div class="product-detail">
+       <h6 class="name">Fresh Pear</h6>
+       <p>They have been linked to a number of health benefits, including improved digestion, heart health, and blood sugar control.</p>
+       <h6 class="unit mt-1">3 KG</h6>
+       <h6 class="byers">By Fruits Market</h6>
+       <h5 class="sold text-content">
+          <span class="theme-color price">{{4.80 | currencySymbol }}</span>
+          <del class="">{{6.00 | currencySymbol }}</del>
+       </h5>
+       <div class="product-rating">
+          <ul class="price">
+             <li>
+                <i class="ri-star-s-fill"></i>
+             </li>
+             <li>
+                <i class="ri-star-s-fill"></i>
+             </li>
+             <li>
+                <i class="ri-star-s-fill"></i>
+             </li>
+             <li>
+                <i class="ri-star-s-fill"></i>
+             </li>
+             <li>
+                <i class="ri-star-s-fill"></i>
+             </li>
+          </ul>
+          <h6 class="theme-color"> In Stock </h6>
+       </div>
+       <div class="add-to-cart-box">
+          <button type="button" class="addcart-button btn btn-add-cart" (click)="open = !open">Add</button>
+
+          <div class="cart_qty qty-box" [class.open]="open">
+             <div class="input-group">
+                <button type="button" type="button" class="qty-left-minus" (click)="open = !open">
+                   <i class="ri-subtract-line"></i>
+                </button>
+                <input type="text" value="1" name="quantity" readonly="" class="form-control input-number qty-input">
+                <button type="button" type="button"  class="qty-left-plus" (click)="open = !open">
+                   <i class="ri-add-fill"></i>
+                </button>
+             </div>
+          </div>
+       </div>
+    </div>
+</div>
+
+<div class="product-style-1">
+<div class="product-image">
+    <div class="label-flex">
+        <div class="discount">
+            <label>20%</label>
+        </div>
+        <button type="button" class="btn p-0 wishlist btn-wishlist notifi-wishlist">
+            <i class="ri-heart-line"></i>
+        </button>
+    </div>
+    <a href="#!">
+        <img class="img-fluid" src="assets/images/product.png" alt="product">
+    </a>
+    <ul class="product-option">
+        <li class="">
+            <a href="javascript:void(0)">
+            <i class="ri-eye-line"></i>
+            </a>
+        </li>
+        <li class="">
+            <a href="javascript:void(0)">
+            <i class="ri-refresh-line"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="product-detail">
+    <div class="product-rating mb-2">
+        <ul class="price">
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+        </ul>
+        <h6 class="theme-color"> In Stock </h6>
+    </div>
+    <h6 class="name">Fresh Pear</h6>
+    <h5 class="sold text-content">
+        <span class="theme-color price">{{ 4.80 | currencySymbol}}</span>
+        <del class="ms-1">{{ 6.00 | currencySymbol}}</del>
+    </h5>
+    <div class="add-to-cart-box">
+        <button type="button" class="addcart-button btn btn-add-cart" (click)="open = !open">Add to Cart</button>
+        <div class="cart_qty qty-box" [class.open]="open">
+            <div class="input-group">
+            <button type="button" class="qty-left-minus" (click)="open = !open">
+                <i class="ri-subtract-line"></i>
+            </button>
+            <input type="text" value="1" name="quantity" readonly="" value="1" class="form-control input-number qty-input">
+            <button type="button" class="qty-left-plus" (click)="open = !open">
+                <i class="ri-add-fill"></i>
+            </button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="product-style-2">
+<div class="product-image">
+    <div class="label-flex">
+        <div class="discount">
+            <label>20%</label>
+        </div>
+        <button type="button" class="btn p-0 wishlist btn-wishlist notifi-wishlist">
+            <i class="iconly-Heart icli"></i>
+        </button>
+    </div>
+    <a href="#!">
+        <img class="img-fluid" src="assets/images/product.png" alt="product">
+    </a>
+    <ul class="product-option">
+        <li class="">
+            <a href="javascript:void(0)">
+            <i class="ri-eye-line"></i>
+            </a>
+        </li>
+        <li class="">
+            <a href="javascript:void(0)">
+            <i class="ri-refresh-line"></i>
+            </a>
+        </li>
+        <li class="">
+            <a href="javascript:void(0)" class="notifi-wishlist">
+            <i class="ri-heart-line"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="product-detail">
+    <h6 class="name">Premium Organic Pumpkin</h6>
+    <div class="product-rating mb-2">
+        <ul class="price">
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+            <li>
+            <i class="ri-star-s-fill"></i>
+            </li>
+        </ul>
+        <h6 class="theme-color"> In Stock </h6>
+    </div>
+    <div class="product-bottom">
+        <h5 class="sold text-content">
+            <span class="theme-color price">{{ 5.20 | currencySymbol}}</span>
+            <del class="ms-1">{{ 6.50 | currencySymbol}}</del>
+        </h5>
+        <div class="add-to-cart-box">
+            <button type="button" class="addcart-button btn btn-add-cart" (click)="open = !open">Add</button>
+            <div class="cart_qty qty-box" [class.open]="open">
+            <div class="input-group">
+                <button type="button" class="qty-left-minus" (click)="open = !open">
+                    <i class="ri-subtract-line"></i>
+                </button>
+                <input type="text" value="1" name="quantity" readonly="" class="form-control input-number qty-input">
+                <button type="button" class="qty-left-plus" (click)="open = !open">
+                    <i class="ri-add-fill"></i>
+                </button>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="product-box product-white-bg">
+<div class="product-image">
+    <a href="#!">
+        <img class="img-fluid" src="assets/images/product.png" alt="product">
+    </a>
+    <ul class="product-option">
+        <li class="">
+            <a href="javascript:void(0)">
+            <i class="ri-eye-line"></i>
+            </a>
+        </li>
+        <li class="">
+            <a href="javascript:void(0)">
+            <i class="ri-refresh-line"></i>
+            </a>
+        </li>
+        <li class="">
+            <a href="javascript:void(0)" class="notifi-wishlist">
+            <i class="ri-heart-line"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="product-detail position-relative">
+    <h6 class="name">Premium Organic Pumpkin</h6>
+    <h6 class="sold weight mb-0 text-content fw-normal ">2 KG</h6>
+    <div class="d-flex align-items-end justify-content-between position-relative">
+        <h6 class="price theme-color m-0">{{ 5.20 | currencySymbol}}</h6>
+        <div class="add-to-cart-btn-2 addtocart_btn">
+            <button type="button" class="active addcart-button btn btn-add-cart" (click)="open = !open">
+            <i class="ri-add-line "></i>
+            </button>
+            <div class="cart_qty qty-box" [class.open]="open">
+            <div class="input-group">
+                <button type="button" class="qty-left-minus" (click)="open = !open">
+                    <i class="ri-subtract-line"></i>
+                </button>
+                <input type="text" value="1" name="quantity" readonly="" class="form-control input-number qty-input">
+                <button type="button" class="qty-left-plus" (click)="open = !open">
+                    <i class="ri-add-line"></i>
+                </button>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div  class="product-theme-box">
+<div class="img-box ratio_50">
+    <a href="#!">
+        <img class="img-fluid" src="assets/images/product.png" alt="product">
+    </a>
+    <a href="javascript:void(0)" class="heart-icon">
+        <i class="ri-heart-line"></i>
+    </a>
+</div>
+<div class="content-box">
+    <div class="top-content">
+        <a ng-reflect-router-link="product,premium-organic-pumpki" ng-reflect-query-params="[object Object]" href="#!">
+            <h5 >Premium Organic Pumpkin</h5>
+        </a>
+        <div class="d-flex align-items-center justify-content-between">
+            <h6>by <a  href="#!"> Natures Basket Mart</a> in <a  href="#!" class="ng-star-inserted">Vegetables & Fruits</a></h6>
+            <div class="product-rating review-rating">
+            <ul class="rating">
+                <li>
+                    <i  data-feather="star" class="fill"></i>
+                </li>
+                <li>
+                    <i  data-feather="star" class="fill"></i>
+                </li>
+                <li>
+                    <i  data-feather="star" class="fill"></i>
+                </li>
+                <li>
+                    <i  data-feather="star"></i>
+                </li>
+                <li>
+                    <i  data-feather="star"></i>
+                </li>
+            </ul>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-content">
+        <div >
+            <span >8 Sales</span>
+            <h5  class="price">{{ 5.20 | currencySymbol}}</h5>
+        </div>
+        <div class="btn-grp">
+            <button type="button" class="addcart-button btn btn-add-cart" [class.active]="open" (click)="open = !open">
+            <i class="ri-shopping-cart-line"></i>
+            </button>
+            <a href="javascript:void(0)" class="btn">Preview</a>
+        </div>
+    </div>
+</div>
+</div>

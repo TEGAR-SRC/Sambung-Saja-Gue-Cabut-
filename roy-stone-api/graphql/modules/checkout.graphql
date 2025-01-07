@@ -1,0 +1,82 @@
+type CheckoutItemProducts {
+    store_id: Int
+    variation_id: Int
+    product_id: Int
+    tax: Float
+    shipping_cost: Float
+    single_price: Float
+    quantity: Int
+    subtotal: Float
+}
+
+type Checkout {
+    items:[CheckoutItems]
+    total:CheckoutTotal
+}
+
+type CheckoutItems {
+    store: Int
+    products:[CheckoutItemProducts]
+    total: CheckoutItemTotal
+}
+
+type CheckoutItemTotal {
+    tax_total: Float
+    shipping_total:Float
+    sub_total: Float
+    total: Float
+}
+
+type CheckoutTotal {
+    tax_total: Float
+    shipping_total: Float
+    points: Float
+    points_amount: Boolean
+    wallet_balance: Boolean
+    coupon_total_discount: Float
+    total: Float
+    sub_total: Float
+    convert_point_amount: Float
+    convert_wallet_balance: Float
+}
+
+input CheckoutProductsInput {
+    quantity: Int
+    product_id: Int
+    variation_id: Int
+    consumer_id: Int
+    sub_total:Float
+    updated_at: DateTime
+    quantity: Int
+    tax: Float
+    product_id: Int
+    variation_id: Int
+}
+
+input CheckoutUserAddressInput {
+    street: String
+    pincode: Int
+    state_id: Int
+    country_id: Int
+    city: String
+}
+
+input CheckoutInput {
+    consumer_id: Int
+    coupon: String
+    products: [CheckoutProductsInput]
+    shipping_address_id: Int
+    billing_address_id: Int
+    return_url:String
+    cancel_url:String
+    payment_method: String
+    points_amount: Boolean
+    wallet_balance: Boolean
+    delivery_interval: String
+    delivery_description: String
+}
+
+extend type Mutation @guard{
+    checkout(input: CheckoutInput @spread): Checkout @field(resolver: "CheckoutMutator@calculate")
+}
+

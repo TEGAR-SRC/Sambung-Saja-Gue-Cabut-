@@ -1,0 +1,12 @@
+
+<swiper [direction]="'vertical'" [loop]="true" [autoHeight]="true" [height]="26" [allowTouchMove]="false" [autoplay]="{ delay: 1000, disableOnInteraction: false }" [pagination]="false" [navigation]="false">
+  @for(item of content; track item; let i = $index){
+    @if(item.content){
+      <ng-template [attr.data-swiper-autoplay]="2000 * (i+1)" swiperSlide>
+        <div>
+          <span [innerHtml]="item.content"></span>
+        </div>
+      </ng-template>
+    }
+  }
+</swiper>

@@ -1,0 +1,17 @@
+<ng-template #noteModal let-modal>
+  <div class="modal-body">
+    <h5 class="modal-title text-center">{{ 'shipping_note' | translate }}</h5>
+    <div class="mb-4 mt-2">
+      <textarea class="form-control" #descriptionField placeholder="{{ 'enter_description' | translate }} (optional)" rows="3"></textarea>
+    </div>
+    <input class="form-control mb-3" type="datetime-local" placeholder="{{ 'enter_end_date' | translate }}" [formControl]="date">
+    <div class="button-box">
+      <app-button [class]="'btn-md fw-bold btn btn-secondary'" [type]="'button'" [spinner]="false" [id]="'cancel_btn'" (click)="modal.dismiss('Cancel')">
+        {{ 'cancel' | translate }}
+      </app-button>
+      <app-button [class]="'btn-theme btn-md fw-bold btn'" [id]="'yes_btn'" (click)="submit(modal, descriptionField.value)">
+        {{ 'submit' | translate }}
+      </app-button>
+    </div>
+  </div>
+</ng-template>

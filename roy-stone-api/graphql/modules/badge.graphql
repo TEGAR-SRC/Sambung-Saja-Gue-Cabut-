@@ -1,0 +1,36 @@
+type Badge {
+    product: ProductsBadge
+    store: StoresBadge
+    refund:RefundsBadge
+    withdraw_request:WithdrawRequestBadge
+}
+
+type ProductsBadge {
+    total_products: Int
+    total_approved_products: Int
+    total_in_approved_products: Int
+}
+
+type StoresBadge {
+    total_stores: Int
+    total_approved_stores: Int
+    total_in_approved_stores: Int
+}
+
+type RefundsBadge {
+    total_refunds: Int
+    total_pending_refunds: Int
+    total_approved_refunds: Int
+    total_rejected_refunds: Int
+}
+
+type WithdrawRequestBadge {
+    total_withdraw_requests: Int
+    total_pending_withdraw_requests: Int
+    total_approved_withdraw_requests: Int
+    total_rejected_withdraw_requests: Int
+}
+
+extend type Query @guard {
+    badge: Badge @field(resolver: "App\\GraphQL\\Queries\\BadgeQuery@index")
+}

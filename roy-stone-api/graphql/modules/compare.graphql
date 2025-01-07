@@ -1,0 +1,26 @@
+type Compare {
+    id: Int
+    product_id: Int
+    variation_id: Int
+    consumer_id: Int
+    category_id: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input AddToCompareInput {
+    product_id: Int
+}
+
+input DeleteCompareInput {
+    id: Int
+}
+
+extend type Query @guard {
+    compare: [Product]!  @paginate(resolver: "App\\GraphQL\\Queries\\CompareQuery@index" defaultCount:15)
+}
+
+extend type Mutation @guard {
+    addToCompare(input: AddToCompareInput @spread): Compare @field(resolver: "CompareMutator@store")
+    deleteCompare(input: DeleteCompareInput @spread): Boolean @field(resolver: "CompareMutator@destroy")
+}

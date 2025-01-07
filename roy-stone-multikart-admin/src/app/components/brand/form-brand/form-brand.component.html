@@ -1,0 +1,48 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+
+  <app-form-fields [label]="'name'" [for]="'name'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{ 'enter_name' | translate }}" name="name" formControlName="name">
+    @if(form.controls['name'].touched && form.controls['name'].errors?.['required']){
+    <div class="invalid-feedback">
+      {{ 'name_is_required' | translate }}
+    </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'image' | translate " [for]="'image'" [required]="false">
+    <app-image-upload [accept]="[mediaConfig.image]" [multipleImage]="false" [image]="brand?.brand_image" (selectedFiles)="selectBrandImage($event)">
+    </app-image-upload>
+  </app-form-fields>
+
+  <app-form-fields [label]="'banner_image' | translate " [for]="'banner_image'" [required]="false">
+    <app-image-upload [accept]="[mediaConfig.image]" [multipleImage]="false" [image]="brand?.brand_banner" (selectedFiles)="selectBannerImage($event)">
+    </app-image-upload>
+  </app-form-fields>
+
+  <app-form-fields [label]="'meta_title'" [for]="'metatitle'" [required]="false">
+    <input class="form-control" type="text" placeholder="{{'enter_meta_title' | translate }}" formControlName="meta_title">
+  </app-form-fields>
+
+  <app-form-fields [label]="'meta_description'" [for]="'desc'" [required]="false">
+    <textarea class="form-control" placeholder="{{ 'enter_meta_description' | translate }}" formControlName="meta_description" rows="3"></textarea>
+  </app-form-fields>
+
+  <app-form-fields [label]="'meta_image' | translate " [for]="'meta_image'" [required]="false">
+    <app-image-upload [accept]="[mediaConfig.image]" [multipleImage]="false" [image]="brand?.brand_meta_image" (selectedFiles)="selectMetaImage($event)">
+    </app-image-upload>
+  </app-form-fields>
+
+  <app-form-fields [label]="'status'" [for]="'status'" [required]="false">
+    <div class="form-check form-switch ps-0">
+      <label class="switch">
+        <input type="checkbox" id="status" formControlName="status">
+        <span class="switch-state"></span>
+      </label>
+    </div>
+  </app-form-fields>
+
+  <app-button [id]="'brand_btn'">
+    {{ (type == 'create' ? 'save_brand' : 'update_brand') | translate }}
+  </app-button>
+
+</form>

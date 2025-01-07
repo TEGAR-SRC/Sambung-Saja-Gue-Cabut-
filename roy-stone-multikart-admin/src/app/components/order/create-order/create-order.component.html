@@ -1,0 +1,184 @@
+@if(loadingStatus$ | async){
+<app-loader></app-loader>
+}
+
+<div class="container-fluid">
+  <div class="row">
+    <div [ngClass]="navServices.collapseSidebar ? 'col-xxl-9' : 'col-xxl-8'">
+      @if((category$ | async)?.data?.length){
+      <div class="card">
+        <div class="card-body">
+          <div class="pos-product-screen">
+            <div class="title-header">
+              <div class="d-flex align-items-center">
+                <h5>{{ 'categories' | translate }}</h5>
+              </div>
+            </div>
+
+            <owl-carousel-o [options]="customOptions">
+              @for(category of (category$ | async)?.data; track category){
+              <ng-template carouselSlide>
+                <div class="dashboard-category">
+                  <a href="javascript:void(0)" class="category-image"
+                    [class.active]="activeCategory?.id == category?.id" (click)="selectCategory(category)">
+                    <h4>{{category.name.charAt(0).toString().toUpperCase()}}</h4>
+                  </a>
+                  <a href="javascript:void(0)" class="category-name">
+                    <h6>{{category.name}}</h6>
+                  </a>
+                </div>
+              </ng-template>
+              }
+            </owl-carousel-o>
+
+          </div>
+        </div>
+      </div>
+      }
+      <div class="card">
+        <div class="card-body">
+          <form class="theme-form mb-4">
+            <div class="row g-sm-4 g-3">
+              <div class="col-sm-6">
+                <input class="form-control" placeholder="{{ 'search_products_barcode_here' | translate }}" type="text"
+                  [formControl]="term">
+              </div>
+              <div class="col-sm-6">
+                <app-advance-dropdown [position]="'bottom'" [selectedOption]="selectedCategory"
+                  [options]="(category$ | async )?.data ? (category$ | async )?.data : []"
+                  [subArrayKey]="'subcategories'" (selectedItem)="selectCategoryItem($event)">
+                </app-advance-dropdown>
+              </div>
+            </div>
+          </form>
+          <div class="product-section custom-box-loader">
+            <div class="row g-4 row-cols-md-3 row-cols-sm-2 row-cols-1"
+              [ngClass]="navServices.collapseSidebar ? 'row-cols-xxl-5 row-cols-lg-4' : 'row-cols-xxl-4'">
+              @if(loading){
+              @for(item of skeletonItems; track item){
+              <div class="col">
+                <app-product-box-skeleton></app-product-box-skeleton>
+              </div>
+              }
+              }@else {
+              @for(product of (product$ | async)?.data; track product){
+              <div class="col">
+                <app-product-box [product]="product"></app-product-box>
+              </div>
+              }
+              }
+            </div>
+
+            @if((product$ | async)?.data.length){
+            <nav class="custom-pagination">
+              <app-pagination [total]="totalItems" [currentPage]="filter['page']" [pageSize]="filter['paginate']"
+                (setPage)="setPaginate($event)">
+              </app-pagination>
+            </nav>
+            }
+
+            @if(!(product$ | async)?.data?.length && !loading){
+            <app-no-data [class]="'no-data-added shipping-no-data'" [image]="'assets/svg/no-product.png'"
+              [text]="'no_products_found'">
+            </app-no-data>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div [ngClass]="navServices.collapseSidebar ? 'col-xxl-3' : 'col-xxl-4'">
+      <div class="checkout-right-box">
+        <div class="card pos-detail-card">
+          <div class="card-body">
+            <div class="title-header">
+              <div class="d-flex align-items-center w-100">
+                <h5>{{ 'cart' | translate }}</h5>
+              </div>
+            </div>
+            <div class="product-details">
+              @if(!(cartItem$ | async)?.length){
+              <app-no-data [class]="'empty-cart'" [image]="'assets/svg/empty-cart.svg'" [text]="'no_items_in_a_cart'">
+              </app-no-data>
+              }
+
+              @if((cartItem$ | async)?.length){
+              <ul class="cart-listing">
+                @for(item of cartItem$ | async; track item){
+                <li>
+                  <img [src]="item?.variation && item?.variation?.variation_image
+                                                  ? item?.variation?.variation_image?.original_url
+                                                  : item?.product?.product_thumbnail
+                                                  ? item?.product?.product_thumbnail?.original_url
+                                                  : 'assets/images/product.png'" class="img-fluid" alt="product">
+                  <div class="cart-content">
+                    <h4>{{item?.variation ? item?.variation?.name : item?.product?.name}}</h4>
+                    <div>
+                      <h5>{{ (item?.variation ? item?.variation.sale_price : item?.product && item?.wholesale_price ?
+                        item?.wholesale_price : item?.product?.sale_price) | currencySymbol}}</h5>
+                      <div class="qty-box cart_qty">
+                        <div class="input-group">
+                          <app-button [class]="'btn qty-left-minus'" [id]="'add-to-cart'+item.product.id"
+                            [spinner]="false" (click)="updateQuantity(item, -1)">
+                            <i class="ri-subtract-line"></i>
+                          </app-button>
+                          <input class="form-control input-number qty-input" type="number" name="quantity"
+                            [value]="item?.quantity" readonly>
+                          <app-button [class]="'btn qty-left-minus'" [id]="'qty-left-minus'+item.product.id"
+                            [spinner]="false" (click)="updateQuantity(item, 1)">
+                            <i class="ri-add-line"></i>
+                          </app-button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                }
+              </ul>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if((cartItem$ | async)?.length){
+        <div class="card pos-detail-card">
+          <div class="card-body">
+            <div class="title-header">
+              <div class="d-flex align-items-center w-100">
+                <h5>{{"billing_summary"| translate}}</h5>
+              </div>
+            </div>
+
+            <ul class="summary-total">
+              <li>
+                <h4>{{ 'subtotal' | translate }}</h4>
+                <h4 class="price">{{ (cartTotal$ | async) | currencySymbol}}</h4>
+              </li>
+              <li>
+                <h4>{{ 'shipping' | translate }}</h4>
+                <h4 class="price">{{ 'cost_at_checkout' | translate }}</h4>
+              </li>
+              <li>
+                <h4>{{ 'tax' | translate }}</h4>
+                <h4 class="price">{{ 'cost_at_checkout' | translate }}</h4>
+              </li>
+              <li class="list-total">
+                <h4>{{ 'total' | translate }}</h4>
+                <h4 class="price">{{ (cartTotal$ | async) | currencySymbol}}</h4>
+              </li>
+            </ul>
+
+            <ng-container *hasPermission="'order.create'">
+              @if((cartItem$ | async)?.length){
+              <a [routerLink]="['/order/checkout']" routerLinkActive="router-link-active"
+                class="btn btn-animation payment-btn mt-4">
+                {{ 'proceed_to_checkout' | translate }}
+              </a>
+              }
+            </ng-container>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

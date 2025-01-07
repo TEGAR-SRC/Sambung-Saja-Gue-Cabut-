@@ -1,0 +1,48 @@
+<ng-template #requestModal let-modal>
+  <div class="modal-header">
+    <h3 class="mb-1 fw-semibold">{{ 'withdraw_request' | translate }}</h3>
+  </div>
+  <div class="modal-body theme-form">
+    <form [formGroup]="form" (ngSubmit)="sendRequest()">
+
+      <app-form-fields [label]="'amount'" [for]="'Amount'" [required]="true">
+        <input class="form-control" id="Amount" type="number" placeholder="{{ 'enter_request_amount' | translate }}" formControlName="amount">
+        @if(form.controls['amount'].touched && form.controls['amount'].errors?.['required']){
+          <div class="invalid-feedback">
+            {{ 'amount_is_required' | translate }}
+          </div>
+        }
+      </app-form-fields>
+
+      <app-form-fields [label]="'payment_type'" [for]="'payment_type'" [required]="true">
+        <select2 class="custom-select"
+          [data]="payment_type?.length ? payment_type : []"
+          [placeholder]="'select_payment_type' | translate"
+          formControlName="payment_type"
+          noResultMessage="{{'no_data_found' | translate }}">
+        </select2>
+
+        @if(form.controls['payment_type'].touched && form.controls['payment_type'].errors?.['required']){
+          <div class="invalid-feedback">
+            {{ 'payment_type_is_required' | translate }}
+          </div>
+        }
+      </app-form-fields>
+
+      <app-form-fields [label]="'message'" [for]="'message'" [required]="true">
+        <textarea class="form-control" id="message" placeholder="{{ 'enter_message' | translate }}" formControlName="message"></textarea>
+        @if(form.controls['message'].touched && form.controls['message'].errors?.['required']){
+          <div class="invalid-feedback">
+            {{ 'message_is_required' | translate }}
+          </div>
+        }
+      </app-form-fields>
+
+      <div class="button-box">
+        <app-button [class]="'btn-theme btn-md fw-bold btn'" (click)="sendRequest()" [id]="'withdraw-request'">
+          {{ 'send' | translate }}
+        </app-button>
+      </div>
+    </form>
+  </div>
+</ng-template>

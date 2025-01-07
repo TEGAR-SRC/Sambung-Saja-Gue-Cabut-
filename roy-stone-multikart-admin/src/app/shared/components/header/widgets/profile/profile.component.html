@@ -1,0 +1,36 @@
+<li class="profile-nav onhover-dropdown pe-0 me-0">
+   <div class="media profile-media" (click)="clickHeaderOnMobile()">
+      @if((user$ | async)?.profile_image){
+      <div class="profile-img">
+         <img class="user-profile rounded-circle" [src]="(user$ | async)?.profile_image?.original_url" alt="profile">
+      </div>
+      }@else {
+      <div class="user-round">
+         <h4>{{ (user$ | async)?.name?.charAt(0)?.toString()?.toUpperCase() }}</h4>
+      </div>
+      }
+      <div class="user-name-hide media-body">
+         <span>{{ (user$ | async)?.name }}</span>
+         <p class="mb-0 font-roboto">{{ (user$ | async)?.role?.name }}
+            <i class="middle ri-arrow-down-s-line"></i>
+         </p>
+      </div>
+   </div>
+   <ul class="profile-dropdown onhover-show-div" [class.active]="active">
+      <li>
+         <a [routerLink]="['/account']">
+            <i class="ri-user-line"></i>
+            <span>{{ 'my_account' | translate }}</span>
+         </a>
+      </li>
+      <li>
+         <a (click)="confirmationModal.openModal('')">
+            <i class="ri-logout-box-line"></i>
+            <span>{{ 'log_out' | translate }}</span>
+         </a>
+      </li>
+   </ul>
+</li>
+
+<app-confirmation-modal #confirmationModal (confirmed)="logout()">
+</app-confirmation-modal>

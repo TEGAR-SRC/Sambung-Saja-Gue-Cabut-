@@ -1,0 +1,84 @@
+type Currency {
+    id: Int
+    code: String
+    symbol: String
+    no_of_decimal: Float
+    exchange_rate: Float
+    symbol_position: String
+    thousands_separator: String
+    decimal_separator: String
+    system_reserve:Int
+    status: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateCurrencyInput {
+    code: String
+    symbol: String
+    no_of_decimal: Float
+    exchange_rate: Float
+    symbol_position: String
+    thousands_separator: String
+    decimal_separator: String
+    status: Int
+}
+
+input UpdateCurrencyInput {
+    id: Int!
+    code: String
+    symbol: String
+    no_of_decimal: Float
+    exchange_rate: Float
+    symbol_position: String
+    thousands_separator: String
+    decimal_separator: String
+    status: Int
+}
+
+input DeleteCurrencyInput {
+    id: Int!
+}
+
+input DeleteAllCurrenciesInput {
+    ids: [Int]
+}
+
+input StatusCurrencyInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createCurrency(input: CreateCurrencyInput @spread): Currency
+        @can(ability: "currency.create")
+        @field(resolver: "CurrencyMutator@store")
+
+    updateCurrency(input: UpdateCurrencyInput @spread): Currency
+        @can(ability: "currency.edit")
+        @field(resolver: "CurrencyMutator@update")
+
+    deleteCurrency(input: DeleteCurrencyInput @spread): Boolean!
+        @can(ability: "currency.destroy", model: "App\\Models\\Currency")
+        @field(resolver: "CurrencyMutator@destroy")
+
+    statusCurrency(input: StatusCurrencyInput @spread): Currency
+        @can(ability: "currency.edit", model: "App\\Models\\Currency")
+        @field(resolver: "CurrencyMutator@status")
+
+    deleteAllCurrencies(input: DeleteAllCurrenciesInput @spread): Boolean!
+        @can(ability: "currency.destroy", model: "App\\Models\\Currency")
+        @field(resolver: "CurrencyMutator@deleteAll")
+}
+
+extend type Query {
+    currencies(
+        search: String @where(operator: "like", key: "code")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [Currency!]!
+    @paginate(resolver: "App\\GraphQL\\Queries\\CurrencyQuery@index" defaultCount:15)
+    currency(id: Int @eq): Currency @find
+}

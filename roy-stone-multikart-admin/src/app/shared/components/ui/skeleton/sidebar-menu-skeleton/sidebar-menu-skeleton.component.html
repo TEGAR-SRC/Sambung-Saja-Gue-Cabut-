@@ -1,0 +1,37 @@
+@if (loading) {
+   <div class="skeleton-loader">
+      <div class="logo-wrapper logo-wrapper-center">
+         @if((setting$ | async)?.general?.light_logo_image){
+            <a>
+               <img class="img-fluid for-white" [src]="(setting$ | async )?.general?.light_logo_image?.original_url" alt="logo" />
+            </a>
+         }@else {
+            <a>
+               <h2 class="text-white">
+                  {{(setting$ | async)?.general?.site_name ? (setting$ | async)?.general?.site_name : 'Logo Here'}}
+               </h2>
+            </a>
+         }
+         <div class="back-btn"><i class="fa fa-angle-left"></i></div>
+         <div class="toggle-sidebar"><i class="ri-apps-line status_toggle middle sidebar-toggle"></i></div>
+      </div>
+      <nav class="sidebar-main">
+         <div class="left-arrow" id="left-arrow">
+            <i data-feather="arrow-left"></i>
+         </div>
+         <div id="sidebar-menu">
+            <ul class="sidebar-links" id="simple-bar">
+               <li class="back-btn"></li>
+               @for(item of skeletonItems; track item){
+                  <li class="sidebar-list">
+                     <a class="link-nav sidebar-link sidebar-title">
+                        <i></i>
+                        <div class="sidebar-main-link"></div>
+                     </a>
+                  </li>
+               }
+            </ul>
+         </div>
+      </nav>
+   </div>
+}

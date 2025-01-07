@@ -1,0 +1,14 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'brands'">
+  <div *hasPermission="'brand.create'" button>
+    <a [routerLink]="['/brand/create']" class="align-items-center btn btn-theme d-flex">
+      <i class="ri-add-line"></i> {{ 'add_brand' | translate }}
+    </a>
+  </div>
+  <app-table
+    [tableConfig]="tableConfig"
+    [hasCheckbox]="true"
+    (tableChanged)="onTableChange($event)"
+    (rowClicked)="edit($event)"
+    (action)="onActionClicked($event)">
+  </app-table>
+</app-page-wrapper>

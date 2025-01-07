@@ -1,0 +1,91 @@
+<div [class]="class">
+   <div class="logo-wrapper logo-wrapper-center">
+      @if((setting$ | async)?.general?.light_logo_image){
+         <a [routerLink]="['/dashboard']">
+            <img class="img-fluid for-white" [src]="(setting$ | async )?.general?.light_logo_image?.original_url" alt="logo" />
+         </a>
+      }@else {
+         <a [routerLink]="['/dashboard']">
+            <h2 class="text-white">
+               {{(setting$ | async)?.general?.site_name ? (setting$ | async)?.general?.site_name : 'Logo Here'}}
+            </h2>
+         </a>
+      }
+
+      @if((setting$ | async )?.general?.tiny_logo_image){
+         <img class="img-fluid logo-sm" [src]="(setting$ | async )?.general?.tiny_logo_image?.original_url" alt="logo">
+      }@else {
+         <h2 class="text-white logo-sm">
+            {{(setting$ | async)?.general?.site_title ? (setting$ | async)?.general?.site_title.substr(0, 2)?.toString()?.toUpperCase() : 'Logo'}}
+         </h2>
+      }
+
+      <div class="back-btn">
+         <i class="fa fa-angle-left"></i>
+      </div>
+      <div class="toggle-sidebar" (click)="sidebarToggle()">
+         <i class="ri-apps-line status_toggle middle sidebar-toggle"></i>
+      </div>
+   </div>
+   <nav class="sidebar-main">
+      <div class="left-arrow" id="left-arrow">
+         <i data-feather="arrow-left"></i>
+      </div>
+      <div id="sidebar-menu">
+         <ul class="sidebar-links" id="simple-bar">
+            <li class="back-btn"></li>
+            <div *ngTemplateOutlet="recursiveMenu; context: { $implicit: (menu$ | async)?.data }"></div>
+            <ng-template #recursiveMenu let-menus>
+
+               @for(menu of menus; track menu){
+                  @if(hasMainLevelMenuPermission(menu?.acl_permission)
+                  && (!menu?.canAllow || (menu?.canAllow?.length && role && menu?.canAllow?.includes(role)))){
+                     <li [class.sidebar-list]="menu.type == 'sub'" *hasPermission="menu?.permission">
+                        @if(menu.type === 'sub'){
+                           <a href="javascript:void(0)" [ngClass]="{'debar-link sidebar-title link-nav sidebar-link': menu.level === 1 , 'activated': menu.children && menu.active }" [routerLink]="menu.path" [queryParams]="menu.params" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="onItemSelected(menu)">
+                              <span>
+                                 <div class="d-flex align-items-center">
+                                    @if(menu.icon){
+                                       <i class="{{ menu.icon }}"></i>
+                                    }
+                                    <div class="sidebar-main-link">{{ menu.title.replace(' ', '_') | translate }}</div>
+                                 </div>
+   
+                                 @if(menu?.badgeType && menu?.badgeValue != '0' && menu?.badgeValue){
+                                    <span [class]="menu?.badgeType">
+                                       {{ menu?.badgeValue }}
+                                    </span>
+                                 }
+                              </span>
+   
+                              @if(menu.children){
+                                 <div class="according-menu">
+                                    <!-- <i class="ri-arrow-{{ menu.active ? 'down' : 'right' }}-s-line"></i> -->
+                                    <i class="ri-{{ menu.active ? 'subtract' : 'add' }}-line"></i>
+                                 </div>
+                              }
+                           </a>
+                        }
+                        <!-- Submenu Link -->
+                        @if(menu.type === 'link'){
+                           <a href="javascript:void(0)" [routerLink]="menu.path" [queryParams]="menu.params" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">
+                              <div>{{ menu.title.replace(' ', '_') | translate }}</div>
+
+                              @if(menu?.badgeType && menu?.badgeValue != '0' && menu?.badgeValue){
+                                 <span [class]="menu?.badgeType">
+                                    {{ menu?.badgeValue }}
+                                 </span>
+                              }
+                           </a>
+                        }
+                        <ul class="sidebar-submenu" [class.show]="menu.children && menu.active">
+                           <ng-container *ngTemplateOutlet="recursiveMenu; context: { $implicit: menu.children }"></ng-container>
+                        </ul>
+                     </li>
+                  }
+               }
+            </ng-template>
+         </ul>
+      </div>
+   </nav>
+</div>

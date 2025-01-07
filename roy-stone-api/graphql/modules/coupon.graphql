@@ -1,0 +1,113 @@
+type Coupon {
+    id: Int
+    title: String
+    description: String
+    code: String
+    type: String
+    amount: Float
+    min_spend: Int
+    max_spend: Int
+    is_unlimited: Int
+    usage_per_coupon: Int
+    usage_per_customer: Int
+    status: Int
+    is_expired: Int
+    is_first_order: Int
+    is_apply_all: Int
+    start_date: String
+    end_date: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    products: [Product]
+    exclude_products: [Product]
+}
+
+input CreateCouponInput {
+    title: String
+    description: String
+    code: String
+    type: String
+    amount: Float
+    min_spend: Int
+    max_spend: Int
+    is_unlimited: Int
+    usage_per_coupon: Int
+    usage_per_customer: Int
+    status: Int
+    is_expired: Int
+    is_first_order: Int
+    is_apply_all: Int
+    start_date: String
+    end_date: String
+    products: [Int]
+    exclude_products: [Int]
+}
+
+input UpdateCouponInput {
+    id: Int!
+    title: String
+    description: String
+    code: String
+    type: String
+    amount: Float
+    min_spend: Int
+    max_spend: Int
+    is_unlimited: Int
+    usage_per_coupon: Int
+    usage_per_customer: Int
+    status: Int
+    is_expired: Int
+    is_first_order: Int
+    is_apply_all: Int
+    start_date: String
+    end_date: String
+    products: [Int]
+    exclude_products: [Int]
+}
+
+input DeleteCouponInput {
+    id: Int!
+}
+
+input DeleteAllCouponsInput {
+    ids: [Int]
+}
+
+input StatusCouponInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createCoupon(input: CreateCouponInput @spread): Coupon
+        @can(ability: "coupon.create")
+        @field(resolver: "CouponMutator@store")
+
+    updateCoupon(input: UpdateCouponInput @spread): Coupon
+        @can(ability: "coupon.edit")
+        @field(resolver: "CouponMutator@update")
+
+    deleteCoupon(input: DeleteCouponInput @spread): Boolean!
+        @can(ability: "coupon.destroy", model: "App\\Models\\Coupon")
+        @field(resolver: "CouponMutator@destroy")
+
+    deleteAllCoupons(input: DeleteAllCouponsInput @spread): Boolean!
+        @can(ability: "coupon.destroy", model: "App\\Models\\Coupon")
+        @field(resolver: "CouponMutator@deleteAll")
+
+    statusCoupon(input: StatusCouponInput @spread): Coupon
+        @can(ability: "coupon.edit", model: "App\\Models\\Coupon")
+        @field(resolver: "CouponMutator@status")
+}
+
+extend type Query {
+    coupons(
+        search: String @where(operator: "like", key: "name")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [Coupon!]!
+    @paginate(resolver: "App\\GraphQL\\Queries\\CouponQuery@index" defaultCount:15)
+    coupon(id: Int @eq): Coupon @find
+}

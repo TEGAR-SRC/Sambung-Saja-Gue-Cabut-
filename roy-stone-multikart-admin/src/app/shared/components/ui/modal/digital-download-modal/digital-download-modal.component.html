@@ -1,0 +1,29 @@
+<ng-template #downloadModal let-modal>
+   <div class="modal-body">
+      <h5 class="modal-title text-center">{{ 'download' | translate }}</h5>
+      <div class="mb-4 mt-2">
+         <select2 class="custom-select" 
+            [data]="variations.length ? variations : []" 
+            [placeholder]="'select_product' | translate" 
+            (update)="selectProduct($event)" 
+            noResultMessage="{{ 'no_data_found' | translate }}" 
+            resettable>
+         </select2>
+      </div>
+      <div class="button-box">
+         <app-button 
+            [class]="'btn-md fw-bold btn btn-secondary'" 
+            [spinner]="false" 
+            [id]="'no_btn'" 
+            (click)="modal.dismiss('Cancel')">
+            {{ 'cancel' | translate }}
+         </app-button>
+         <app-button 
+            [class]="'btn-theme btn-md fw-bold btn'" 
+            [id]="'yes_btn'" 
+            (click)="download(modal)">
+            {{ 'download' | translate }}
+         </app-button>
+      </div>
+   </div>
+</ng-template>

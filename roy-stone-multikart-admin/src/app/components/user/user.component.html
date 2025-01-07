@@ -1,0 +1,18 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'users'">
+  <div class="d-flex flex-wrap gap-2" *hasPermission="'user.create'" button>
+    <a href="javascript:void(0)" class="align-items-center btn btn-light-bg me-2" (click)="CSVModal.openModal()">
+      <i class="ri-upload-2-line"></i> {{ 'import' | translate }}
+    </a>
+    <a href="javascript:void(0)" class="align-items-center btn btn-light-bg me-2" (click)="export()">
+      <i class="ri-download-2-line"></i> {{ 'export' | translate }}
+    </a>
+    <a [routerLink]="['/user/create']" class="align-items-center btn btn-theme">
+      <i class="ri-add-line"></i> {{ 'add_user' | translate }}
+    </a>
+  </div>
+  <app-table [tableConfig]="tableConfig" [hasCheckbox]="true" (tableChanged)="onTableChange($event)" (rowClicked)="edit($event)" (action)="onActionClicked($event)">
+  </app-table>
+</app-page-wrapper>
+
+<app-import-csv-modal [module]="'user'" #csvModal>
+</app-import-csv-modal>

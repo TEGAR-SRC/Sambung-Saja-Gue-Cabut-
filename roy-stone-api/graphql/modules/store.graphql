@@ -1,0 +1,149 @@
+type Store {
+    id: Int
+    store_name: String
+    description: String
+    slug: String
+    status: Int
+    country_id: Int
+    state_id: Int
+    city: String
+    address: String
+    pincode: String
+    facebook: String
+    twitter: String
+    instagram: String
+    youtube: String
+    pinterest: String
+    store_logo_id: Int
+    store_cover_id: Int
+    hide_vendor_email: Int
+    hide_vendor_phone: Int
+    products_count: Int
+    vendor_id: Int
+    is_approved:Int
+    orders_count: Int
+    reviews_count: Int
+    products_count: Int
+    order_amount:Float
+    rating_count:Float
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    store_logo: Attachment
+    store_cover: Attachment
+    country: Country
+    state: State
+    vendor: User
+}
+
+input CreateStoreInput {
+    store_name: String
+    description: String
+    slug: String
+    status: Int
+    country_id: Int
+    state_id: Int
+    vendor_id: Int
+    city: String
+    address: String
+    pincode: String
+    facebook: String
+    twitter: String
+    instagram: String
+    youtube: String
+    pinterest: String
+    hide_vendor_email: Int
+    hide_vendor_phone: Int
+    store_logo_id: Int
+    store_cover_id: Int
+    name: String
+    email: String
+    country_code: String
+    phone: String
+    password: String
+    password_confirmation: String
+}
+
+input UpdateStoreInput {
+    id: Int!
+    store_name: String
+    description: String
+    slug: String
+    status: Int
+    country_id: Int
+    state_id: Int
+    city: String
+    vendor_id: Int
+    address: String
+    pincode: String
+    facebook: String
+    twitter: String
+    instagram: String
+    youtube: String
+    pinterest: String
+    store_logo_id: Int
+    store_cover_id: Int
+    hide_vendor_email: Int
+    hide_vendor_phone: Int
+    name: String
+    email: String
+    country_code: String
+    phone: String
+    password: String
+}
+
+input DeleteStoreInput {
+    id: Int!
+}
+
+input ApproveStoreInput {
+    id: Int!
+    status: Int
+}
+
+input DeleteAllStoresInput {
+    ids: [Int]
+}
+
+input StatusStoreInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createStore(input: CreateStoreInput @spread): Store
+        @field(resolver: "StoreMutator@store")
+
+    updateStore(input: UpdateStoreInput @spread): Store
+        @field(resolver: "StoreMutator@update")
+
+    deleteStore(input: DeleteStoreInput @spread): Boolean!
+        @field(resolver: "StoreMutator@destroy")
+
+    deleteAllStores(input: DeleteAllStoresInput @spread): Boolean!
+        @can(ability: "store.destroy", model: "App\\Models\\Store")
+        @field(resolver: "StoreMutator@deleteAll")
+
+    approveStore(input: ApproveStoreInput @spread): Store
+        @can(ability: "store.edit", model: "App\\Models\\Product")
+        @field(resolver: "StoreMutator@approve")
+
+    statusStore(input: StatusStoreInput @spread): Store
+        @can(ability: "store.edit", model: "App\\Models\\Store")
+        @field(resolver: "StoreMutator@status")
+}
+
+extend type Query {
+    stores(
+        search: String @where(operator: "like", key: "name")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+        top_selling: Int
+        top_vendor: Int
+        filter_by: String
+        filter_by: String
+    ): [Store!]!@paginate(resolver: "App\\GraphQL\\Queries\\StoreQuery@index" defaultCount:15)
+    store(id: Int @eq): Store @find
+    storeBySlug(slug: String): Store @field(resolver: "App\\GraphQL\\Queries\\StoreQuery@getStoreBySlug")
+}

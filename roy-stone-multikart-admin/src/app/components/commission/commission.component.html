@@ -1,0 +1,8 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'commission_history'">
+  <app-table
+    [tableConfig]="tableConfig"
+    [hasCheckbox]="false"
+    [dateRange]="true"
+    (tableChanged)="onTableChange($event)">
+  </app-table>
+</app-page-wrapper>

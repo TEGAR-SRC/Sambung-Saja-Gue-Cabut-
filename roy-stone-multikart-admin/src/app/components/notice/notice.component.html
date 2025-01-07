@@ -1,0 +1,35 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'notices'" *hasPermission="['notice.create', 'notice.destroy', 'notice.index' ]">
+  <div class="d-flex flex-wrap gap-2" *hasPermission="'notice.create'" button>
+    <a [routerLink]="['/notice/create']" class="align-items-center btn btn-theme">
+      <i class="ri-add-line"></i> {{ 'add_notice' | translate }}
+    </a>
+  </div>
+  <app-table [tableConfig]="tableConfig" [hasCheckbox]="false" (tableChanged)="onTableChange($event)" (rowClicked)="edit($event)" (action)="onActionClicked($event)">
+  </app-table>
+</app-page-wrapper>
+
+@if(role !== 'admin'){
+  @if(!hasPermission('notice.create') && !hasPermission('notice.destroy')){
+    <app-page-wrapper [gridClass]="'col-xxl-8 m-auto'" [title]="'Notice'">
+      @if((notice$ | async)?.data?.length){
+        <ul class="notification-setting notification-page">
+          @for(notice of (notice$ | async)?.data; track notice){
+            <li class="notice-section" [class.warning]="notice.priority === 'low'">
+              <div class="notice-content">
+                <div class="icon-box">
+                  <i class="ri-error-warning-line"></i>
+                </div>
+                <div class="notice-box">
+                  <h3>{{ notice?.title }}</h3>
+                  <p [innerHTML]="notice?.description"></p>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </app-page-wrapper>
+  }
+}
+<ng-container>
+</ng-container>

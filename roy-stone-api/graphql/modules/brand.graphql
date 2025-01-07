@@ -1,0 +1,92 @@
+type Brand {
+    id: Int
+    name: String
+    status: Int
+    meta_title: String
+    meta_description: String
+    brand_image_id: Int
+    brand_meta_image_id: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    brand_image: Attachment
+    brand_meta_image: Attachment
+}
+
+input CreateBrandInput {
+    name: String
+    meta_title: String
+    meta_description: String
+    brand_image_id: Int
+    brand_meta_image_id: Int
+    status: Int
+}
+
+input UpdateBrandInput {
+    id: Int!
+    name: String
+    meta_title: String
+    meta_description: String
+    brand_image_id: Int
+    og_image_id: Int
+    status: Int
+}
+
+input DeleteBrandInput {
+    id: Int!
+}
+
+input DeleteAllBrandsInput {
+    ids: [Int]
+}
+
+input StatusBrandInput {
+    id: Int!
+    status: Int
+}
+
+input ImportBrandsInput {
+    brands: Upload
+}
+
+type BrandPayload {
+    success: Boolean
+    message: String
+}
+
+extend type Mutation {
+    createBrand(input: CreateBrandInput @spread): Brand
+        @can(ability: "brand.create")
+        @field(resolver: "BrandMutator@store")
+
+    updateBrand(input: UpdateBrandInput @spread): Brand
+        @can(ability: "brand.edit")
+        @field(resolver: "BrandMutator@update")
+
+    deleteBrand(input: DeleteBrandInput @spread): Boolean!
+        @can(ability: "brand.destroy", model: "App\\Models\\Brand")
+        @field(resolver: "BrandMutator@destroy")
+
+    statusBrand(input: StatusBrandInput @spread): Brand
+        @can(ability: "brand.edit", model: "App\\Models\\Brand")
+        @field(resolver: "BrandMutator@status")
+
+    deleteAllBrands(input: DeleteAllBrandsInput @spread): Boolean!
+        @can(ability: "brand.destroy", model: "App\\Models\\Brand")
+        @field(resolver: "BrandMutator@deleteAll")
+
+    importBrands(input: ImportBrandsInput @spread): [Brand]
+        @can(ability: "brand.create", model: "App\\Models\\Brand")
+        @field(resolver: "BrandMutator@import")
+}
+
+extend type Query {
+    brands(
+        search: String @where(operator: "like", key: "name")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): Brand
+    @paginate(resolver: "App\\GraphQL\\Queries\\BrandQuery@index" defaultCount:15)
+    brand(id: Int @eq): Brand @find
+}

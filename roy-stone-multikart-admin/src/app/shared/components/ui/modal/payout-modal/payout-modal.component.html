@@ -1,0 +1,100 @@
+<ng-template #payoutModal let-modal>
+   <div class="modal-header">
+      <h3 class="mb-1 fw-semibold">{{ label | translate }}</h3>
+      <app-button [class]="'btn btn-close'" [spinner]="false" [id]="'payout_close_btn'" (click)="modal.dismiss('Cross click')">
+         <i class="ri-close-line"></i>
+      </app-button>
+   </div>
+   <div class="modal-body">
+      <div class="dark-border-color">
+         <table class="table all-package theme-table no-footer">
+            <tbody>
+               @if(payoutData.message){
+                  <tr>
+                     <td class="text-start fw-semibold">{{ 'message' | translate }}</td>
+                     <td class="text-start">{{ payoutData.message }}</td>
+                  </tr>
+               }
+               @if(payoutData.reason){
+                  <tr>
+                     <td class="text-start fw-semibold">{{ 'reason' | translate }}</td>
+                     <td class="text-start">{{ payoutData.reason }}</td>
+                  </tr>
+               }
+               @if(payoutData.user.payment_account){
+                  <tr>
+                     <td class="text-start fw-semibold">{{ 'due_to_seller' | translate }}</td>
+                     <td class="text-start">{{ payoutData?.amount | currencySymbol }}</td>
+                  </tr>
+               }
+               @if(payoutData?.payment_type !== 'WALLET'){
+                  @if(payoutData.user.payment_account && payoutData?.user?.payment_account?.bank_name){
+                     <tr>
+                        <td class="text-start fw-semibold">{{ 'bank_name' | translate }} </td>
+                        <td class="text-start">{{ payoutData?.user?.payment_account?.bank_name }}</td>
+                     </tr>
+                  }
+                  @if(payoutData.user.payment_account && payoutData?.user?.payment_account?.bank_holder_name){
+                     <tr>
+                        <td class="text-start fw-semibold">{{ 'bank_account_name' | translate }} </td>
+                        <td class="text-start">{{payoutData?.user?.payment_account?.bank_holder_name}}</td>
+                     </tr>
+                  }
+                  @if(payoutData.user.payment_account && payoutData?.user?.payment_account?.bank_account_no){
+                     <tr>
+                        <td class="text-start fw-semibold">{{ 'bank_account_number' | translate }} </td>
+                        <td class="text-start">{{ payoutData?.user?.payment_account?.bank_account_no }}</td>
+                     </tr>
+                  }
+                  @if(payoutData.user.payment_account && payoutData?.user?.payment_account?.ifsc){
+                     <tr>
+                        <td class="text-start fw-semibold">{{ 'bank_ifsc_code' | translate }}</td>
+                        <td class="text-start">{{ payoutData?.user?.payment_account?.ifsc }}</td>
+                     </tr>
+                  }
+                  @if(payoutData.user.payment_account && payoutData?.user?.payment_account?.swift){
+                     <tr>
+                        <td class="text-start fw-semibold">{{ 'bank_swift_Code' | translate }} </td>
+                        <td class="text-start">{{ payoutData?.user?.payment_account?.swift }}</td>
+                     </tr>
+                  }
+               }
+               @if(!payoutData.user.payment_account){
+                  <tr>
+                     <td class="text-start fw-semibold">{{ 'amount' | translate }} </td>
+                     <td class="text-start">
+                        {{ payoutData?.amount | currencySymbol }}
+                     </td>
+                  </tr>
+               }
+               @if(payoutData?.payment_type){
+                  <tr>
+                     <td class="text-start fw-semibold">{{ 'payment_method' | translate }}</td>
+                     <td class="text-start">{{ payoutData?.payment_type | uppercase }}</td>
+                  </tr>
+               }
+               @if(payoutData?.status){
+                  <tr>
+                     <td class="text-start fw-semibold">{{ 'status' | translate }}</td>
+                     <td class="text-start">
+                        <div class="status-{{ payoutData?.status }}"><span>{{ payoutData?.status | uppercase }}</span></div>
+                     </td>
+                  </tr>
+               }
+            </tbody>
+         </table>
+      </div>
+      <div *hasPermission="'withdraw_request.action'">
+         @if(payoutData?.status === 'pending'){
+            <div class="button-box">
+               <app-button [class]="'btn-md fw-bold btn btn-secondary'" [id]="'withdrawal_rejected_btn'" (click)="actionPerform('rejected')">
+                  {{ 'rejected' | translate }}
+               </app-button>
+               <app-button [class]="'btn-theme btn-md fw-bold btn'" [id]="'withdrawal_approved_btn'" (click)="actionPerform('approved')">
+                  {{ 'approved' | translate }}
+               </app-button>
+            </div>
+         }
+      </div>
+   </div>
+</ng-template>

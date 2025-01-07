@@ -1,0 +1,59 @@
+type Attachment {
+    id: Int
+    collection_name: String
+    name: String
+    file_name: String
+    disk: String
+    conversions_disk: String
+    mime_type: String
+    size: Int
+    created_by_id: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    original_url: String
+    preview_url: String
+}
+
+input UploadAttachmentInput {
+    attachments: [Upload]
+}
+
+input DeleteAttachmentInput {
+    id: Int!
+}
+
+input DeleteAllAttachmentsInput {
+    ids: [Int]
+}
+
+type AttachmentPayload {
+    success: Boolean
+    message: String
+}
+
+extend type Mutation @guard {
+
+    uploadAttachment(input: UploadAttachmentInput @spread): [Attachment]
+        @can(ability: "attachment.create")
+        @field(resolver: "AttachmentMutator@store")
+
+    deleteAttachment(input: DeleteAttachmentInput @spread): Boolean!
+        @can(ability: "attachment.destroy", model: "App\\Models\\Attachment")
+        @field(resolver: "AttachmentMutator@destroy")
+
+    deleteAllAttachments(input: DeleteAllAttachmentsInput @spread): Boolean!
+        @can(ability: "attachment.destroy", model: "App\\Models\\Attachment")
+        @field(resolver: "AttachmentMutator@deleteAll")
+
+}
+
+extend type Query @guard {
+
+    attachments(
+        search: String @where(operator: "like", key: "file_name")
+        paginate: Int
+        sort: String
+        orderBy: _@orderBy(columns: ["size","updated_at", "created_at"], order: DESC)):
+            [Attachment!]! @paginate(resolver: "App\\GraphQL\\Queries\\AttachmentQuery@index" defaultCount:15)
+
+}

@@ -1,0 +1,1386 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'theme_options'">
+   <form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="vertical-tabs">
+         <div class="row">
+            <div class="col-xl-3 col-lg-4">
+               <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" orientation="vertical">
+                  <li ngbNavItem="general">
+                     <a ngbNavLink><i class="ri-settings-line"></i>{{ 'general' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="row">
+                           <div class="col-xl-12">
+                              <div formGroupName="logo">
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'header_logo'" [for]="'header_logo'" [required]="false">
+                                    <app-image-upload
+                                       [accept]="[mediaConfig.image]"
+                                       [multipleImage]="false"
+                                       [helpText]="'*Upload image size 180x50px recommended'"
+                                       [image]="(themeOption$ | async)?.logo?.header_logo"
+                                       (selectedFiles)="selectHeaderLogo($event)">
+                                    </app-image-upload>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'footer_logo'" [for]="'footer_logo'" [required]="false">
+                                    <app-image-upload
+                                       [accept]="[mediaConfig.image]"
+                                       [multipleImage]="false"
+                                       [helpText]="'*Upload image size 180x50px recommended'"
+                                       [image]="(themeOption$ | async)?.logo?.footer_logo"
+                                       (selectedFiles)="selectFooterLogo($event)">
+                                    </app-image-upload>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'favicon_icon'" [for]="'favicon_logo'" [required]="false">
+                                    <app-image-upload
+                                       [accept]="[mediaConfig.image]"
+                                       [multipleImage]="false"
+                                       [helpText]="'*Upload image size 16x16px recommended'"
+                                       [image]="(themeOption$ | async)?.logo?.favicon_icon"
+                                       (selectedFiles)="selectFaviconIcon($event)">
+                                    </app-image-upload>
+                                 </app-form-fields>
+                              </div>
+                              <div formGroupName="general">
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'site_title'" [for]="'site_title'" [required]="true">
+                                    <input class="form-control" id="site_title" type="text" placeholder="{{ 'enter_site_title' | translate }}" formControlName="site_title">
+                                   @if(form.get('general.site_title')?.touched && form.get('general.site_title')?.errors?.['required']){
+                                       <div class="invalid-feedback">
+                                       {{ 'site_title_is_required' | translate }}
+                                       </div>
+                                   }
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'site_tagline'" [for]="'site_tagline'">
+                                    <input class="form-control" id="site_tagline" type="text" placeholder="{{ 'enter_site_tagline' | translate }}" formControlName="site_tagline">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'primary_color'" [for]="'primary_color'">
+                                    <div class="color-box">
+                                       <input class="form-control" id="primary_color" type="color" formControlName="primary_color">
+                                       <h6>{{ form.get('general.primary_color')?.value}}</h6>
+                                    </div>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secondary_color'" [for]="'secondary_color'">
+                                    <div class="color-box">
+                                       <input class="form-control" id="secondary_color" type="color" formControlName="secondary_color">
+                                       <h6>{{ form.get('general.secondary_color')?.value}}</h6>
+                                    </div>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'back_to_top'" [for]="'back_to_top_enable'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="back_to_top_enable" formControlName="back_to_top_enable">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'cart_style'" [for]="'cart_style'">
+                                    <select2
+                                        class="custom-select"
+                                        [data]="cart_style?.length ? cart_style : []"
+                                        [placeholder]="'select_mode' | translate "
+                                        noResultMessage="{{ 'no_data_found' | translate }}"
+                                        formControlName="cart_style">
+                                    </select2>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'language_direction'" [for]="'language_direction'">
+                                    <select2
+                                       class="custom-select"
+                                       [placeholder]="'select_footer_mode' | translate"
+                                       formControlName="language_direction"
+                                       [data]="language_direction?.length ? language_direction : []">
+                                    </select2>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'mode'" [for]="'mode'">
+                                    <select2
+                                        class="custom-select"
+                                        [data]="mode?.length ? mode : []"
+                                        [placeholder]="'select_mode' | translate "
+                                        noResultMessage="{{ 'no_data_found' | translate }}"
+                                        formControlName="mode">
+                                    </select2>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Seller Register URL'" [for]="'seller_register_url'">
+                                    <input class="form-control" id="seller_register_url" type="text" placeholder="{{ 'enter_seller_register_url' | translate }}" formControlName="seller_register_url">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'celebration_effect'" [for]="'celebration_effect'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="celebration_effect" formControlName="celebration_effect">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'exit_tab_tagline'" [for]="'exit_tagline'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="exit_tagline_enable" formControlName="exit_tagline_enable">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 @for(tagline of taglines.controls; track tagline; let i = $index){
+                                   <div formArrayName="taglines">
+                                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'tagline'+ ' ' +(i+1)" [for]="'tagline'">
+                                       <input class="form-control" id="tagline" type="text" placeholder="{{ 'enter_tagline' | translate }}" [formControlName]="i">
+                                       </app-form-fields>
+                                   </div>
+                                 }
+                              </div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="header">
+                     <a ngbNavLink><i class="ri-layout-top-line"></i>{{ 'header' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="row">
+                           <div class="col-xl-12">
+                              <div formGroupName="header">
+                                <app-form-fields  [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'header_options'" [for]="'mode'">
+                                   <select2 class="custom-select"
+                                         [data]="header_options ? header_options : []"
+                                         [placeholder]="'select_variant' | translate " formControlName="header_options"
+                                         noResultMessage="{{'no_data_found' | translate }}"
+                                         multiple="false">
+                                   </select2>
+                                </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sticky_header'" [for]="'sticky_Header'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="sticky_header_enable" formControlName="sticky_header_enable">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'topbar'" [for]="'page_top_bar_enable'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="page_top_bar_enable" formControlName="page_top_bar_enable">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 <div formArrayName="top_bar_content">
+                                   @for(noticeGroup of topBarContent?.controls; track noticeGroup; let i = $index){
+                                       <div [formGroupName]="i">
+                                          @if(form.get('header.page_top_bar_enable')?.value){
+                                              <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="('top_bar_content' | translate)+' '+(i+1)" [for]="'top_bar_content'" >
+                                                 <input type="text" class="form-control" id="top_bar_content" placeholder="{{ 'enter_top_bar_content' | translate }}" formControlName="content">
+                                                 <p class="help-text">{{ '*Utilize HTML tags for custom content presentation.' }}</p>
+                                              </app-form-fields>
+                                          }
+                                       </div>
+                                   }
+                                  </div>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'support_number'" [for]="'site_tagline'">
+                                    <input type="text" class="form-control" placeholder="{{'enter_phone_number' | translate}}" formControlName="support_number">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'categories'" [for]="'category_ids'">
+                                    <select2 class="custom-select"
+                                       [templates]="template"
+                                       [data]="(categories$ | async) ? (categories$ | async) : []"
+                                       [placeholder]="'select_categories' | translate "
+                                       formControlName="category_ids" multiple="true"
+                                       noResultMessage="{{'no_data_found' | translate }}"
+                                       resettable>
+                                       <ng-template #template let-data="data">
+                                          <div class="image">
+                                             <img [src]="data.image" [class]="'img-fluid selection-image'">
+                                          </div>
+                                          {{ data.name }}
+                                       </ng-template>
+                                    </select2>
+                                 </app-form-fields>
+                              </div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="footer">
+                     <a ngbNavLink><i class="ri-layout-bottom-line"></i>{{ 'footer' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="row">
+                           <div class="col-xl-12">
+                              <div formGroupName="footer">
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'footer_style'" [for]="'mode'">
+                                    <select2
+                                       class="custom-select"
+                                       [placeholder]="'select_footer_mode' | translate"
+                                       [data]="footer_layout?.length ? footer_layout : []"
+                                       formControlName="footer_style">
+                                    </select2>
+                                 </app-form-fields>
+                                 @if(form.get('footer.footer_style')?.value === 'footer_three'){
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'"  [label]="'background Color'" [for]="'bg_color'">
+                                        <div class="color-box">
+                                           <input class="form-control" id="primary_color" type="color" formControlName="bg_color">
+                                           <h6>{{ form.get('footer.bg_color')?.value}}</h6>
+                                        </div>
+                                     </app-form-fields>
+                                 }
+                                 @if(form.get('footer.footer_style')?.value === 'footer_four'){
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'"  [label]="'Footer Background Image'" [for]="'image_url'" >
+                                        <app-image-upload
+                                           [url]="true"
+                                           [accept]="[mediaConfig.image]"
+                                           [multipleImage]="false"
+                                           [helpText]="'*Upload image size 1155x670px recommended'"
+                                           [imageUrl]="form.get('footer.bg_image')?.value"
+                                           (selectedFiles)="selectBanner($event, 'footer.bg_image')">
+                                        </app-image-upload>
+                                     </app-form-fields>
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'"[label]="'title'" [for]="'title'">
+                                        <input class="form-control" id="title" type="text"
+                                           placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                     </app-form-fields>
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sub_title'" [for]="'sub_title'">
+                                        <input class="form-control" id="sub_title" type="text"
+                                           placeholder="{{ 'enter_sub_title' | translate }}" formControlName="sub_title">
+                                     </app-form-fields>
+                                 }
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'footer_content'" [for]="'footer_about'">
+                                    <textarea class="w-100" formControlName="footer_about" placeholder="{{ 'enter_footer_content' | translate }}"></textarea>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'address'" [for]="'about_address'">
+                                    <textarea class="w-100" placeholder="{{ 'enter_address' | translate }}" formControlName="about_address"></textarea>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'email'" [for]="'about_email'">
+                                    <input type="email" class="form-control" id="about_email" placeholder="{{ 'enter_email' | translate }}" formControlName="about_email">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'categories'" [for]="'category'">
+                                    <app-advance-dropdown
+                                       [position]="'bottom'"
+                                       [selectedOption]="selectedCategories"
+                                       [options]="(category$ | async )?.data?.length ? (category$ | async )?.data : []"
+                                       [subArrayKey]="'subcategories'" (selectedItem)="selectCategory($event)">
+                                    </app-advance-dropdown>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'useful_link'" [for]="'useful_link' | translate">
+                                    <app-advance-dropdown
+                                          [position]="'bottom'"
+                                          [selectedOption]="usefulLinks"
+                                          [options]="useful_link?.length ? useful_link : []"
+                                          (selectedItem)="usefulLink($event)">
+                                    </app-advance-dropdown>
+                                    <p class="help-text">{{ '*Pick Usefull Link to showcase in the footer area.' }}</p>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'help_center'" [for]="'useful_link' | translate">
+                                    <app-advance-dropdown
+                                          [position]="'bottom'"
+                                          [selectedOption]="helpCenterIds"
+                                          [options]="help_center?.length ? help_center : []"
+                                          (selectedItem)="helpCenter($event)">
+                                    </app-advance-dropdown>
+                                    <p class="help-text">{{ '*Pick help center Link to showcase in the footer area.' }}</p>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'support_number'" [for]="'site_tagline'">
+                                    <input type="text" class="form-control" placeholder="{{ 'enter_phone_number' | translate }}" formControlName="support_number">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'support_email'">
+                                    <input type="email" class="form-control" placeholder="{{ 'enter_email' | translate }}" formControlName="support_email">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'play_store_url'" [for]="'play_store_url'">
+                                    <input type="url" class="form-control" placeholder="{{ 'enter_play_store_url' | translate }}" formControlName="play_store_url">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'app_store_url'" [for]="'app_store_url'">
+                                    <input type="url" class="form-control" placeholder="{{ 'enter_app_store_url' | translate }}" formControlName="app_store_url">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'"  [label]="'Payment option image'" [for]="'image_url'" >
+                                   <app-image-upload
+                                      [url]="true"
+                                      [accept]="[mediaConfig.image]"
+                                      [multipleImage]="false"
+                                      [imageUrl]="form.get('footer.payment_option_image_url')?.value"
+                                      (selectedFiles)="selectBanner($event, 'footer.payment_option_image_url')">
+                                   </app-image-upload>
+                                </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'show_social_media'" [for]="'site_tagline'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="social_media" formControlName="social_media_enable">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 @if(form.get('footer.social_media_enable')?.value){
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'faceBook'" [for]="'facebook'">
+                                        <input type="url" class="form-control" placeholder="{{ 'enter_facebook_url' | translate }}" formControlName="facebook">
+                                     </app-form-fields>
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'instagram'" [for]="'instagram'">
+                                        <input type="url" class="form-control" placeholder="{{ 'enter_instagram_url' | translate }}" formControlName="instagram">
+                                     </app-form-fields>
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'twitter'" [for]="'twitter'">
+                                        <input type="url" class="form-control" placeholder="{{ 'enter_twitter_url' | translate }}" formControlName="twitter">
+                                     </app-form-fields>
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'pinterest'" [for]="'pinterest'">
+                                        <input type="url" class="form-control" placeholder="{{ 'enter_pinterest_url' | translate }}" formControlName="pinterest">
+                                     </app-form-fields>
+                                 }
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'footer_copyright'" [for]="'footer_copyright'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="footer_copyright" formControlName="footer_copyright">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 @if(form.get('footer.footer_copyright').value){
+                                     <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'copyright_text'" [for]="'copyright_content'">
+                                        <textarea class="w-100" placeholder="{{ 'enter_copyright_text' | translate }}" formControlName="copyright_content"></textarea>
+                                     </app-form-fields>
+                                 }
+                              </div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="shop_layout">
+                     <a ngbNavLink><i class="ri-shopping-basket-line"></i>{{ 'collection' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div formGroupName="collection">
+                           <div class="selection-layout radio-type-sec">
+                              <h4 class="fw-semibold">{{'collection_page_layout' | translate }}</h4>
+                              <div class="row row-cols-xxl-4 row-cols-xl-3 row-cols-lg-2 row-cols-md-3 row-cols-2 g-4">
+                               @for(layout of collection_layout; track layout){
+                                  <div>
+                                      <div class="selection-box text-center">
+                                         <input name="shop-layout" type="radio" [id]="layout.value" [value]="layout.value" name="collection_layout" formControlName="collection_layout" />
+                                         <label [for]="layout.value">
+                                            <div>
+                                               <img [src]="layout.image" class="img-fluid" [alt]="layout.label">
+                                            </div>
+                                            <h4 class="mt-2">{{ layout.label | translate }}</h4>
+                                         </label>
+                                      </div>
+                                  </div>
+                               }
+                              </div>
+                           </div>
+                           <div class="banner-image-box">
+                               @if(form.get('collection.collection_layout')?.value === 'collection_category_slider' || form.get('collection.collection_layout')?.value === 'collection_category_sidebar'){
+                                   <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'categories'" [for]="'type'">
+                                      <app-advance-dropdown
+                                         [position]="'bottom'" [selectedOption]="selectedCollectionCategories"
+                                         [options]="(category$ | async)?.data?.length ? (category$ | async )?.data : []"
+                                         [subArrayKey]="'subcategories'"
+                                         [id]="'categories'"
+                                         (selectedItem)="selectCategoryItem($event, 'collection.collection_categories_ids')">
+                                      </app-advance-dropdown>
+                                   </app-form-fields>
+                               }
+                               @if(form.get('collection.collection_layout')?.value !== 'collection_category_slider'   &&
+                               form.get('collection.collection_layout')?.value !== 'collection_category_sidebar' &&
+                               form.get('collection.collection_layout')?.value !== 'collection_offcanvas_filter'){
+                                   <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'"  [label]="'banner_image'" [for]="'collection_banner_image_url'">
+                                      <app-image-upload
+                                         [url]="true"
+                                         [accept]="[mediaConfig.image]"
+                                         [multipleImage]="false"
+                                         [helpText]="'*Upload image size 1579x241px recommended'"
+                                         [imageUrl]="form.get('collection.collection_banner_image_url')?.value"
+                                         (selectedFiles)="selectBanner($event, 'collection.collection_banner_image_url')">
+                                      </app-image-upload>
+                                   </app-form-fields>
+                               }
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="product_layout">
+                    <a ngbNavLink><i class="ri-shopping-basket-line"></i>{{ 'product' | translate }}</a>
+                    <ng-template ngbNavContent>
+                       <div formGroupName="product">
+                       <app-form-fields  [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'product_page_layout'" [for]="'mode'">
+                          <select2 class="custom-select"
+                                [data]="product_layout.length ? product_layout : []"
+                                [placeholder]="'product_page_layout' | translate " formControlName="product_layout"
+                                noResultMessage="{{'no_data_found' | translate }}"
+                                multiple="false">
+                          </select2>
+                       </app-form-fields>
+                       <div class="banner-image-box">
+                          @if(form.get('product.product_layout')?.value === 'product_sidebar_left' || form.get('product.product_layout')?.value === 'product_sidebar_right' || form.get('product.product_layout')?.value === 'product_slider'){
+                          <div formGroupName="services">
+                          
+                             <app-button [class]="'btn btn-animation mb-3'" [id]="'add_banners_btn'" (click)="addServiceBanner($event)" [spinner]="false">
+                                {{ 'add_banners' | translate }}
+                             </app-button>
+                          
+                             @if(servicesArray?.controls?.length){
+                             <div class="shipping-accordion variant-accordion">
+                                <div formArrayName='banners'>
+                                   <ng-container>
+                                      @for(banners of servicesArray.controls; track banners; let i = $index){
+                                      <div class="d-flex" formGroupName="{{ i }}">
+                                         <div class="col-11">
+                                            <div ngbAccordion>
+                                               <div ngbAccordionItem [collapsed]="false">
+                                                  <div ngbAccordionHeader>
+                                                     <button ngbAccordionButton>{{ 'service' | translate }} {{(i+1)}}</button>
+                                                  </div>
+                                                  <div ngbAccordionCollapse>
+                                                     <div ngbAccordionBody>
+                                                        <ng-template>
+                          
+                                                           <app-form-fields [label]="'title'" [for]="'title'">
+                                                              <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                           </app-form-fields>
+                          
+                                                           <app-form-fields [label]="'description'" [for]="'description'">
+                                                              <input class="form-control" id="description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description">
+                                                           </app-form-fields>
+                          
+                                                           <app-form-fields [label]="'image'" [for]="'image_url'">
+                                                              <app-image-upload [url]="true" [accept]="[mediaConfig.image]" [multipleImage]="false" [helpText]="'*Upload image size 375x586px recommended'" [imageUrl]="form.get('product.services.banners')?.value[i].image_url" (selectedFiles)="selectServiceImage($event, i)">
+                                                              </app-image-upload>
+                                                           </app-form-fields>
+                                                           
+                                                           <app-form-fields [label]="'image'" [for]="'image_url'">
+                                                              <app-image-upload [url]="true" [accept]="[mediaConfig.image]" [multipleImage]="false" [helpText]="'*Upload image size 375x586px recommended'" [imageUrl]="form.get('product.services.banners')?.value[i].image_url" (selectedFiles)="selectServiceImage($event, i)">
+                                                              </app-image-upload>
+                                                           </app-form-fields>
+                                                           <app-form-fields [label]="'status'" [for]="'status'">
+                                                              <div class="form-check form-switch ps-0">
+                                                                 <label class="switch">
+                                                                    <input type="checkbox" id="status" formControlName="status">
+                                                                    <span class="switch-state"></span>
+                                                                 </label>
+                                                              </div>
+                                                           </app-form-fields>
+                          
+                                                        </ng-template>
+                                                     </div>
+                                                  </div>
+                                               </div>
+                                            </div>
+                                         </div>
+                                         <div class="col-1 text-center fs-20">
+                                            <a href="javascript:void(0)" (click)="removeServiceBanner(i)" class="invalid-feedback text-end cursor-pointer d-inline-block w-auto mt-2">
+                                               <i class="ri-close-line"></i></a>
+                                         </div>
+                                      </div>
+                                      }
+                                   </ng-container>
+                                </div>
+                             </div>
+                             }
+                          </div>
+
+                          }
+                       </div>
+                       <div class="mb-5">
+                           <app-form-fields  [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Layout variation'" [for]="'mode'">
+                             <select2 class="custom-select"
+                                   [data]="product_box_variant ? product_box_variant : []"
+                                   [placeholder]="'select_variant' | translate " formControlName="product_box_variant"
+                                   noResultMessage="{{'no_data_found' | translate }}"
+                                   multiple="false">
+                             </select2>
+                          </app-form-fields>
+                          <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Image variation'" [for]="'image_variant'">
+                             <select2 class="custom-select"
+                                [data]="image_variant ? image_variant : []"
+                                [placeholder]="'image_variant' | translate " formControlName="image_variant"
+                                noResultMessage="{{'no_data_found' | translate }}"
+                                multiple="false">
+                             </select2>
+                          </app-form-fields>
+                       </div>
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'trending_product' | translate" [for]="'is_trending_product'">
+                          <div class="form-check form-switch ps-0">
+                             <label class="switch">
+                                <input type="checkbox" id="is_trending_product" formControlName="is_trending_product">
+                                <span class="switch-state"></span>
+                             </label>
+                             <p class="help-text">{{ '*Enabling this will showcase the product in the sidebar of the product page as a trending item.' }}</p>
+                          </div>
+                       </app-form-fields>
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'safe_checkout'" [for]="'safe_checkout'">
+                          <div class="form-check form-switch ps-0">
+                             <label class="switch">
+                                <input type="checkbox" id="safe_checkout" formControlName="safe_checkout">
+                                <span class="switch-state"></span>
+                             </label>
+                             <p class="help-text">{{ '*A safe checkout image will appear on the product page.' }}</p>
+                          </div>
+                       </app-form-fields>
+                       @if(form.get('product.safe_checkout')?.value){
+                          <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'"
+                             [label]="'safe_checkout_image'" [for]="'image_url'">
+                             <app-image-upload
+                                [url]="true"
+                                [accept]="[mediaConfig.image]"
+                                [multipleImage]="false"
+                                [helpText]="'*Upload image size 50x50px recommended'"
+                                [imageUrl]="form.get('product.safe_checkout_image')?.value"
+                                (selectedFiles)="selectBanner($event, 'product.safe_checkout_image')">
+                             </app-image-upload>
+                          </app-form-fields>
+                       }
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secure_checkout'" [for]="'secure_checkout'">
+                          <div class="form-check form-switch ps-0">
+                             <label class="switch">
+                                <input type="checkbox" id="secure_checkout" formControlName="secure_checkout">
+                                <span class="switch-state"></span>
+                             </label>
+                             <p class="help-text">{{ '*A secure checkout image will appear on the product page.' }}</p>
+                          </div>
+                       </app-form-fields>
+                       @if(form.get('product.secure_checkout')?.value){
+                          <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'"
+                             [label]="'secure_checkout_image'" [for]="'image_url'">
+                             <app-image-upload
+                                [url]="true"
+                                [accept]="[mediaConfig.image]"
+                                [multipleImage]="false"
+                                [helpText]="'*Upload image size 50x50px recommended'"
+                                [imageUrl]="form.get('product.secure_checkout_image')?.value"
+                                (selectedFiles)="selectBanner($event, 'product.secure_checkout_image')">
+                             </app-image-upload>
+                          </app-form-fields>
+                       }
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'encourage_order'" [for]="'encourage_order'">
+                          <div class="form-check form-switch ps-0">
+                             <label class="switch">
+                                <input type="checkbox" id="encourage_order" formControlName="encourage_order">
+                                <span class="switch-state"></span>
+                             </label>
+                             <p class="help-text">{{ '*A random order count between 1 and 100 will be displayed to motivate user purchases.' }}</p>
+                          </div>
+                       </app-form-fields>
+                       @if(form.get('product.encourage_order')?.value){
+                          <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'"  [gridClass]="'col-sm-9'" [label]="'encourage_max_order_count'" [for]="'encourage_max_order_count'" [required]="false">
+                             <input type="number" class="form-control" min="0" max="100" oninput="if (value > 100) value = 100; if (value < 0) value = 0;" placeholder="{{ 'enter_count' | translate }}" formControlName="encourage_max_order_count">
+                             <p class="help-text">{{ '*Specify a number between 1 and 10 to encourage orders.' }}</p>
+                          </app-form-fields>
+                       }
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'encourage_view'" [for]="'encourage_view'">
+                          <div class="form-check form-switch ps-0">
+                             <label class="switch">
+                                <input type="checkbox" id="encourage_view" formControlName="encourage_view">
+                                <span class="switch-state"></span>
+                             </label>
+                             <p class="help-text">{{ '*this feature encourages users to view products by presenting engaging content or prompts.' }}</p>
+                          </div>
+                       </app-form-fields>
+                       @if(form.get('product.encourage_view')?.value){
+                          <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'"  [gridClass]="'col-sm-9'" [label]="'encourage_max_view_count'" [for]="'encourage_max_view_count'" [required]="false">
+                             <input type="number" class="form-control" min="0" max="100" oninput="if (value > 100) value = 100; if (value < 0) value = 0;" placeholder="{{ 'enter_count' | translate }}" formControlName="encourage_max_view_count">
+                             <p class="help-text">{{ '*Specify a number between 1 and 10 to encourage product view.' }}</p>
+                          </app-form-fields>
+                       }
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sticky_checkout'" [for]="'sticky_checkout'">
+                          <div class="form-check form-switch ps-0">
+                             <label class="switch">
+                                <input type="checkbox" id="sticky_checkout" formControlName="sticky_checkout">
+                                <span class="switch-state"></span>
+                             </label>
+                             <p class="help-text">{{ '*Enable to make the Add to Cart and checkout options sticky at the bottom of the product page.' }}</p>
+                          </div>
+                       </app-form-fields>
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sticky_product'" [for]="'sticky_product'">
+                          <div class="form-check form-switch ps-0">
+                             <label class="switch">
+                                <input type="checkbox" id="sticky_product" formControlName="sticky_product">
+                                <span class="switch-state"></span>
+                             </label>
+                             <p class="help-text">{{ '*Enable to showcase random products at the bottom of the website.' }}</p>
+                          </div>
+                       </app-form-fields>
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'social_share'" [for]="'social_share'">
+                          <div class="form-check form-switch ps-0">
+                             <label class="switch">
+                                <input type="checkbox" id="social_share" formControlName="social_share">
+                                <span class="switch-state"></span>
+                             </label>
+                             <p class="help-text">{{ '*Enable this option to allow users to share the product on social media platforms.' }}</p>
+                          </div>
+                       </app-form-fields>
+                       <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'shipping_and_return'" [for]="'shipping_and_return'" [required]="false">
+                             <div class="custom-editor">
+                                <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+                                <ngx-editor [editor]="editor" [ngModel]="html" [disabled]="false" [placeholder]="'Type here...'" formControlName="shipping_and_return"></ngx-editor>
+                             </div>
+                             <p class="help-text">{{ '*This area contains the shipping and return policies. A minimum of 500 characters is recommended for effective communication.' }}</p>
+                       </app-form-fields>
+                       </div>
+                    </ng-template>
+                  </li>
+                  <li ngbNavItem="blog">
+                     <a ngbNavLink><i class="ri-file-list-2-line"></i>{{ 'blog' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="selection-layout radio-type-sec mb-4">
+                           <h4 class="fw-semibold w-100">{{ 'blog_style' | translate }}</h4>
+                           <div class="row row-cols-xxl-4 row-cols-xl-3 row-cols-lg-2 row-cols-md-3 row-cols-2 w-webkit g-4" formGroupName="blog">
+                              <div>
+                                 <div class="selection-box text-center">
+                                    <input type="radio" id="grid_view" value="grid_view" name="blog_style" formControlName="blog_style" />
+                                    <label for="grid_view">
+                                       <div>
+                                          <img src="assets/images/theme-option/shop/01.jpg" class="img-fluid" alt="grid-view">
+                                       </div>
+                                       <h4 class="mt-2">{{ 'grid_view' | translate }}</h4>
+                                    </label>
+                                 </div>
+                              </div>
+                              <div>
+                                 <div class="selection-box text-center">
+                                    <input type="radio" id="list_view" value="list_view" name="blog_style" formControlName="blog_style" />
+                                    <label for="list_view">
+                                       <div>
+                                          <img src="assets/images/theme-option/shop/02.jpg" class="img-fluid" alt="list-view">
+                                       </div>
+                                       <h4 class="mt-2">{{ 'list_view' | translate }}</h4>
+                                    </label>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="selection-layout radio-type-sec mb-4">
+                           <h4 class="fw-semibold w-100">{{ 'blog_sidebar_type' | translate }}</h4>
+                           <div class="row row-cols-xxl-4 row-cols-xl-3 row-cols-lg-2 row-cols-md-3 row-cols-2 w-webkit g-4" formGroupName="blog">
+                               @for(blogType of blog_sidebar; track blogType){
+                                <div>
+                                   <div class="selection-box text-center">
+                                      <input type="radio" [id]="blogType.value" [value]="blogType.value" name="blog_sidebar_type" formControlName="blog_sidebar_type" />
+                                      <label [for]="blogType.value">
+                                         <div>
+                                            <img [src]="blogType.image" class="img-fluid" [alt]="blogType.label">
+                                         </div>
+                                         <h4 class="mt-2">{{ blogType.value | translate }}</h4>
+                                      </label>
+                                   </div>
+                                </div>
+                               }
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xl-12">
+                              <div formGroupName="blog">
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'blog_author'" [for]="'blog_author_enable'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="blog_author_enable" formControlName="blog_author_enable">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'read_more_link'" [for]="'read_more_enable'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="read_more_enable" formControlName="read_more_enable">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                              </div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="seller">
+                     <a ngbNavLink><i class="ri-file-list-2-line"></i>{{ 'seller' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div formGroupName="seller">
+                           <div class="inside-horizontal-tabs mt-0">
+                              <ul ngbNav #nav_about="ngbNav" [(activeId)]="about"
+                                  class="nav-tabs">
+                                 <li ngbNavItem="about">
+                                    <a ngbNavLink>{{ 'about' | translate }}</a>
+                                    <ng-template ngbNavContent>
+                                       <div formGroupName="about">
+                                          <app-form-fields [label]="'status'" [for]="'status'">
+                                             <div class="form-check form-switch ps-0">
+                                                <label class="switch">
+                                                   <input type="checkbox" id="status" formControlName="status">
+                                                   <span class="switch-state"></span>
+                                                </label>
+                                             </div>
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'title'" [for]="'title'">
+                                             <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'description'" [for]="'description'">
+                                             <textarea class="form-control" id="description" type="text" rows="8" placeholder="{{ 'enter_description' | translate }}" formControlName="description"></textarea>
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'image'" [for]="'seller_image'" [required]="false">
+                                             <app-image-upload
+                                                [url]="true"
+                                                [accept]="[mediaConfig.image]"
+                                                [multipleImage]="false"
+                                                [helpText]="'*Upload image size 512x438px recommended'"
+                                                [imageUrl]="form.get('seller.about.image_url')?.value"
+                                                (selectedFiles)="selectSellerImage($event, 'seller.about.image_url')">
+                                             </app-image-upload>
+                                          </app-form-fields>
+                                       </div>
+                                    </ng-template>
+                                 </li>
+                                 <li ngbNavItem="services">
+                                    <a ngbNavLink>{{ 'services' | translate }}</a>
+                                    <ng-template ngbNavContent>
+                                       <div formGroupName="services">
+                                          <app-form-fields  [label]="'status'" [for]="'status'">
+                                             <div class="form-check form-switch ps-0">
+                                                <label class="switch">
+                                                   <input type="checkbox" id="status" formControlName="status">
+                                                   <span class="switch-state"></span>
+                                                </label>
+                                             </div>
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'title'" [for]="'title'">
+                                             <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                          </app-form-fields>
+                                          <div formGroupName="service_1">
+                                             <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'service_box' | translate }} 1</h4>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description"></textarea>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'image'" [for]="'seller_image'" [required]="false">
+                                                <app-image-upload
+                                                   [url]="true"
+                                                   [accept]="[mediaConfig.image]"
+                                                   [multipleImage]="false"
+                                                   [helpText]="'*Upload image size 90x90px recommended'"
+                                                   [imageUrl]="form.get('seller.services.service_1.image_url').value"
+                                                   (selectedFiles)="selectSellerImage($event, 'seller.services.service_1.image_url')">
+                                                </app-image-upload>
+                                             </app-form-fields>
+                                          </div>
+                                          <div formGroupName="service_2">
+                                             <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'service_box' | translate }} 2</h4>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text"
+                                                   placeholder="{{ 'enter_description' | translate }}"
+                                                   formControlName="description"></textarea>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'image'" [for]="'seller_image'" [required]="false">
+                                                <app-image-upload
+                                                   [url]="true"
+                                                   [accept]="[mediaConfig.image]"
+                                                   [multipleImage]="false"
+                                                   [helpText]="'*Upload image size 90x90px recommended'"
+                                                   [imageUrl]="form.get('seller.services.service_2.image_url').value"
+                                                   (selectedFiles)="selectSellerImage($event, 'seller.services.service_2.image_url')">
+                                                </app-image-upload>
+                                             </app-form-fields>
+                                          </div>
+                                          <div formGroupName="service_3">
+                                             <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'service_box' | translate }} 3</h4>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text"
+                                                   placeholder="{{ 'enter_description' | translate }}"
+                                                   formControlName="description"></textarea>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'image'" [for]="'seller_image'" [required]="false">
+                                                <app-image-upload
+                                                   [url]="true"
+                                                   [accept]="[mediaConfig.image]"
+                                                   [multipleImage]="false"
+                                                   [helpText]="'*Upload image size 90x90px recommended'"
+                                                   [imageUrl]="form.get('seller.services.service_3.image_url').value"
+                                                   (selectedFiles)="selectSellerImage($event, 'seller.services.service_3.image_url')">
+                                                </app-image-upload>
+                                             </app-form-fields>
+                                          </div>
+                                          <div formGroupName="service_4">
+                                             <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'service_box' | translate }} 4</h4>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text"
+                                                   placeholder="{{ 'enter_description' | translate }}"
+                                                   formControlName="description"></textarea>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'image'" [for]="'seller_image'" [required]="false">
+                                                <app-image-upload
+                                                   [url]="true"
+                                                   [accept]="[mediaConfig.image]"
+                                                   [multipleImage]="false"
+                                                   [helpText]="'*Upload image size 90x90px recommended'"
+                                                   [imageUrl]="form.get('seller.services.service_4.image_url').value"
+                                                   (selectedFiles)="selectSellerImage($event, 'seller.services.service_4.image_url')">
+                                                </app-image-upload>
+                                             </app-form-fields>
+                                          </div>
+                                       </div>
+                                    </ng-template>
+                                 </li>
+                                  <li ngbNavItem="steps">
+                                    <a ngbNavLink>{{ 'steps' | translate }}</a>
+                                    <ng-template ngbNavContent>
+                                       <div formGroupName="steps">
+                                          <app-form-fields [label]="'status'" [for]="'status'">
+                                             <div class="form-check form-switch ps-0">
+                                                <label class="switch">
+                                                   <input type="checkbox" id="status" formControlName="status">
+                                                   <span class="switch-state"></span>
+                                                </label>
+                                             </div>
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'title'" [for]="'title'">
+                                             <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                          </app-form-fields>
+                                          <div formGroupName="step_1">
+                                             <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'step' | translate }} 1</h4>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text"
+                                                   placeholder="{{ 'enter_description' | translate }}"
+                                                   formControlName="description"></textarea>
+                                             </app-form-fields>
+                                          </div>
+                                          <div formGroupName="step_2">
+                                             <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'step' | translate }} 2</h4>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text"
+                                                   placeholder="{{ 'enter_description' | translate }}"
+                                                   formControlName="description"></textarea>
+                                             </app-form-fields>
+                                          </div>
+                                          <div formGroupName="step_3">
+                                             <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'step' | translate }} 3</h4>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text"
+                                                   placeholder="{{ 'enter_description' | translate }}"
+                                                   formControlName="description"></textarea>
+                                             </app-form-fields>
+                                          </div>
+                                       </div>
+                                    </ng-template>
+                                 </li>
+                                 <li ngbNavItem="start_selling">
+                                    <a ngbNavLink>{{ 'selling' | translate }}</a>
+                                    <ng-template ngbNavContent>
+                                       <div formGroupName="start_selling">
+                                          <app-form-fields [label]="'status'" [for]="'status'">
+                                             <div class="form-check form-switch ps-0">
+                                                <label class="switch">
+                                                   <input type="checkbox" id="status" formControlName="status">
+                                                   <span class="switch-state"></span>
+                                                </label>
+                                             </div>
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'title'" [for]="'title'">
+                                             <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'description'" [for]="'description'">
+                                             <textarea class="form-control" id="description" type="text"
+                                                placeholder="{{ 'enter_description' | translate }}"
+                                                rows="6"
+                                                formControlName="description"></textarea>
+                                          </app-form-fields>
+                                       </div>
+                                    </ng-template>
+                                 </li>
+                              </ul>
+                              <div [ngbNavOutlet]="nav_about" class="mt-3"></div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="contact_page">
+                     <a ngbNavLink><i class="ri-contacts-line"></i>{{ 'contact_page' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="row">
+                           <div class="col-xl-12">
+                              <div formGroupName="contact_us">
+                                 <app-form-fields [label]="'title'" [for]="'title'">
+                                   <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                 </app-form-fields>
+                                 <app-form-fields [label]="'description'" [for]="'description'">
+                                   <textarea class="form-control" id="description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description"></textarea>
+                                 </app-form-fields>
+                                 <div formGroupName="detail_1">
+                                    <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'detail' | translate }} 1</h4>
+                                    <app-form-fields [label]="'label'" [for]="'label'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_label' | translate }}" formControlName="label">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'icon'" [for]="'label'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_icon' | translate }}" formControlName="icon">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'text'" [for]="'text'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_text' | translate }}" formControlName="text">
+                                    </app-form-fields>
+                                 </div>
+                                 <div formGroupName="detail_2">
+                                    <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'detail' | translate }} 2</h4>
+                                    <app-form-fields [label]="'label'" [for]="'label'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_label' | translate }}" formControlName="label">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'icon'" [for]="'label'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_icon' | translate }}" formControlName="icon">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'text'" [for]="'text'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_text' | translate }}" formControlName="text">
+                                    </app-form-fields>
+                                 </div>
+                                 <div formGroupName="detail_3">
+                                    <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'detail' | translate }} 3</h4>
+                                    <app-form-fields [label]="'label'" [for]="'label'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_label' | translate }}" formControlName="label">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'icon'" [for]="'label'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_icon' | translate }}" formControlName="icon">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'text'" [for]="'text'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_text' | translate }}" formControlName="text">
+                                    </app-form-fields>
+                                 </div>
+                                 <div formGroupName="detail_4">
+                                    <h4 class="fw-semibold mb-3 txt-primary w-100">{{ 'detail' | translate }} 4</h4>
+                                    <app-form-fields [label]="'label'" [for]="'label'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_label' | translate }}" formControlName="label">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'icon'" [for]="'label'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_icon' | translate }}" formControlName="icon">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'text'" [for]="'text'">
+                                       <input type="text" class="form-control" placeholder="{{ 'enter_text' | translate }}" formControlName="text">
+                                    </app-form-fields>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="about_us">
+                     <a ngbNavLink><i class="ri-contacts-line"></i>{{ 'about_us' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="inside-horizontal-tabs mt-0" formGroupName="about_us">
+                           <ul ngbNav #nav_analytics="ngbNav" [(activeId)]="seller"
+                               class="nav-tabs">
+                              <li ngbNavItem="about">
+                                 <a ngbNavLink>{{ 'about' | translate }}</a>
+                                 <ng-template ngbNavContent>
+                                    <div class="row">
+                                       <div formGroupName="about">
+                                          <app-form-fields [label]="'status'" [for]="'status'">
+                                             <div class="form-check form-switch ps-0">
+                                                <label class="switch">
+                                                   <input type="checkbox" id="status" formControlName="status">
+                                                   <span class="switch-state"></span>
+                                                </label>
+                                             </div>
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'Bg Image'" [for]="'content_bg_image_url'">
+                                             <app-image-upload
+                                                [url]="true"
+                                                [accept]="[mediaConfig.image]"
+                                                [multipleImage]="false"
+                                                [helpText]="'*Upload image size 1579x241px recommended'"
+                                                [imageUrl]="form.get('about_us.about.content_bg_image_url')?.value"
+                                                (selectedFiles)="selectBanner($event, 'about_us.about.content_bg_image_url')">
+                                             </app-image-upload>
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'title'" [for]="'meta_title'">
+                                             <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                          </app-form-fields>
+                                          <app-form-fields [label]="'description'" [for]="'description'">
+                                             <textarea class="w-100" placeholder="{{ 'enter_description' | translate }}" formControlName="description"></textarea>
+                                          </app-form-fields>
+
+                                          <div formArrayName="futures">
+                                             <app-button [class]="'btn btn-animation mb-3'" [id]="'futures_content_btn'" [spinner]="false" (click)="addFuture($event)" >{{ 'add_future' | translate }}</app-button>
+                                             <div class="shipping-accordion variant-accordion">
+                                               @for(futures of futuresContent?.controls; track futures; let i = $index){
+                                                   <div [formGroupName]="i">
+                                                       <div class="row">
+                                                          <div class="col-11">
+                                                             <div ngbAccordion>
+                                                                <div ngbAccordionItem [collapsed]="false">
+                                                                   <div [id]="'ngb-service-'+i" ngbAccordionHeader>
+                                                                      <button ngbAccordionButton> {{ futures.get('title')?.value || 'Enter Text' }}</button>
+                                                                  </div>
+                                                                  <div ngbAccordionCollapse>
+                                                                      <div ngbAccordionBody>
+                                                                         <ng-template>
+                                                                            <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'meta_title'">
+                                                                               <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                            </app-form-fields>
+
+                                                                            <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'description'" [for]="'meta_description'">
+                                                                             <input class="form-control" id="description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description">
+                                                                             </app-form-fields>
+ 
+                                                                            <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'icon'" [for]="'icon'">
+                                                                               <app-image-upload
+                                                                                  [url]="true"
+                                                                                  [accept]="[mediaConfig.image]"
+                                                                                  [multipleImage]="false"
+                                                                                  [imageUrl]="futures.get('icon')?.value"
+                                                                                  (selectedFiles)="selectFutures($event, i)">
+                                                                               </app-image-upload>
+                                                                            </app-form-fields>
+                                                                         </ng-template>
+                                                                      </div>
+                                                                   </div>
+                                                                </div>
+                                                             </div>
+                                                          </div>
+                                                          <div class="col-1 text-center fs-20">
+                                                             <a href="javascript:void(0)" class="invalid-feedback text-end cursor-pointer d-inline-block w-auto mt-2" (click)="removeFutures(i)"><i class="ri-close-line"></i></a>
+                                                          </div>
+                                                       </div>
+                                                    </div>
+                                               }
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </ng-template>
+                              </li>
+                              <li ngbNavItem="team">
+                                 <a ngbNavLink>{{ 'team' | translate }}</a>
+                                 <ng-template ngbNavContent>
+                                    <div class="row" formGroupName="team">
+                                       <app-form-fields [label]="'status'" [for]="'status'">
+                                          <div class="form-check form-switch ps-0">
+                                             <label class="switch">
+                                                <input type="checkbox" id="status" formControlName="status">
+                                                <span class="switch-state"></span>
+                                             </label>
+                                          </div>
+                                       </app-form-fields>
+                                       <app-form-fields [label]="'sub_title'" [for]="'meta_title'">
+                                          <input class="form-control" id="sub_title" type="text" placeholder="{{ 'enter_sub_title' | translate }}" formControlName="sub_title">
+                                       </app-form-fields>
+                                       <app-form-fields [label]="'title'" [for]="'meta_title'">
+                                          <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                       </app-form-fields>
+                                       <div formArrayName="members">
+                                          <app-button [class]="'btn btn-animation mb-3'" [id]="'futures_content_btn'" [spinner]="false" (click)="addMember($event)" >{{ 'add_content' | translate }}</app-button>
+                                          <div class="shipping-accordion variant-accordion">
+                                           @for(member of members?.controls; track member; let i = $index){
+                                               <div class="row" [formGroupName]="i">
+                                                   <div class="col-11">
+                                                      <div ngbAccordion>
+                                                         <div ngbAccordionItem [collapsed]="false">
+                                                             <div ngbAccordionHeader>
+                                                                 <button ngbAccordionButton> {{ member.get('name')?.value || 'Enter Name' }}</button>
+                                                             </div>
+                                                             <div ngbAccordionCollapse>
+                                                                 <div ngbAccordionBody>
+                                                                  <ng-template>
+                                                                     <app-form-fields [label]="'profile_image'" [for]="'icon'">
+                                                                        <app-image-upload
+                                                                           [url]="true"
+                                                                           [accept]="[mediaConfig.image]"
+                                                                           [multipleImage]="false"
+                                                                           [imageUrl]="member.get('profile_image_url')?.value"
+                                                                           (selectedFiles)="selectMemberProfile($event, i)">
+                                                                        </app-image-upload>
+                                                                     </app-form-fields>
+                                                                     <app-form-fields [label]="'name'" [for]="'name'">
+                                                                        <input class="form-control" id="name" type="text" placeholder="{{ 'enter_name' | translate }}" formControlName="name">
+                                                                     </app-form-fields>
+                                                                     <app-form-fields [label]="'designation'" [for]="'designation'">
+                                                                        <input class="form-control" id="designation" type="text" placeholder="{{ 'enter_designation' | translate }}" formControlName="designation">
+                                                                     </app-form-fields>
+                                                                     <app-form-fields  [label]="'FaceBook'" [for]="'facebook'">
+                                                                        <input type="url" class="form-control" placeholder="{{ 'enter_url' | translate }}"
+                                                                           formControlName="facebook">
+                                                                     </app-form-fields>
+                                                                     <app-form-fields  [label]="'Instagram'" [for]="'instagram'">
+                                                                        <input type="url" class="form-control" placeholder="{{ 'enter_url' | translate }}"
+                                                                           formControlName="instagram">
+                                                                     </app-form-fields>
+                                                                     <app-form-fields  [label]="'Twitter'" [for]="'Twitter'">
+                                                                        <input type="url" class="form-control" placeholder="{{ 'enter_url' | translate }}"
+                                                                           formControlName="twitter">
+                                                                     </app-form-fields>
+                                                                     <app-form-fields  [label]="'Pinterest'" [for]="'pinterest'">
+                                                                        <input type="url" class="form-control" placeholder="{{ 'enter_url' | translate }}"
+                                                                           formControlName="pinterest">
+                                                                     </app-form-fields>
+                                                                  </ng-template>
+                                                                 </div>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                   </div>
+                                                   <div class="col-1 text-center fs-20">
+                                                      <a href="javascript:void(0)" class="invalid-feedback text-end cursor-pointer d-inline-block w-auto mt-2" (click)="removeMember(i)"><i class="ri-close-line"></i></a>
+                                                   </div>
+                                                </div>
+                                           }
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </ng-template>
+                              </li>
+                              <li ngbNavItem="testimonial">
+                                 <a ngbNavLink>{{ 'testimonial' | translate }}</a>
+                                 <ng-template ngbNavContent>
+                                    <div class="row" formGroupName="testimonial">
+                                       <app-form-fields [label]="'status'" [for]="'status'">
+                                          <div class="form-check form-switch ps-0">
+                                             <label class="switch">
+                                                <input type="checkbox" id="status" formControlName="status">
+                                                <span class="switch-state"></span>
+                                             </label>
+                                          </div>
+                                       </app-form-fields>
+                                       <app-form-fields [label]="'sub_title'" [for]="'meta_title'">
+                                          <input class="form-control" id="sub_title" type="text" placeholder="{{ 'enter_sub_title' | translate }}" formControlName="sub_title">
+                                       </app-form-fields>
+                                       <app-form-fields [label]="'title'" [for]="'meta_title'">
+                                          <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                       </app-form-fields>
+                                       <div formArrayName="reviews">
+                                          <app-button [class]="'btn btn-animation mb-3'" [id]="'futures_content_btn'" [spinner]="false" (click)="reviews($event)" >{{ 'add_content' | translate }}</app-button>
+                                          <div class="shipping-accordion variant-accordion">
+                                           @for(review of testimonials?.controls; track review; let i = $index){
+                                               <div class="row" [formGroupName]="i">
+                                                   <div class="col-11">
+                                                      <div ngbAccordion>
+                                                         <div ngbAccordionItem [collapsed]="false">
+                                                             <div ngbAccordionHeader>
+                                                                 <button ngbAccordionButton>{{ review.get('name')?.value || 'Enter Name' }}</button>
+                                                             </div>
+                                                             <div ngbAccordionCollapse>
+                                                                 <div ngbAccordionBody>
+                                                                  <ng-template>
+                                                                     <app-form-fields [label]="'profile_image'" [for]="'icon'">
+                                                                        <app-image-upload
+                                                                           [url]="true"
+                                                                           [accept]="[mediaConfig.image]"
+                                                                           [multipleImage]="false"
+                                                                           [imageUrl]="review.get('profile_image_url')?.value"
+                                                                           (selectedFiles)="selectReviewProfile($event, i)">
+                                                                        </app-image-upload>
+                                                                     </app-form-fields>
+                                                                     <app-form-fields [label]="'title'" [for]="'meta_title'">
+                                                                        <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                     </app-form-fields>
+                                                                     <app-form-fields [label]="'name'" [for]="'name'">
+                                                                        <input class="form-control" id="name" type="text" placeholder="{{ 'enter_name' | translate }}" formControlName="name">
+                                                                     </app-form-fields>
+                                                                     <app-form-fields [label]="'designation'" [for]="'designation'">
+                                                                        <input class="form-control" id="designation" type="text" placeholder="{{ 'enter_designation' | translate }}" formControlName="designation">
+                                                                     </app-form-fields>
+                                                                     <app-form-fields [label]="'review'" [for]="'review'">
+                                                                        <textarea class="w-100" placeholder="{{ 'enter_review' | translate }}" formControlName="review"></textarea>
+                                                                     </app-form-fields>
+                                                                  </ng-template>
+                                                                 </div>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                   </div>
+                                                   <div class="col-1 text-center fs-20">
+                                                      <a href="javascript:void(0)" class="invalid-feedback text-end cursor-pointer d-inline-block w-auto mt-2" (click)="removeProfile(i)"><i class="ri-close-line"></i></a>
+                                                   </div>
+                                                </div>
+                                           }
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </ng-template>
+                              </li>
+                           </ul>
+                           <div [ngbNavOutlet]="nav_analytics" class="mt-3"></div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="errorPage">
+                     <a ngbNavLink><i class="ri-alert-line"></i>{{ '404_error_page' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="row">
+                           <div class="col-xl-12">
+                              <div formGroupName="error_page">
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'error_page_content'" [for]="'site_tagline'">
+                                    <textarea class="w-100" placeholder="{{ 'enter_error_page_content' | translate }}" formControlName="error_page_content"></textarea>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'back_button'" [for]="'blog_author'">
+                                    <div class="form-check form-switch ps-0">
+                                       <label class="switch">
+                                          <input type="checkbox" id="blog_author" placeholder="{{ 'enter_blog_author' | translate }}" formControlName="back_button_enable">
+                                          <span class="switch-state"></span>
+                                       </label>
+                                    </div>
+                                 </app-form-fields>
+                                 @if(form.get('error_page.back_button_enable')?.value){
+                                   <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'back_button_text'" [for]="'back_button_text'">
+                                   <input type="text" class="form-control" placeholder="{{ 'enter_back_button_text' | translate }}" formControlName="back_button_text">
+                                   </app-form-fields>
+                                 }
+                              </div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="popup">
+                     <a ngbNavLink><i class="ri-record-circle-line"></i>{{ 'popup' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="row">
+                           <div class="col-xl-12" formGroupName="popup">
+                              <div class="inside-horizontal-tabs mt-0">
+                                 <ul ngbNav #nav_popup="ngbNav" [(activeId)]="popup"
+                                     class="nav-tabs">
+                                    <li ngbNavItem="news_letter">
+                                       <a ngbNavLink>{{ 'news_letter' | translate }}</a>
+                                       <ng-template ngbNavContent>
+                                          <div formGroupName="news_letter">
+                                             <app-form-fields [label]="'status'" [for]="'is_enable'">
+                                                <div class="form-check form-switch ps-0">
+                                                   <label class="switch">
+                                                      <input type="checkbox" id="is_enable" formControlName="is_enable">
+                                                      <span class="switch-state"></span>
+                                                   </label>
+                                                </div>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'offer'" [for]="'offer'">
+                                                <input class="form-control" id="offer" type="text" placeholder="{{ 'enter_offer' | translate }}" formControlName="offer">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description"></textarea>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'image'" [for]="'seller_image'" [required]="false">
+                                                <app-image-upload
+                                                   [url]="true"
+                                                   [accept]="[mediaConfig.image]"
+                                                   [multipleImage]="false"
+                                                   [helpText]="'*Upload image size 90x90px recommended'"
+                                                   [imageUrl]="form.get('popup.news_letter.image_url')?.value"
+                                                   (selectedFiles)="selectSellerImage($event, 'popup.news_letter.image_url')">
+                                                </app-image-upload>
+                                             </app-form-fields>
+                                          </div>
+                                       </ng-template>
+                                    </li>
+                                    <li ngbNavItem="exit">
+                                       <a ngbNavLink>{{ 'exit' | translate }}</a>
+                                       <ng-template ngbNavContent>
+                                          <div formGroupName="exit">
+                                             <app-form-fields [label]="'status'" [for]="'is_enable'">
+                                                <div class="form-check form-switch ps-0">
+                                                   <label class="switch">
+                                                      <input type="checkbox" id="is_enable" formControlName="is_enable">
+                                                      <span class="switch-state"></span>
+                                                   </label>
+                                                </div>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'title'" [for]="'title'">
+                                                <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'sub_title'" [for]="'meta_title'">
+                                                <input class="form-control" id="sub_title" type="text" placeholder="{{ 'enter_sub_title' | translate }}" formControlName="sub_title">
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'description'" [for]="'description'">
+                                                <textarea class="form-control" id="description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description"></textarea>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'image'" [for]="'seller_image'" [required]="false">
+                                                <app-image-upload
+                                                   [url]="true"
+                                                   [accept]="[mediaConfig.image]"
+                                                   [multipleImage]="false"
+                                                   [helpText]="'*Upload image size 90x90px recommended'"
+                                                   [imageUrl]="form.get('popup.exit.image_url')?.value"
+                                                   (selectedFiles)="selectSellerImage($event, 'popup.exit.image_url')">
+                                                </app-image-upload>
+                                             </app-form-fields>
+                                          </div>
+                                       </ng-template>
+                                    </li>
+                                    <!-- <li ngbNavItem="sale">
+                                       <a ngbNavLink>{{ 'sale' | translate }}</a>
+                                       <ng-template ngbNavContent>
+                                          <div formGroupName="sale">
+                                             <app-form-fields [label]="'status'" [for]="'is_enable'">
+                                                <div class="form-check form-switch ps-0">
+                                                   <label class="switch">
+                                                      <input type="checkbox" id="is_enable" formControlName="is_enable">
+                                                      <span class="switch-state"></span>
+                                                   </label>
+                                                </div>
+                                             </app-form-fields>
+                                             <app-form-fields [label]="'text'" [for]="'text'">
+                                                <input class="form-control" id="text" type="text" placeholder="{{ 'enter_text' | translate }}" formControlName="text">
+                                             </app-form-fields>
+                                          </div>
+                                       </ng-template>
+                                    </li> -->
+                                    <li ngbNavItem="auth">
+                                      <a ngbNavLink>{{ 'auth' | translate }}</a>
+                                      <ng-template ngbNavContent>
+                                        <div formGroupName="auth">
+                                          <app-form-fields [label]="'image'" [for]="'seller_image'" [required]="false">
+                                            <app-image-upload [url]="true" [accept]="[mediaConfig.image]" [multipleImage]="false" [helpText]="'*Upload image size 90x90px recommended'" [imageUrl]="form.get('popup.auth.image_url')?.value" (selectedFiles)="selectSellerImage($event, 'popup.auth.image_url')">
+                                            </app-image-upload>
+                                          </app-form-fields>
+                                        </div>
+                                      </ng-template>
+                                    </li>
+                                 </ul>
+                                 <div [ngbNavOutlet]="nav_popup" class="mt-3"></div>
+                              </div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+                  <li ngbNavItem="seo">
+                     <a ngbNavLink><i class="ri-earth-line"></i>{{'seo' | translate }}</a>
+                     <ng-template ngbNavContent>
+                        <div class="row">
+                           <div class="col-xl-12">
+                              <div formGroupName="seo">
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'meta_title'" [for]="'meta_title'">
+                                    <input class="form-control" id="meta_title" type="text" placeholder="{{ 'enter_meta_title' | translate }}" formControlName="meta_tags">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'meta_tags'" [for]="'meta_tags'">
+                                    <input class="form-control" id="meta_tags" type="text" placeholder="{{ 'enter_meta_tags' | translate }}" formControlName="meta_title">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'meta_description'" [for]="'meta_description'">
+                                    <textarea class="form-control" id="meta_description" type="text" placeholder="{{ 'enter_meta_description' | translate }}" formControlName="meta_description"></textarea>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'og_title'" [for]="'og_title'">
+                                    <input class="form-control" id="og_title" type="text" placeholder="{{ 'enter_og_title' | translate }}" formControlName="og_title">
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'og_description'" [for]="'og_description'">
+                                    <textarea class="form-control" id="og_description" type="text" placeholder="{{ 'enter_og_description' | translate }}" formControlName="og_description"></textarea>
+                                 </app-form-fields>
+                                 <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'og_image'" [for]="'og_image_id'">
+                                    <app-image-upload
+                                       [accept]="[mediaConfig.image]"
+                                       [multipleImage]="false"
+                                       [helpText]="'*Upload image size 1200x630px recommended'"
+                                       [image]="(themeOption$ | async)?.seo?.og_image"
+                                       (selectedFiles)="selectOgImage($event)">
+                                    </app-image-upload>
+                                 </app-form-fields>
+                              </div>
+                           </div>
+                        </div>
+                     </ng-template>
+                  </li>
+               </ul>
+            </div>
+            <div class="col-xl-7 col-lg-8">
+               <div [ngbNavOutlet]="nav"></div>
+            </div>
+         </div>
+      </div>
+      <app-button [id]="'theme-option'" *hasPermission="'theme_option.edit'">
+         {{ 'submit' | translate }}
+      </app-button>
+   </form>
+</app-page-wrapper>

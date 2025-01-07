@@ -1,0 +1,70 @@
+<div #dropdownContainer (clickOutside)="clickOutside()">
+   <div class="position-relative">
+      <nav class="category-breadcrumb-select" (click)="toggleDropdown($event)">
+         <ol class="breadcrumb">
+            @if(selectedPills.length){
+               @for(pills of selectedPills; track pills){
+                  <li class="breadcrumb-p ills">
+                     <span class="badge badge-pill badge-primary">{{ pills[displayKey] }}
+                        <i class="ri-close-line" (click)="removeItem(pills); $event.stopPropagation()"></i>
+                     </span>
+                  </li>
+               }
+            }@else {
+               <li class="breadcrumb-item">
+                  <a href="javascript:void(0)" (click)="clearOptions()">{{ (text ? text : 'select_option') | translate }}</a>
+               </li>
+            }
+         </ol>
+      </nav>
+      <a class="cateogry-close-btn d-inline-block" [class.show]="isOpen" (click)="toggleDropdown($event)">
+         <i class="ri-arrow-down-s-line down-arrow"></i>
+         <i class="ri-close-line close-arrow"></i>
+      </a>
+      <div class="select-category-box mt-2 dropdown-open" [class.show]="isOpen">
+         <input class="form-control search-input" placeholder="{{'search_here' | translate}}" [formControl]="term">
+         <div class="category-content">
+            <nav class="category-breadcrumb" aria-label="breadcrumb">
+               <ol class="breadcrumb">
+                  @if( optionsData && (!optionsData.length)){
+                     <li class="breadcrumb-item">
+                        <a href="javascript:void(0)">{{ 'no_data_found' | translate }}</a>
+                     </li>
+                  }
+
+                  @if(optionsData && optionsData.length){
+                     <li class="breadcrumb-item">
+                        <a href="javascript:void(0)" (click)="clearOptions()">{{ 'all' | translate}}</a>
+                     </li>
+                  }
+
+                  @for(breadCrumb of breadCrumbValues; track breadCrumb; let i = $index;){
+                     <li class="breadcrumb-item">
+                        <a href="javascript:void(0)" (click)="changeTo(breadCrumb)">{{ breadCrumb[displayKey] }}</a>
+                     </li>
+                  }
+               </ol>
+            </nav>
+
+            @if(optionsData && optionsData.length){
+               <div class="category-listing">
+                  <ul>
+                     @for(option of optionsData; track option){
+                     <app-dropdown-list 
+                        [key]="displayKey" 
+                        [data]="option" 
+                        [parentId]="parent" 
+                        [selectedPillIds]="selectedIds" 
+                        [subArrayKey]="subArrayKey" 
+                        (selected)="onSelect($event)" 
+                        (subItemClicked)="subItemClicked($event)"
+                        [showImage]="showImage">
+                     </app-dropdown-list>
+                     }
+                  </ul>
+               </div>
+            }
+         </div>
+      </div>
+   </div>
+</div>

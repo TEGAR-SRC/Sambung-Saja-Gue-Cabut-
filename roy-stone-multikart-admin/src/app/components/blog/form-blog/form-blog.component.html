@@ -1,0 +1,125 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+
+  <app-form-fields [label]="'title'" [for]="'title'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{ 'enter_blog_title' | translate }}" name="title" formControlName="title">
+    @if(form.controls['title'].touched && form.controls['title'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'title_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'description'" [for]="'desc'" [required]="false">
+    <textarea class="form-control" placeholder="{{ 'enter_blog_description' | translate }}" formControlName="description" rows="3"></textarea>
+  </app-form-fields>
+
+  <app-form-fields [label]="'content'" [for]="'content'" [required]="false">
+    <div class="custom-editor editor-checkbox">
+      <div class="form-check form-switch">
+        <input class="form-check-input" id="ckcheck" type="checkbox" name="isCodeEditor" [(ngModel)]="isCodeEditor" [ngModelOptions]="{standalone: true}">
+        <label for="ckcheck" class="cursor-pointer">
+          <span class="edit">
+            <i class="ri-edit-box-line"></i>
+          </span>
+          <span class="code">
+            <i class="ri-code-s-slash-line"></i>
+          </span>
+        </label>
+      </div>
+      <div [ngClass]="!isCodeEditor ? 'd-none' : 'd-block'">
+        <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+        <ngx-editor [editor]="editor" [placeholder]="'Type here...'" formControlName="content" [(ngModel)]="html" (ngModelChange)="getData($event)"></ngx-editor>
+      </div>
+      <div class="editor-textarea" [ngClass]="isCodeEditor ? 'd-none' : 'd-block'">
+        <textarea class="form-control" id="content" placeholder="{{ 'enter_html_content' | translate }}" rows="3" [formControl]="textArea" (keyup)="getText($event)"></textarea>
+        <p class="mt-2">*{{'only_accept_html_tags' | translate}}</p>
+      </div>
+    </div>
+  </app-form-fields>  
+
+  <app-form-fields [label]="'thumbnail'" [for]="'image'" [required]="true">
+
+    <app-image-upload
+      [multipleImage]="false"
+      [accept]="[mediaConfig.image]"
+      [image]="(blog$ | async)?.blog_thumbnail"
+      (selectedFiles)="selectThumbnail($event)">
+    </app-image-upload>
+
+    @if(form.controls['blog_thumbnail_id'].touched && form.controls['blog_thumbnail_id'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'thumbnail_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'select_categories'" [for]="'category'" [required]="true">
+    <app-advance-dropdown
+      [position]="'top'"
+      [selectedOption]="selectedCategories"
+      [options]="(category$ | async )?.data?.length ? (category$ | async )?.data : []"
+      [subArrayKey]="'subcategories'"
+      (selectedItem)="selectCategoryItem($event)">
+    </app-advance-dropdown>
+
+    @if(form.controls['categories'].touched && form.controls['categories'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'select_category_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'select_tags'" [for]="'tag'" [required]="false">
+    <app-advance-dropdown
+      [position]="'top'"
+      [selectedOption]="selectedTags"
+      [options]="(tag$ | async )?.data?.length ? (tag$ | async )?.data : []"
+      (selectedItem)="selectTagItem($event)">
+    </app-advance-dropdown>
+  </app-form-fields>
+
+  <app-form-fields [label]="'featured'" [for]="'is_featured'" [required]="false">
+    <div class="form-check form-switch ps-0">
+      <label class="switch">
+        <input type="checkbox" id="is_featured" formControlName="is_featured">
+        <span class="switch-state"></span>
+      </label>
+    </div>
+  </app-form-fields>
+
+  <app-form-fields [label]="'sticky'" [for]="'is_sticky'" [required]="false">
+    <div class="form-check form-switch ps-0">
+      <label class="switch">
+        <input type="checkbox" id="is_sticky" formControlName="is_sticky">
+        <span class="switch-state"></span>
+      </label>
+    </div>
+  </app-form-fields>
+
+  <app-form-fields [label]="'meta_title'" [for]="'meta_title'" [required]="false">
+    <input class="form-control" type="text" placeholder="{{ 'enter_meta_title' | translate }}" formControlName="meta_title">
+  </app-form-fields>
+
+  <app-form-fields [label]="'meta_description'" [for]="'meta_description'" [required]="false">
+    <textarea class="form-control" placeholder="{{ 'enter_meta_description' | translate }}" formControlName="meta_description" rows="3"></textarea>
+  </app-form-fields>
+
+  <app-form-fields [label]="'meta_image'" [for]="'meta_image'" [required]="false">
+    <app-image-upload [accept]="[mediaConfig.image]" [multipleImage]="false" [image]="(blog$ | async)?.blog_meta_image" (selectedFiles)="selectMetaImage($event)">
+    </app-image-upload>
+  </app-form-fields>
+
+  <app-form-fields [label]="'status'" [for]="'status'" [required]="false">
+    <div class="form-check form-switch ps-0">
+      <label class="switch">
+        <input type="checkbox" id="status" formControlName="status">
+        <span class="switch-state"></span>
+      </label>
+    </div>
+  </app-form-fields>
+
+  <app-button [id]="'blog_btn'">
+    {{ (type == 'create' ? 'save_blog' : 'update_blog') | translate }}
+  </app-button>
+
+</form>

@@ -1,0 +1,28 @@
+type ContactUs {
+    id: Int
+    name: String
+    phone: String
+    email: String
+    subject: String
+    message: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input ContactUsInput {
+    name: String
+    phone: String
+    email: String
+    subject: String
+    message: String
+}
+
+type ContactUsPayload {
+    success: Boolean
+    message: String
+}
+
+extend type Mutation {
+    contactUs(input: ContactUsInput @spread): Json @field(resolver: "ContactUsMutator@contactUs")
+}
+

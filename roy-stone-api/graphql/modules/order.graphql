@@ -1,0 +1,121 @@
+type Order {
+    id: Int
+    order_number:String
+    transaction_id: String
+    url: String
+    is_redirect: Int
+    consumer_id: Int
+    order_status_id: Int
+    delivery_description: String
+    delivery_interval: String
+    tax_total: Float
+    store_id: Int
+    shipping_total: Float
+    payment_method: String
+    payment_status: String
+    wallet_balance: Float
+    points_amount: Float
+    coupon_total_discount: Float
+    invoice_url:String
+    billing_address_id: Int
+    shipping_address_id: Int
+    coupon_id: Int
+    total: Float
+    amount: Float
+    tax_total: Float
+    shipping_total: Float
+    consumer:User
+    sub_orders:[Order]
+    products: [Product]
+    order_status: OrderStatus
+    billing_address: Address
+    shipping_address: Address
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input OrderProductsInput {
+    quantity: Int
+    product_id: Int
+    variation_id: Int
+    consumer_id: Int
+    sub_total:Float
+    updated_at: DateTime
+    quantity: Int
+    tax: Float
+    product_id: Int
+    variation_id: Int
+}
+
+input CreateOrderInput {
+    consumer_id: Int
+    coupon: String
+    products: [OrderProductsInput]
+    points_amount: Boolean
+    wallet_balance: Boolean
+    coupon_total_discount: Float
+    payment_method: String
+    return_url:String
+    cancel_url:String
+    delivery_description: String
+    delivery_interval: String
+    shipping_address_id: Int
+    billing_address_id: Int
+}
+
+input UpdateOrderInput {
+    id: Int!
+    consumer_id: Int
+    order_status_id: Int
+    delivery_description: String
+    delivery_interval: String
+    payment_method: String
+    coupon_id: Int
+    shipping_total: Float
+    status: Int
+}
+
+input DeleteOrderInput {
+    id: Int!
+}
+
+input rePaymentInput {
+    return_url:String
+    cancel_url:String
+    order_number:String
+    payment_method:String
+}
+
+extend type Mutation {
+    createOrder(input: CreateOrderInput! @spread): Order
+        @can(ability: "order.create")
+        @field(resolver: "OrderMutator@store")
+
+    updateOrder(input: UpdateOrderInput! @spread): Order
+        @can(ability: "order.update")
+        @field(resolver: "OrderMutator@update")
+
+    deleteOrder(input: DeleteOrderInput! @spread): Boolean!
+        @can(ability: "order.destroy", model: "App\\Models\\Order")
+        @field(resolver: "OrderMutator@destroy")
+
+    rePayment(input: rePaymentInput! @spread): Order
+        @can(ability: "order.create", model: "App\\Models\\Order")
+        @field(resolver: "OrderMutator@rePayment")
+}
+
+extend type Query @guard {
+    orders(
+        search: String @where(operator: "like", key: "order_number")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [Order!]!
+    @paginate(resolver: "App\\GraphQL\\Queries\\OrderQuery@index" defaultCount:15)
+    order(id:Int):Order @field(resolver: "App\\GraphQL\\Queries\\OrderQuery@show")
+    trackOrder(order_number:String):Order @field(resolver: "App\\GraphQL\\Queries\\OrderQuery@trackOrder")
+    verifyPayment(order_number:String): Order @field(resolver: "App\\GraphQL\\Queries\\OrderQuery@verifyPayment")
+    getInvoiceUrl(order_number:String): String @field(resolver: "App\\GraphQL\\Queries\\OrderQuery@getInvoiceUrl")
+}
+

@@ -1,0 +1,53 @@
+<app-page-wrapper [title]="'payout_details'">
+  <form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="inside-horizontal-tabs mt-0">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li ngbNavItem="bank">
+          <a ngbNavLink><i class="ri-bank-line"></i>{{ 'bank' | translate }}</a>
+          <ng-template ngbNavContent>
+
+            <app-form-fields [label]="'bank_account_no' | translate " [for]="'bank_account_no'" [required]="false">
+              <input class="form-control" id="bank_account_no" type="text" placeholder="{{ 'enter_bank_account_no' | translate }}" formControlName="bank_account_no" numbersOnly>
+            </app-form-fields>
+
+            <app-form-fields [label]="'bank_name' | translate" [for]="'bank_name'" [required]="false">
+              <input class="form-control" id="bank_name" type="text" placeholder="{{ 'enter_bank_name' | translate }}" formControlName="bank_name">
+            </app-form-fields>
+
+            <app-form-fields [label]="'holder_name' | translate" [for]="'bank_holder_name'" [required]="false">
+              <input class="form-control" id="bank_holder_name" type="text" placeholder="{{ 'enter_bank_holder_name' | translate }}" formControlName="bank_holder_name">
+            </app-form-fields>
+
+            <app-form-fields [label]="'swift' | translate" [for]="'swift'" [required]="false">
+              <input class="form-control" id="swift" type="text" placeholder="{{ 'enter_swift' | translate }}" formControlName="swift">
+            </app-form-fields>
+
+            <app-form-fields [label]="'ifsc' | translate" [for]="'ifsc'" [required]="false">
+              <input class="form-control" id="ifsc" type="text" placeholder="{{'enter_ifsc' | translate }}" formControlName="ifsc">
+            </app-form-fields>
+
+          </ng-template>
+        </li>
+        <li ngbNavItem="paypal">
+          <a ngbNavLink><i class="ri-paypal-line"></i> {{ 'paypal' | translate }}</a>
+          <ng-template ngbNavContent>
+
+            <app-form-fields [label]="'paypal_email' | translate" [for]="'paypal_email'" [required]="false">
+              <input class="form-control" id="paypal_email" type="email" placeholder="{{ 'enter_paypal_email' | translate }}" formControlName="paypal_email">
+              @if(form.controls['paypal_email'].touched && form.controls['paypal_email'].errors?.['email']){
+                <div class="invalid-feedback">
+                  {{ 'please_enter_valid_email' | translate }}
+                </div>
+              }
+            </app-form-fields>
+
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-3"></div>
+    </div>
+    <app-button [id]="'payout_btn'">
+      {{ 'save' | translate }}
+    </app-button>
+  </form>
+</app-page-wrapper>

@@ -1,0 +1,83 @@
+type Permission {
+    id: String
+    name: String
+    guard_name: String
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+type AuthPayload {
+    access_token: String
+    permissions: [Permission]
+    success: Boolean
+    message: String
+}
+
+type LogoutResponse {
+    message: String
+    success: Boolean
+}
+
+type passwordUpdatePayload {
+    message: String
+    success: Boolean
+}
+
+input LoginInput {
+    email: String!
+    password: String!
+    recaptcha: String
+}
+
+input ForgotPasswordInput {
+    email: String!
+}
+
+input verifyUpdatePasswordTokenInput {
+    token: String!
+    email: String!
+}
+
+input RegisterInput {
+    name: String!
+    email: String!
+    country_code: String
+    phone: String
+    password: String
+    password_confirmation: String
+    recaptcha: String
+}
+
+input UpdatePasswordInput {
+    token: String!
+    email: String!
+    password: String!
+    password_confirmation: String!
+}
+
+extend type Mutation {
+    login(input: LoginInput @spread): AuthPayload
+        @field(resolver: "AuthMutator@login")
+
+    backendLogin(input: LoginInput @spread): AuthPayload
+        @field(resolver: "AuthMutator@backendLogin")
+
+    register(input: RegisterInput @spread): AuthPayload
+        @field(resolver: "AuthMutator@register")
+
+    forgotPassword(input: ForgotPasswordInput @spread): passwordUpdatePayload
+        @field(resolver: "AuthMutator@forgotPassword")
+
+    verifyUpdatePasswordToken(
+        input: verifyUpdatePasswordTokenInput @spread
+    ): passwordUpdatePayload @field(resolver: "AuthMutator@verifytoken")
+
+    updatePassword(input: UpdatePasswordInput! @spread): passwordUpdatePayload
+        @field(resolver: "AuthMutator@updatePassword")
+
+    logout: LogoutResponse! @field(resolver: "AuthMutator@logout")
+}
+
+extend type Query {
+    self: User! @guard @auth
+}

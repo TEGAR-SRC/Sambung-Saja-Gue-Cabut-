@@ -1,0 +1,14 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'pages'">
+  <div button *hasPermission="'page.create'">
+    <a [routerLink]="['/page/create']" class="align-items-center btn btn-theme d-flex">
+      <i class="ri-add-line"></i> {{ 'add_page' | translate }}
+    </a>
+  </div>
+  <app-table
+    [tableConfig]="tableConfig"
+    [hasCheckbox]="true"
+    (tableChanged)="onTableChange($event)"
+    (rowClicked)="edit($event)"
+    (action)="onActionClicked($event)">
+  </app-table>
+</app-page-wrapper>

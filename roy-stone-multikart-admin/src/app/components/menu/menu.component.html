@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-xl-4 p-0">
+       <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'menu'">
+          <div button *ngIf="type == 'edit'">
+             <div ngbDropdown class="d-inline-block dropdown-box">
+                <button type="button" class="btn btn-sm btn-light-bg" ngbDropdownToggle>
+                {{ 'action' | translate }}
+                </button>
+                <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end">
+                   <button ngbDropdownItem *ngIf="type == 'edit'" (click)="create()">{{ 'create' | translate }}</button>
+                </div>
+             </div>
+          </div>
+          <app-menu-tree 
+             [data]="(menu$ | async)?.data?.length ? (menu$ | async)?.data : []" 
+             [recursionKey]="'child'" 
+             [type]="'menu'">
+          </app-menu-tree>
+       </app-page-wrapper>
+    </div>
+    <div class="col-xl-8 p-0">
+       <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'menu'">
+          <app-form-menu [type]="type"></app-form-menu>
+       </app-page-wrapper>
+    </div>
+ </div>
+
+ 

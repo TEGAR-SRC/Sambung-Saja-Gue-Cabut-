@@ -1,0 +1,513 @@
+/**=====================
+    Media CSS start
+==========================**/
+.media-library-sec {
+    .dropdown {
+        transform: translateY(-10px);
+        transition: all 0.5s ease;
+        opacity: 0;
+        visibility: hidden;
+
+        .dropdown-menu {
+            padding: 10px 5px;
+
+            li {
+                margin-bottom: 6px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            .dropdown-item {
+                border-top: none;
+                font-size: 15px;
+
+                &:hover {
+                    color: var(--theme-color);
+                }
+            }
+        }
+    }
+
+    .library-box {
+        overflow: hidden;
+        position: relative;
+
+        input[type="checkbox"] {
+            display: none;
+        }
+
+        h6 {
+            margin-top: 7px;
+            text-align: center;
+        }
+
+        .dropdown-toggle {
+            &:after {
+                display: none;
+            }
+        }
+
+        .dropdown {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: rgba(82, 82, 82, 0.72);
+            line-height: 1;
+            color: $white;
+            @include pseudowh($width: 26px, $height: 26px);
+            @include flex_common;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 1;
+
+            >a {
+                i {
+                    color: $white;
+                }
+            }
+        }
+
+        &:hover {
+            label {
+                &:before {
+                    transform: translateY(0);
+                    transition: all 0.5s ease;
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+
+            .dropdown {
+                transform: translateY(0);
+                transition: all 0.5s ease;
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    }
+
+    input[type="checkbox"][class="media-checkbox"],
+    input[type="radio"][class="media-checkbox"] {
+        display: none;
+    }
+
+    label {
+        border: 1px solid #fff;
+        padding: 15px;
+        display: block;
+        position: relative;
+        margin: 0;
+        cursor: pointer;
+        background-color: #f8f8f8;
+        border-radius: 0;
+
+        img {
+            width: 100%;
+            object-fit: contain;
+        }
+    }
+
+    label:before {
+        background-color: #525252;
+        color: $white;
+        @include pos;
+        display: block;
+        border-radius: 0;
+        border: 1px solid #c1c1c1;
+        top: 10px;
+        left: 10px;
+        @include pseudowh($width: 18px, $height: 18px);
+        text-align: center;
+        line-height: 16px;
+        transition-duration: 0.4s;
+        transform: translateY(-10px);
+        transition: all 0.5s ease;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1;
+    }
+
+    :checked+label {
+        border-color: var(--theme-color);
+    }
+
+    :checked+label:before {
+        content: "✓";
+        background-color: var(--theme-color);
+        border-color: var(--theme-color);
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        z-index: 1;
+    }
+}
+
+.select-top-panel {
+    margin-top: 0;
+    padding-bottom: 20px;
+    display: flex;
+    gap: calc(9px + (25 - 9) * ((100vw - 320px) / (1920 - 320)));
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    >div {
+        width: 50%;
+
+        @include mq-max(md) {
+            width: 49%;
+        }
+
+        @include mq-max(sm) {
+            width: 100%;
+        }
+    }
+
+    select {
+        width: 25%;
+
+        @include mq-max(md) {
+            width: 48%;
+        }
+
+        @include mq-max(sm) {
+            width: 100%;
+        }
+    }
+}
+
+.media-modal {
+    h2 {
+        font-size: calc(16px + (20 - 16) * ((100vw - 320px) / (1920 - 320)));
+    }
+
+    .media-library-sec {
+        .dropdown {
+            .dropdown-menu {
+                right: 0 !important;
+                left: unset !important;
+                min-width: max-content;
+            }
+        }
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #eee !important;
+    }
+
+    .nav-tabs {
+        border-color: $border-color;
+
+        .nav-link {
+            border-color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-link.active {
+            background-color: #f2f2f2;
+        }
+    }
+
+    .content-section {
+        padding: calc(15px + (35 - 15) * ((100vw - 320px) / (1920 - 320))) 0;
+        min-height: 45vh;
+
+        [type="file"] {
+            height: 0;
+            overflow: hidden;
+            width: 0;
+        }
+
+        .card {
+            padding: 8px;
+            border: 1px solid $border-color;
+            border-radius: 3px;
+
+            .option-btn {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                background-color: #f5f5f5;
+                padding: 3px 0;
+
+                [dir="rtl"] & {
+                    right: unset;
+                    left: 10px;
+                }
+
+                img {
+                    width: 16px;
+                }
+            }
+
+            .card-img-top {
+                height: 180px;
+            }
+
+            .card-body {
+                padding: 5px 0 0 0;
+
+                .card-text {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    margin-bottom: 0;
+                    font-size: 13px;
+                }
+
+                span {
+                    font-size: 12px;
+                }
+            }
+        }
+
+        &.drop-files-sec {
+            text-align: center;
+            @include flex_common;
+            flex-wrap: wrap;
+            padding: 0;
+            border: 1px dashed var(--theme-color);
+            border-radius: 0;
+            margin: calc(16px + (25 - 16) * ((100vw - 320px) / (1920 - 320))) 5px;
+            margin-bottom: 14px;
+
+            i {
+                display: block;
+                width: 100%;
+            }
+
+            h2 {
+                font-size: calc(17px + (25 - 17) * ((100vw - 320px) / (1920 - 320)));
+
+                span {
+                    display: block;
+                    margin-top: calc(4px + (14 - 4) * ((100vw - 320px) / (1920 - 320)));
+                    font-size: calc(14px + (20 - 14) * ((100vw - 320px) / (1920 - 320)));
+                    font-weight: 400;
+                    opacity: 0.55;
+                }
+
+                label {
+                    display: block;
+                    margin-top: -15px;
+                    font-size: calc(14px + (20 - 14) * ((100vw - 320px) / (1920 - 320)));
+                    color: var(--theme-color);
+                }
+            }
+
+            i {
+                font-size: calc(31px + (45 - 31) * ((100vw - 320px) / (1920 - 320)));
+            }
+        }
+
+        &.select-file-section {
+            height: 440px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    }
+
+    .modal-footer {
+        justify-content: space-between;
+        display: flex;
+        border-top: 1px solid #eee !important;
+
+        .left-part {
+            display: flex;
+            align-items: center;
+            text-align: left;
+
+            .file-detail {
+                h6 {
+                    margin-bottom: 6px;
+                }
+            }
+        }
+    }
+
+    .modal-body {
+        .tab-content {
+            .tab-pane {
+                .select-top-panel {
+                    >div {
+                        .form-control {
+                            padding: calc(5px + (6 - 5) * ((100vw - 320px) / (1920 - 320))) calc(9px + (12 - 9) * ((100vw - 320px) / (1920 - 320)));
+                            font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+                        }
+                    }
+
+                    .form-select {
+                        padding-top: calc(5px + (6 - 5) * ((100vw - 320px) / (1920 - 320)));
+                        padding-bottom: calc(5px + (6 - 5) * ((100vw - 320px) / (1920 - 320)));
+                        font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+                        padding-left: calc(9px + (12 - 9) * ((100vw - 320px) / (1920 - 320)));
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.select-file-section {
+    .row-cols-xxl-6>* {
+        width: 10%;
+
+        @media (max-width: 1600px) {
+            width: 12.5%;
+        }
+
+        @media (max-width: 1199px) {
+            width: 16.66%;
+        }
+
+        @media (max-width: 768px) {
+            width: 20%;
+        }
+
+        @media (max-width: 576px) {
+            width: 25%;
+        }
+
+        @media (max-width: 430px) {
+            width: 33.33%;
+        }
+
+        @media (max-width: 380px) {
+            width: 50%;
+        }
+    }
+}
+
+.editor-checkbox {
+    position: relative;
+
+    .form-switch {
+        padding: 0;
+        display: block;
+        min-height: unset;
+        margin: 0;
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        border-radius: 0;
+        overflow: hidden;
+        border: 1px solid #ddd;
+
+        html[dir="rtl"] & {
+            right: unset;
+            left: 6px;
+        }
+
+        body.dark-only & {
+            border-color: #404040;
+        }
+
+        .form-check-input {
+            margin: 0;
+            width: 66px;
+            height: 29px;
+            box-shadow: unset;
+            float: unset;
+            border-radius: 0;
+            background: unset;
+            border: unset;
+            background-color: rgba(13, 164, 135, 0.07);
+            cursor: pointer;
+
+            &:checked {
+                ~label {
+                    .edit {
+                        background-color: var(--theme-color);
+
+                        i {
+                            color: #fff;
+                        }
+                    }
+
+                    .code {
+                        background-color: white;
+
+                        body.dark-only & {
+                            background-color: #1c2128;
+                        }
+
+                        i {
+                            color: #4a5568;
+
+                            body.dark-only & {
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        label {
+            margin: 0;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 100%;
+            line-height: 1;
+            display: flex;
+
+            span {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                i {
+                    font-size: 18px;
+                }
+
+                &.edit {
+                    background-color: white;
+
+                    body.dark-only & {
+                        background-color: #1c2128;
+                    }
+
+                    i {
+                        color: #4a5568;
+
+                        body.dark-only & {
+                            color: #fff;
+                        }
+                    }
+                }
+
+                &.code {
+                    background-color: var(--theme-color);
+
+                    i {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+
+    .editor-textarea {
+        .ckeditor-title {
+            position: absolute;
+            top: 11px;
+            left: 6px;
+
+            html[dir="rtl"] & {
+                left: unset;
+                right: 6px;
+            }
+        }
+
+        textarea {
+            height: 198px;
+        }
+    }
+}

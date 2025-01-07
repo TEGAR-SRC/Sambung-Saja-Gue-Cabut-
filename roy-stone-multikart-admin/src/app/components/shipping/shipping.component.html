@@ -1,0 +1,37 @@
+<app-page-wrapper [gridClass]="'col-xxl-8 m-auto'" [title]="'shipping'">
+  <div button *hasPermission="'shipping.create'">
+    <a (click)="CountryShippingModal.openModal()" class="align-items-center btn btn-theme d-flex">
+      <i class="ri-add-line"></i> {{ 'select_country'| translate}}
+    </a>
+  </div>
+
+  @if((shipping$ | async)?.data?.length){
+  <ul class="country-list">
+    @for(shipping of (shipping$ | async)?.data; track shipping){
+    <li>
+      <a href="javascript:void(0)">
+        <h5>{{ shipping?.country?.name }}</h5>
+      </a>
+      <div>
+        <a [routerLink]="['/shipping/edit/', shipping?.id]" class="me-2" *hasPermission="'shipping.edit'">
+          <i class="ri-pencil-line text-success"></i>
+        </a>
+        <a href="javascript:void(0)" *hasPermission="'shipping.destroy'"
+          (click)="DeleteModal.openModal('delete', shipping)">
+          <i class="ri-delete-bin-7-line text-danger"></i>
+        </a>
+      </div>
+    </li>
+    }
+  </ul>
+  }
+
+  @if(!(shipping$ | async)?.data?.length){
+  <app-no-data [class]="'no-data-added no-shipping'" [image]="'assets/svg/no-category.png'" [text]="'No Data Found'">
+  </app-no-data>
+  }
+</app-page-wrapper>
+
+<app-shipping-country-modal #countryShippingModal></app-shipping-country-modal>
+
+<app-delete-modal #deleteModal (deleteItem)="delete($event.actionToPerform, $event.data)"></app-delete-modal>

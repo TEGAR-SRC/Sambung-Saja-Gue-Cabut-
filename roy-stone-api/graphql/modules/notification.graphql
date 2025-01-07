@@ -1,0 +1,31 @@
+type Notification {
+    id: String
+    type: String
+    notifiable_type:String
+    notifiable_id:Int
+    data:NotificationData
+    total:Int
+    read_at:DateTime
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+type NotificationData {
+    title: String
+    message: String
+    type: String
+}
+
+input DeleteNotificationInput {
+    id: String!
+}
+
+extend type Mutation @guard {
+    markAsRead:[Notification] @field(resolver: "NotificationMutator@markAsRead")
+    deleteNotification(input:DeleteNotificationInput @spread): Boolean!
+        @field(resolver: "NotificationMutator@destroy")
+}
+
+extend type Query @guard {
+    notifications: [Notification!] @paginate(resolver: "App\\GraphQL\\Queries\\NotificationQuery@index" defaultCount:15)
+}

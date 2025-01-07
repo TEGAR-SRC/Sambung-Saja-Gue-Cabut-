@@ -1,2 +1,2 @@
-# repo roy stone aja 
- karena gw mau cabut jadi lu lanjutin nih repo yang udah buat ya wkwkw 
+# Roy-stone-repo-aja
+REPO ANJ INI REPO YA UDH INI REPO BUAT  YANG GW KERJAIAN 😂

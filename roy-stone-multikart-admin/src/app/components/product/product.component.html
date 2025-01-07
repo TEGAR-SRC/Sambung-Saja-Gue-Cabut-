@@ -1,0 +1,80 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'products'">
+  <div class="d-flex flex-wrap gap-3" button *hasPermission="'product.create'">
+    <a href="javascript:void(0)" class="align-items-center btn btn-light-bg" (click)="CSVModal.openModal()">
+      <i class="ri-upload-2-line"></i> {{ 'import' | translate }}
+    </a>
+    <a href="javascript:void(0)" class="align-items-center btn btn-light-bg" (click)="export()">
+      <i class="ri-download-2-line"></i> {{ 'export' | translate }}
+    </a>
+    <a [routerLink]="['/product/create']" class="align-items-center btn btn-theme d-flex">
+      <i class="ri-add-line"></i> {{ 'add_product' | translate }}
+    </a>
+  </div>
+  <app-table
+    [tableConfig]="tableConfig"
+    [hasCheckbox]="true"
+    [hasDuplicate]="true"
+    (tableChanged)="onTableChange($event)"
+    (rowClicked)="edit($event)"
+    (action)="onActionClicked($event)">
+    <div filter class="top-panel-selection">
+      <button class="align-items-center btn d-flex h-100 btn-light-bg fs-5 px-3 py-1" (click)="openFilter()">
+        <i class="ri-filter-3-line"></i>
+      </button>
+    </div>
+
+    @if(open){
+      <div advanceFilter class="show-box mb-4 d-block product-category-option">
+        <div class="row g-sm-4 g-3">
+
+          @if(( user$ | async )?.role?.name !== 'vendor' && (setting$ | async)?.activation?.multivendor){
+            <div class="col-xl-3 col-lg-6 col-md-3 col-sm-6">
+              <select2 class="custom-select"
+                [data]="(store$ | async)?.length ? (store$ | async) : []"
+                [placeholder]="'select_store' | translate "
+                multiple="true"
+                (update)="filters($event, 'store_ids')"
+                noResultMessage="{{'no_data_found' | translate }}"
+                resettable>
+              </select2>
+            </div>
+          }
+          <div [class]="( user$ | async )?.role?.name !== 'vendor' && (setting$ | async)?.activation?.multivendor  ? 'col-xl-2 col-lg-6 col-md-3 col-sm-6' : 'col-md-4'">
+            <select2 class="custom-select"
+              [placeholder]="'select_product_type' | translate"
+              [data]="mainProductType.length ? mainProductType : []"
+              (update)="applyFilter($event)"
+              noResultMessage="{{ 'no_data_found' | translate }}"
+              resettable>
+            </select2>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-3 col-sm-6">
+            <app-advance-dropdown
+              [text]="'select_categories'"
+              [selectSingle]="false"
+              [options]="(category$ | async) ? (category$ | async)?.data : []"
+              [subArrayKey]="'subcategories'"
+              (selectedItem)="selectItem($event)">
+            </app-advance-dropdown>
+          </div>
+          <div [class]="( user$ | async )?.role?.name !== 'vendor' && (setting$ | async)?.activation?.multivendor ? 'col-xl-3 col-lg-6 col-md-3 col-sm-6' : 'col-md-4'">
+            <select2 class="custom-select"
+              [data]="(brand$ | async)?.length ? (brand$ | async) : []"
+              [placeholder]="'select_brands' | translate "
+              multiple="true"
+              (update)="filters($event, 'brand_ids')"
+              noResultMessage="{{'no_data_found' | translate }}"
+              resettable>
+            </select2>
+          </div>
+        </div>
+      </div>
+    }
+  </app-table>
+</app-page-wrapper>
+
+<app-import-csv-modal [module]="'product'" #csvModal>
+</app-import-csv-modal>
+
+<app-digital-download-modal #downloadModal>
+</app-digital-download-modal>

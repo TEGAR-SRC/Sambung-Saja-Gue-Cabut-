@@ -1,0 +1,10 @@
+type Notice {
+    id: String
+    title: String
+    description:String
+    created_by_id:Int
+    is_read: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+

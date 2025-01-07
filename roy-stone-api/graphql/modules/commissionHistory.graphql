@@ -1,0 +1,23 @@
+type CommissionHistory {
+    id: Int
+    admin_commission: Float
+    vendor_commission: Float
+    order_id:Int
+    store_id:Int
+    order:Order
+    store:Store
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+extend type Query @guard {
+    commissionHistory (
+        search: String
+        sort: String
+        field: String
+        status: Int
+        start_date:String
+        end_date:String
+        paginate: Int
+    ): [CommissionHistory] @paginate(resolver: "App\\GraphQL\\Queries\\CommissionHistoryQuery@index" defaultCount:15)
+}

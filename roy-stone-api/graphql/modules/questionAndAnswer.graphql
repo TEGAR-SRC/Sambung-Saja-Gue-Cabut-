@@ -1,0 +1,67 @@
+type QuestionAndAnswer {
+    id: Int
+    question: String
+    answer: String
+    reaction: String
+    total_likes: Int
+    total_dislikes: Int
+    consumer_id: Int
+    product_id: Int
+    store_id: Int
+    product: Product
+    store: Store
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateQuestionAndAnswerInput {
+    question: String
+    answer: String
+    product_id: Int!
+}
+
+input UpdateQuestionAndAnswerInput {
+    id: Int!
+    question: String
+    answer: String
+    product_id: Int!
+}
+
+input DeleteQuestionAndAnswerInput {
+    id: Int!
+}
+
+input FeedbackInput {
+    question_and_answer_id: Int!
+    reaction: String
+}
+
+extend type Mutation @guard {
+    createQuestionAndAnswer(input: CreateQuestionAndAnswerInput @spread): QuestionAndAnswer
+        @can(ability: "question_and_answer.create")
+        @field(resolver: "QuestionAndAnswerMutator@store")
+
+    updateQuestionAndAnswer(input: UpdateQuestionAndAnswerInput @spread): QuestionAndAnswer
+        @can(ability: "question_and_answer.edit")
+        @field(resolver: "QuestionAndAnswerMutator@update")
+
+    deleteQuestionAndAnswer(input: DeleteQuestionAndAnswerInput @spread): Boolean!
+        @can(ability: "question_and_answer.destroy", model: "App\\Models\\QuestionAndAnswer")
+        @field(resolver: "QuestionAndAnswerMutator@destroy")
+
+    addFeedback(input: FeedbackInput @spread): QuestionAndAnswer
+        @can(ability: "question_and_answer.create", model: "App\\Models\\QuestionAndAnswer")
+        @field(resolver: "QuestionAndAnswerMutator@feedback")
+}
+
+extend type Query {
+    questionAndAnswers(
+        search: String
+        sort: String
+        field: String
+        product_id: Int
+        product_slug: String
+        paginate: Int
+    ): [QuestionAndAnswer!]! @paginate(resolver: "App\\GraphQL\\Queries\\QuestionAndAnswerQuery@index" defaultCount:15)
+    questionAndAnswer(id: Int @eq): QuestionAndAnswer @find
+}

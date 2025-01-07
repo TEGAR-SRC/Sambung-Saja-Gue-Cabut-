@@ -1,0 +1,15 @@
+Instructions for Bulk Import - Attribute Values
+
+-------------------------------------------------------------------
+Attribute Values Data
+-------------------------------------------------------------------
+
+1. name: (Required) Enter the name of the attribute. Maximum 255 characters allowed. Must be unique.
+
+2. style: (Required) Specify the style of the attribute. Choose from the following options: 'rectangle', 'circle', 'color', 'radio', 'image', 'dropdown'.
+
+3. status: (Required) Set as '0' for inactive or '1' for active to determine the attribute's status.
+
+4. values: (Optional) Define the values for the attribute. Values should be separated by commas without spaces. For instance: KG,GM,ML etc.
+
+

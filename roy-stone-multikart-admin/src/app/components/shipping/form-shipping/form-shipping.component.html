@@ -1,0 +1,86 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+  <app-form-fields [label]="'name' | translate" [for]="'name'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{ 'enter_name' | translate }}" formControlName="name">
+    @if(form.controls['name'].touched && form.controls['name'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'name_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+  <app-form-fields [label]="'rule_type'" [for]="'rule'" [required]="true">
+    <select2 class="custom-select" [placeholder]="'select_rule_type' | translate " [data]="ruleType?.length ? ruleType : []" formControlName="rule_type" noResultMessage="{{ 'no_data_found' | translate }}" resettable>
+    </select2>
+    @if(form.controls['rule_type'].touched && form.controls['rule_type'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'rule_type_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+  <app-form-fields [label]="'minimum'" [for]="'min'" [required]="true">
+    <input class="form-control" type="number" placeholder="{{ 'enter_minimum_value' | translate }}" formControlName="min">
+    @if(form.controls['min'].touched && form.controls['min'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'minimum_value_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+  <app-form-fields [label]="'maximum'" [for]="'max'" [required]="true">
+    <input class="form-control" type="number" placeholder="{{ 'enter_maximum_value' | translate }}" formControlName="max">
+    @if(form.controls['max'].touched && form.controls['max'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'maximum_value_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+  <app-form-fields [label]="'shipping_type'" [for]="'shipping'" [required]="true">
+    <select2 class="custom-select" [placeholder]="'select_shipping_type' | translate " [data]="shippingType?.length ? shippingType : []" formControlName="shipping_type" (click)="selectShippingType()" noResultMessage="{{ 'no_data_found' | translate }}" resettable>
+    </select2>
+    @if(form.controls['shipping_type'].touched && form.controls['shipping_type'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'type_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  @if(form.get('shipping_type')?.value == 'fixed'){
+    <app-form-fields [label]="'amount'" [for]="'amount'" [required]="true">
+      <div class="input-group">
+        <span class="input-group-text">
+          {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+        </span>
+        <input class="form-control" type="number" placeholder="{{ 'enter_amount' | translate }}" formControlName="amount">
+      </div>
+      @if(form.controls['amount'].touched && form.controls['amount'].errors?.['required']){
+        <div class="invalid-feedback">
+          {{ 'amount_is_required' | translate }}
+        </div>
+      }
+    </app-form-fields>
+  }
+
+  @if(form.controls['shipping_type'].value == 'percentage'){
+    <app-form-fields [label]="'percentage'" [for]="'percentage'" [required]="true">
+      <div class="input-group">
+        <input class="form-control" id="percentage" type="number" min="0" max="100" oninput="if (value > 100) value = 100; if (value < 0) value = 0;" placeholder="{{ 'enter_percentage' | translate }}" formControlName="amount">
+        <span class="input-group-text">%</span>
+      </div>
+      @if(form.controls['amount'].touched && form.controls['amount'].errors?.['required']){
+        <div class="invalid-feedback">
+          {{ 'percentage_is_required' | translate }}
+        </div>
+      }
+    </app-form-fields>
+  }
+  <div class="d-flex mt-4 justify-content-end">
+    @if(data){
+      <app-button [class]="'btn btn-light-bg me-3'" [spinner]="false" [id]="'shipping_form_no_btn'" [type]="'button'" (click)="DeleteModal.openModal('delete', data)">
+        {{ 'delete' | translate }}
+      </app-button>
+    }
+    <app-button [class]="'btn btn-theme'" [id]="'shipping_form_yes_btn'">
+      {{ 'submit' | translate }}
+    </app-button>
+  </div>
+</form>
+<app-delete-modal #deleteModal (deleteItem)="delete($event.actionToPerform,$event.data)">
+</app-delete-modal>

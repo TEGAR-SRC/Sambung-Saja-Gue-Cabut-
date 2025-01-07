@@ -1,0 +1,30 @@
+<div class="row g-sm-4 g-2">
+  <div class="col-xl-12">
+    <div class="row roles-form">
+      @for(module of modules$ | async; track module; let i = $index){
+        <div class="col-12">
+          <ul>
+            <li>{{ module?.name.replace('_', ' ') | titlecase }} </li>
+            <li>
+              <div class="form-check form-switch">
+                <input class="checkbox_animated form-check-input checkall" type="checkbox" id="role-{{module.id}}" [checked]="module.isChecked" (change)="checkUncheckAll($event, module)">
+                <label class="form-check-label m-0 form-label" for="role-{{module.id}}">{{ 'all' | translate }}</label>
+              </div>
+            </li>
+
+            @for(permission of module.module_permissions; track permission){
+              <li>
+                <div class="form-check form-switch">
+                  <input class="checkbox_animated form-check-input check-it" [name]="permission.name" type="checkbox" id="{{ permission.permission_id }}" [checked]="selectedPermission?.includes(+permission.permission_id) || permission.isChecked ? true : false" [value]="permission.permission_id" (change)="permission.name === 'index' && permission.isChecked ? checkIndex($event, module) : onPermissionChecked($event, module)">
+                  <label class="form-check-label m-0 form-label" for="{{ permission.permission_id }}">
+                    {{ permission.name | titlecase }}
+                  </label>
+                </div>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </div>
+</div>

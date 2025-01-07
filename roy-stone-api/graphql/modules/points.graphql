@@ -1,0 +1,24 @@
+type Point {
+    id: Int
+    consumer_id: Int
+    balance: Float
+    transactions:Json
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+extend type Query @guard {
+    pointsTransactions(
+        consumer_id: Int
+        search: String
+        page: Int
+        paginate: Int
+        start_date: String
+        end_date: String
+    ): Point  @field(resolver: "App\\GraphQL\\Queries\\PointsQuery@index")
+}
+
+extend type Mutation {
+    creditPoints(input: creditDebitInput @spread): Point @field(resolver: "PointsMutator@creditPoints")
+    debitPoints(input: creditDebitInput @spread): Point @field(resolver: "PointsMutator@debitPoints")
+}

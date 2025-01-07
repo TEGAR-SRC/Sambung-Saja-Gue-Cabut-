@@ -1,0 +1,16 @@
+input AddToWishlistInput {
+    product_id: Int
+}
+
+input DeleteWishlistInput {
+    id: Int
+}
+
+extend type Query @guard {
+    wishlist: Product! @paginate(resolver: "App\\GraphQL\\Queries\\WishlistQuery@index" defaultCount:15)
+}
+
+extend type Mutation @guard {
+    addWishlist(input: AddToWishlistInput! @spread): Product @field(resolver: "WishlistMutator@store")
+    deleteWishlist(input: DeleteWishlistInput! @spread): Boolean @field(resolver: "WishlistMutator@destroy")
+}

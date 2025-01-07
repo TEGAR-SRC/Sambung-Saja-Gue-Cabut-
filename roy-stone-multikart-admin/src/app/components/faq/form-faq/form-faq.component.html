@@ -1,0 +1,33 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+
+  <app-form-fields [label]="'title'" [for]="'title'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{ 'enter_title' | translate }}" name="title" formControlName="title">
+    @if(form.controls['title'].touched && form.controls['title'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'title_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'description'" [for]="'description'" [required]="true">
+    <textarea class="form-control" placeholder="{{ 'enter_description' | translate }}" formControlName="description" rows="3"></textarea>
+    @if(form.controls['description'].touched && form.controls['description'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'description_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'status'" [for]="'status'" [required]="false">
+    <div class="form-check form-switch ps-0">
+      <label class="switch">
+        <input type="checkbox" id="status" formControlName="status">
+        <span class="switch-state"></span>
+      </label>
+    </div>
+  </app-form-fields>
+
+  <app-button [id]="'faq_btn'">
+    {{ (type == 'create' ? 'save_faq' : 'update_faq') | translate }}
+  </app-button>
+</form>

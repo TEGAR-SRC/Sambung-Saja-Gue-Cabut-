@@ -1,0 +1,338 @@
+/**==========================
+    Log In And Sign up CSS Start
+==========================**/
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.resend-it {
+  color: $primary-color;
+  margin-left: 5px;
+}
+
+.show-hide {
+  position: absolute;
+  top: 29px;
+  right: 30px;
+  transform: translateY(-50%);
+  text-transform: capitalize;
+  z-index: 2;
+
+  span {
+    cursor: pointer;
+    font-size: 13px;
+    color: $primary-color;
+
+    .show-hide span:before {
+      content: "hide";
+    }
+
+    &.show {
+      &:before {
+        content: "show";
+      }
+    }
+
+    &.Hide {
+      &:before {
+        content: "hide";
+      }
+    }
+  }
+}
+
+@keyframes move {
+  0% {
+    -webkit-transform: scale(1) rotate(0deg) translate3d(0, 0, 1px);
+    transform: scale(1) rotate(0deg) translate3d(0, 0, 1px);
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    z-index: 10;
+    -webkit-transform: scale(0) rotate(360deg) translate3d(0, 0, 1px);
+    transform: scale(0) rotate(360deg) translate3d(0, 0, 1px);
+  }
+}
+
+.log-in-section {
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 0;
+  min-height: 100vh;
+  overflow: auto;
+  padding: calc(25px + (60 - 25) * ((100vw - 320px) / (1920 - 320))) 0;
+
+  .logo-login {
+    img {
+      position: absolute;
+      width: calc(140px + (180 - 140) * ((100vw - 320px) / (1920 - 320)));
+      top: 30px;
+      left: 30px;
+    }
+  }
+
+  &.otp-section {
+    display: flex;
+    align-items: center;
+  }
+
+  .image-contain {
+    @include flex_common;
+    height: 100%;
+  }
+
+  .inputs {
+    margin: calc(-2px + (-8 - 2) * ((100vw - 320px) / (1920 - 320)));
+
+    input {
+      margin: calc(2px + (8 - 2) * ((100vw - 320px) / (1920 - 320)));
+      border: none;
+    }
+  }
+
+  .log-in-box {
+    background-color: $white;
+    padding: calc(16px + (50 - 16) * ((100vw - 320px) / (1920 - 320)));
+    border-radius: 0;
+
+    .logo-img {
+      width: 140px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    .phone-selection {
+      .form-control {
+        padding-left: 130px;
+        padding-top: 10px;
+      }
+
+      .custom-select {
+        .select2-container {
+          .select2-selection {
+            background: #ffffff !important;
+            border-top: unset !important;
+            border-left: unset !important;
+            border-bottom: unset !important;
+            height: 56px !important;
+          }
+        }
+
+        &.intl-tel-input {
+          .select2-container {
+            .select2-selection {
+              .select2-selection__rendered {
+                background: #ffffff !important;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .btn-theme {
+      transition: none;
+    }
+
+    .custom-select {
+      &.intl-tel-input {
+        left: 1px;
+        top: 1px;
+      }
+    }
+
+    .custom-select {
+      .select2-container {
+        .select2-selection {
+          background: white !important;
+          height: 58px !important;
+
+          .select2-selection__rendered {
+            display: flex !important;
+            align-items: center;
+          }
+        }
+      }
+    }
+
+    .logo-name {
+      margin-bottom: calc(20px + (30 - 20) * ((100vw - 320px) / (1920 - 320)));
+      margin-top: -10px;
+
+      a {
+        font-size: calc(28px + (35 - 28) * ((100vw - 320px) / (1920 - 320)));
+        font-weight: bold;
+        color: $title-color;
+        font-family: $public-sans;
+        display: block;
+
+        img {
+          width: calc(150px + (225 - 150) * ((100vw - 320px) / (1920 - 320)));
+        }
+      }
+    }
+
+    .log-in-title {
+      margin-bottom: calc(15px + (25 - 15) * ((100vw - 320px) / (1920 - 320)));
+      text-align: center;
+
+      h3 {
+        margin-bottom: calc(1px + (6 - 1) * ((100vw - 320px) / (1920 - 320)));
+        font-size: calc(18px + (21 - 18) * ((100vw - 320px) / (1920 - 320)));
+        color: var(--theme-color);
+        font-weight: 600;
+      }
+
+      h4,
+      h5 {
+        color: $content-color;
+        margin-top: 8px;
+        margin-bottom: 40px;
+      }
+    }
+
+    .log-in-button {
+      margin-top: 20px;
+      padding: 1px 0;
+
+      ul {
+        @include flex_wrap($dis: flex, $wrap: wrap, $gap: 15px);
+        align-items: center;
+
+        [dir="rtl"] & {
+          padding-right: 0;
+        }
+
+        li {
+          display: block;
+          width: 100%;
+          background-color: $light-color;
+
+          a {
+            @include flex_common;
+            font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+            color: $title-color;
+            border-radius: 5px;
+            padding: calc(10px + (16 - 10) * ((100vw - 320px) / (1920 - 320))) calc(18px + (30 - 18) * ((100vw - 320px) / (1920 - 320)));
+            flex-wrap: wrap;
+            gap: calc(8px + (10 - 8) * ((100vw - 320px) / (1920 - 320)));
+            background-color: $light-color;
+
+            img {
+              width: calc(18px + (24 - 18) * ((100vw - 320px) / (1920 - 320)));
+            }
+          }
+        }
+      }
+    }
+
+    .forgot-box {
+      @include flex_common($dis: flex, $align: center, $justify: space-between);
+
+      @include mq-max(2xs) {
+        display: block;
+      }
+    }
+
+    .remember-box {
+      display: flex;
+      align-items: center;
+
+      .check-box {
+        display: block;
+        margin-top: -6px;
+      }
+
+      label {
+        font-size: 16px;
+        margin-bottom: 0;
+
+        span {
+          font-weight: 500;
+          color: var(--theme-color);
+        }
+      }
+    }
+
+    .forgot-password {
+      font-size: 16px;
+      font-weight: 500;
+      display: block;
+
+      &:hover {
+        color: var(--theme-color);
+      }
+    }
+
+    .other-log-in {
+      margin-top: 15px;
+      text-align: center;
+      position: relative;
+
+      &::before {
+        @include pos;
+        @include center(vertical);
+        @include pseudowh($width: 100%, $height: 1px);
+        left: 0;
+        background-color: #ddd;
+        z-index: 0;
+      }
+
+      h6 {
+        color: $content-color;
+        position: relative;
+        background-color: $white;
+        padding: 0 14px;
+        display: inline-block;
+        text-transform: uppercase;
+      }
+    }
+
+    .sign-up-box {
+      margin-top: 20px;
+      text-align: center;
+
+      h4 {
+        color: $content-color;
+        font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+        margin-bottom: calc(0px + (3 - 0) * ((100vw - 320px) / (1920 - 320)));
+      }
+
+      a {
+        font-weight: 500;
+        font-size: calc(15px + (17 - 15) * ((100vw - 320px) / (1920 - 320)));
+        margin-bottom: -4px;
+        display: block;
+
+        &:hover {
+          color: var(--theme-color);
+        }
+      }
+    }
+
+    .contact-title {
+      margin-bottom: 30px;
+
+      h2 {
+        margin-bottom: 15px;
+      }
+
+      h5 {
+        width: 53%;
+        font-size: 18px;
+        line-height: 1.3;
+        color: $content-color;
+      }
+    }
+  }
+}

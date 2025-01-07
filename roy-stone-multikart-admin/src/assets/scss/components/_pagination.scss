@@ -1,0 +1,87 @@
+/**=====================
+     Pagination CSS Start
+==========================**/
+.custom-pagination {
+    margin-top: calc(22px + (35 - 22) * ((100vw - 320px) / (1920 - 320)));
+
+    .pagination {
+        flex-wrap: wrap;
+        gap: calc(6px + (13 - 6) * ((100vw - 320px) / (1920 - 320)));
+
+        .page-item {
+            border-radius: 0;
+            overflow: hidden;
+
+            body.dark-only & {
+                .disabled {
+                    opacity: 1;
+                }
+            }
+
+            &:not(:first-child) {
+                .page-link {
+                    margin: 0;
+                }
+            }
+
+            &.active {
+                .page-link {
+                    background-color: var(--theme-color);
+                    border-color: var(--theme-color);
+                    color: $white;
+                    font-weight: 600;
+
+                    &:hover {
+                        background-color: var(--theme-color);
+                        border-color: var(--theme-color);
+                        color: $white;
+                    }
+                }
+
+                body.dark-only & {
+                    .page-link {
+                        background-color: var(--theme-color);
+                        border-color: var(--theme-color);
+                        color: $white;
+                    }
+                }
+
+                &.disabled {
+                    opacity: 1;
+                    cursor: default;
+                }
+            }
+
+            .page-link {
+                color: $content-color;
+                border: 1px solid #eee;
+                z-index: unset;
+                border-radius: 0;
+                padding: 0;
+                line-height: 1;
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                body.dark-only & {
+                    color: rgba(255, 255, 255, 0.6);
+                    border-color: #404040;
+                }
+
+                &:hover {
+                    border: 1px solid var(--theme-color);
+                    background-color: unset;
+                    color: var(--theme-color);
+                }
+
+                &:focus {
+                    color: var(--theme-color);
+                    background-color: transparent;
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+}

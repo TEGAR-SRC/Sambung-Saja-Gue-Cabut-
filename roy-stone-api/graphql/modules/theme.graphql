@@ -1,0 +1,33 @@
+type Theme {
+    id: Int
+    name: String
+    slug: String
+    image: String
+    status: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input UpdateThemeInput {
+    id: Int!
+    status: Int!
+}
+
+type ThemePayload {
+    success: Boolean
+    message: String
+}
+
+extend type Mutation {
+    updateTheme(input: UpdateThemeInput @spread): Theme
+        @can(ability: "theme.edit")
+        @field(resolver: "ThemeMutator@update")
+
+}
+
+extend type Query {
+    themes(
+        search: String @where(operator: "like", key: "name")
+        orderBy: _@orderBy(columns: ["updated_at", "created_at"], order: DESC)): [Theme!]! @paginate(defaultCount: 10)
+    theme(id: Int @eq): Theme @find
+}

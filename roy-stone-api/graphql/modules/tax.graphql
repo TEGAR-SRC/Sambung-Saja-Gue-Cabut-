@@ -1,0 +1,67 @@
+type Tax {
+    id: Int
+    name: String
+    rate: Float
+    status: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateTaxInput {
+    name: String
+    rate: Float
+    status: Int
+}
+
+input UpdateTaxInput {
+    id: Int!
+    name: String
+    rate: Float
+    status: Int
+}
+
+input DeleteTaxInput {
+    id: Int!
+}
+
+input DeleteAllTaxesInput {
+    ids: [Int]
+}
+
+input StatusTaxInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createTax(input: CreateTaxInput @spread): Tax
+        @can(ability: "tax.create")
+        @field(resolver: "TaxMutator@store")
+
+    updateTax(input: UpdateTaxInput @spread): Tax
+        @can(ability: "tax.edit")
+        @field(resolver: "TaxMutator@update")
+
+    deleteTax(input: DeleteTaxInput @spread): Boolean!
+        @can(ability: "tax.destroy", model: "App\\Models\\Tax")
+        @field(resolver: "TaxMutator@destroy")
+
+    deleteAllTaxes(input: DeleteAllTaxesInput @spread): Boolean!
+        @can(ability: "tax.destroy", model: "App\\Models\\Tax")
+        @field(resolver: "TaxMutator@deleteAll")
+
+    statusTax(input: StatusTaxInput @spread): Tax
+        @can(ability: "user.edit", model: "App\\Models\\Tax")
+        @field(resolver: "TaxMutator@status")
+}
+
+extend type Query {
+    taxes(
+        search: String @where(operator: "like", key: "name")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [Tax!]! @paginate(resolver: "App\\GraphQL\\Queries\\TaxQuery@index" defaultCount:15)
+    tax(id: Int @eq): Tax @find
+}

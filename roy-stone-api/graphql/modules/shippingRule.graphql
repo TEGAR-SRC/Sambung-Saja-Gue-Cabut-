@@ -1,0 +1,72 @@
+type ShippingRule {
+    id: Int
+    name: String
+    shipping_id: Int
+    rule_type: String
+    min: Int
+    max: Int
+    shipping_type: String
+    amount: Float
+    status: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateShippingRuleInput {
+    name: String
+    shipping_id: Int
+    rule_type: String
+    min: Int
+    max: Int
+    shipping_type: String
+    status: Int
+    amount: Float
+}
+
+input UpdateShippingRuleInput {
+    id: Int!
+    name: String
+    shipping_id: Int
+    rule_type: String
+    min: Int
+    max: Int
+    shipping_type: String
+    status: Int
+    amount: Float
+}
+
+input DeleteShippingRuleInput {
+    id: Int!
+}
+
+input StatusShippingRuleInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createShippingRule(input: CreateShippingRuleInput @spread): ShippingRule
+        @can(ability: "shipping.create")
+        @field(resolver: "ShippingRuleMutator@store")
+
+    updateShippingRule(input: UpdateShippingRuleInput @spread): ShippingRule
+        @can(ability: "shipping.edit")
+        @field(resolver: "ShippingRuleMutator@update")
+
+    deleteShippingRule(input: DeleteShippingRuleInput @spread): Boolean!
+        @can(ability: "shipping.destroy", model: "App\\Models\\ShippingRule")
+        @field(resolver: "ShippingRuleMutator@destroy")
+
+    statusShippingRule(input: StatusShippingRuleInput @spread): ShippingRule
+        @can(ability: "shipping.edit", model: "App\\Models\\ShippingRule")
+        @field(resolver: "ShippingRuleMutator@status")
+}
+
+extend type Query {
+    shippingRules(
+        search: String @where(operator: "like", key: "name")
+        orderBy: _ @orderBy(columns: ["updated_at", "created_at"], order: DESC)
+    ): [ShippingRule!]! @all
+        @can(ability: "shipping.index")
+    shippingRule(id: Int @eq): ShippingRule @can(ability: "shipping.index") @find
+}

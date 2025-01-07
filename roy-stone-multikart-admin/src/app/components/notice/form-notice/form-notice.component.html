@@ -1,0 +1,44 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+
+  <app-form-fields [label]="'title'" [for]="'title'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{ 'enter_title' | translate }}" name="title" formControlName="title">
+    @if(form.controls['title'].touched && form.controls['title'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'title_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'description'" [for]="'description'" [required]="true">
+    <div class="custom-editor">
+      <ngx-editor-menu [editor]="editor"></ngx-editor-menu>
+      <ngx-editor [editor]="editor" [placeholder]="'Type here...'" formControlName="description"></ngx-editor>
+    </div>
+
+    @if(form.controls['description'].touched && form.controls['description'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'description_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-form-fields [label]="'priority'" [for]="'priority'">
+    <select2 class="custom-select"
+      [data]="priority.length ? priority : []"
+      [placeholder]="'select_notice' | translate "
+      formControlName="priority"
+      noResultMessage="{{'no_data_found' | translate }}"
+      resettable
+      multiple="false">
+    </select2>
+    @if(form.controls['priority'].touched && form.controls['priority'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'priority_select_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  <app-button [id]="'notice_btn'">
+    {{ (type == 'create' ? 'save_notice' : 'update_notice') | translate }}
+  </app-button>
+</form>

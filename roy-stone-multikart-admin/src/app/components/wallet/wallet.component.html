@@ -1,0 +1,51 @@
+<div class="row g-0">
+  <div class="col-xxl-4 col-xl-5">
+    <form [formGroup]="form">
+      <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'select_consumer'">
+        <select2 class="custom-select"
+          [data]="(users$ | async)?.length ? (users$ | async) : []"
+          [placeholder]="'select_consumer' | translate "
+          formControlName="consumer_id"
+          noResultMessage="{{'no_data_found' | translate }}">
+        </select2>
+      </app-page-wrapper>
+    </form>
+  </div>
+  <div class="col-xxl-8 col-xl-7">
+    <form [formGroup]="form">
+      <app-page-wrapper [gridClass]="'col-sm-12'" [title]="'wallet'">
+        <div class="wallet-sec theme-form">
+          <div class="wallet-amount">
+            <div class="wallet-icon">
+              <i class="ri-wallet-line"></i>
+            </div>
+            <div>
+              <h2>{{ balance | currencySymbol }}</h2>
+              <h5>{{ 'wallet_balance' | translate }}</h5>
+            </div>
+          </div>
+          <input type="number" #bal formControlName="balance" class="form-control" placeholder="{{ 'add_withdraw_amount' | translate }}" numbersOnly>
+          <div class="btn-sec">
+            <app-button [class]="'btn btn-animation'" [disabled]="!form.valid" [spinner]="false" (click)="form.valid && ConfirmationModal.openModal('credit')" *hasPermission="'wallet.credit'">
+              {{ 'add' | translate }}
+            </app-button>
+            <app-button [class]="'btn btn-light-bg'" [spinner]="false" [disabled]="+balance < +bal.value || !bal.value" (click)="+balance < +bal.value || !!bal.value && ConfirmationModal.openModal('debit')" *hasPermission="'wallet.debit'">
+              {{ 'withdraw' | translate }}
+            </app-button>
+          </div>
+        </div>
+      </app-page-wrapper>
+    </form>
+  </div>
+</div>
+
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'transactions'">
+  <app-table
+    (tableChanged)="onTableChange($event)"
+    [dateRange]="true"
+    [tableConfig]="tableConfig">
+  </app-table>
+</app-page-wrapper>
+
+<app-confirmation-modal #confirmationModal (confirmed)="submit($event?.actionToPerform)">
+</app-confirmation-modal>

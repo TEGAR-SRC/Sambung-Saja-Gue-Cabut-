@@ -1,0 +1,30 @@
+<form class="form-inline search-full" [class.open]="navServices.search" #dropdownContainer (clickOutside)="clickOutside()">
+   <div class="form-group w-100" #toggleButton>
+      <input class="demo-input Typeahead-input form-control-plaintext w-100" [(ngModel)]="text" [ngModelOptions]="{ standalone: true }" (keyup)="searchTerm(text)" (click)="openDropDown(text)" type="text" autocomplete="off" placeholder="{{ 'search' | translate }} ..">
+      <i class="ri-search-line"></i>
+   </div>
+   <div class="onhover-dropdown" [class.open]="searchResult">
+      <ul>
+         @for(menu of menuItems; track menu){
+            <li>
+               <a class="main-content" [routerLink]="menu?.path">
+                  @if(menu.icon){
+                     <i class="{{ menu.icon }}"></i>
+                  }
+                  @if(menu.title){
+                     {{ menu.title.replace(' ', '_') | translate }}
+                  }
+               </a>
+            </li>
+         }
+      </ul>
+
+      @if(searchResultEmpty){
+         <div class="Typeahead-menu" [class.open]="searchResultEmpty">
+            <div class="tt-dataset tt-dataset-0">
+               <div class="EmptyMessage">{{ 'opps!!_There_are_no_result_found' | translate }}</div>
+            </div>
+         </div>
+      }
+   </div>
+</form>

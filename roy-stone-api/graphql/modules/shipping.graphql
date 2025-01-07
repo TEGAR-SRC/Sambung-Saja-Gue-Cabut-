@@ -1,0 +1,55 @@
+type Shipping {
+    id: Int
+    country_id: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    country: Country
+    status: Int
+    shipping_rules: [ShippingRule]
+}
+
+input CreateShippingInput {
+    country_id: Int
+    status: Int
+}
+
+input UpdateShippingInput {
+    id: Int!
+    country_id: Int
+    status: Int
+}
+
+input DeleteShippingInput {
+    id: Int!
+}
+
+input StatusShippingInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createShipping(input: [CreateShippingInput]): [Shipping]
+        @can(ability: "shipping.create")
+        @field(resolver: "ShippingMutator@store")
+
+    updateShipping(input: UpdateShippingInput @spread): Shipping
+        @can(ability: "shipping.edit")
+        @field(resolver: "ShippingMutator@update")
+
+    deleteShipping(input: DeleteShippingInput @spread): Boolean!
+        @can(ability: "shipping.destroy", model: "App\\Models\\Shipping")
+        @field(resolver: "ShippingMutator@destroy")
+
+    statusShipping(input: StatusShippingInput @spread): Shipping
+        @can(ability: "user.edit", model: "App\\Models\\Shipping")
+        @field(resolver: "ShippingMutator@status")
+}
+
+extend type Query {
+    shippings(
+        search: String @where(operator: "like", key: "name")
+        orderBy: _ @orderBy(columns: ["updated_at", "created_at"], order: DESC)
+    ): [Shipping!]! @all @can(ability: "shipping.index")
+    shipping(id: Int @eq): Shipping @can(ability: "shipping.index") @find
+}

@@ -1,0 +1,62 @@
+type OrderStatus {
+    id: Int
+    name: String
+    slug: String
+    status: Int
+    sequence: Int
+    system_reserve:Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateOrderStatusInput {
+    name: String
+    status: Int
+    sequence: Int
+}
+
+input UpdateOrderStatusInput {
+    id: Int!
+    name: String
+    status: Int
+    sequence: Int
+}
+
+input DeleteOrderStatusInput {
+    id: Int!
+}
+
+input StatusOrderStatusInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createOrderStatus(input: CreateOrderStatusInput @spread): OrderStatus
+        @can(ability: "order_status.create")
+        @field(resolver: "OrderStatusMutator@store")
+
+    updateOrderStatus(input: UpdateOrderStatusInput @spread): OrderStatus
+        @can(ability: "order_status.edit")
+        @field(resolver: "OrderStatusMutator@update")
+
+    deleteOrderStatus(input: DeleteOrderStatusInput @spread): Boolean!
+        @can(ability: "order_status.destroy", model: "App\\Models\\OrderStatus")
+        @field(resolver: "OrderStatusMutator@destroy")
+
+    statusOrderStatus(input: StatusOrderStatusInput @spread): OrderStatus
+        @can(ability: "order_status.edit", model: "App\\Models\\OrderStatus")
+        @field(resolver: "OrderStatusMutator@status")
+}
+
+extend type Query {
+    orderStatuses(
+        search: String @where(operator: "like", key: "name")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+    ): [OrderStatus!]!
+    @paginate(resolver: "App\\GraphQL\\Queries\\OrderStatusQuery@index" defaultCount:15)
+    orderStatus(id: Int @eq): OrderStatus @find
+}

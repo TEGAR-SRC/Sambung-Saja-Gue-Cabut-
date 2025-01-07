@@ -1,0 +1,374 @@
+type Product {
+    id: Int
+    name: String
+    short_description: String
+    description: String
+    unit: String
+    type: String
+    quantity: Int
+    weight: Int
+    is_changeable: Int
+    status: Int
+    video_provider: String
+    video_link: String
+    price: Float
+    sale_price: Float
+    discount: Float
+    visible_time: String
+    slug: String
+    sku: String
+    is_external: Int
+    external_button_text: String
+    external_url: String
+    stock_status: String
+    meta_title: String
+    meta_description: String
+    is_cod: Int
+    is_free_shipping: Int
+    is_return: Int
+    is_featured: Int
+    show_stock_quantity: Int
+    shipping_days: Int
+    store_id: Int
+    is_licensable: Int
+    preview_url: String
+    brand_id: Int
+    is_digital: Int
+    product_type: String
+    watermark: Int
+    watermark_position: String
+    watermark_image_id: Int
+    wholesale_price_type: String
+    separator: String
+    preview_type: String
+    is_licensekey_auto: Int
+    preview_audio_file_id: Int
+    preview_video_file_id: Int
+    store: Store
+    user_review:Review
+    attributes: [Attribute]
+    categories: [Category]
+    tags: [Tag]
+    tax: Tax
+    review_ratings: [Int]
+    tax_id: Int
+    orders_count: Int
+    reviews_count: Int
+    products_count: Int
+    can_review: Int
+    order_amount:Float
+    rating_count:Float
+    created_by_id: Int
+    is_sale_enable: Int
+    is_approved: Int
+    sale_starts_at: String
+    sale_expired_at: String
+    is_trending: Int
+    is_random_related_products: Int
+    total_in_approved_products: Int
+    product_thumbnail_id: Int
+    product_meta_image_id: Int
+    product_galleries_id: [Int]
+    pivot: ProductPivot
+    variations: [Variation]
+    related_products: [Int]
+    cross_sell_products: [Int]
+    size_chart_image_id: Int
+    estimated_delivery_text: String
+    return_policy_text: String
+    safe_checkout:Int
+    secure_checkout: Int
+    social_share: Int
+    encourage_order: Int
+    encourage_view: Int
+    product_thumbnail: Attachment
+    product_galleries: [Attachment]
+    product_meta_image: Attachment
+    size_chart_image: Attachment
+    preview_audio_file: Attachment,
+    preview_video_file: Attachment,
+    watermark_image: Attachment,
+    license_keys: LicenseKey,
+    digital_files: [Attachment]
+    wholesale: Wholesale,
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    stock: String
+    store_name: String
+}
+
+type ProductPivot {
+    order_id: Int
+    product_id: Int
+    wholesale_price: Float
+    product_type: String
+    quantity: Int
+    refund_status: String
+    shipping_cost: Int
+    single_price: Float
+    subtotal: Float
+    variation: Variation
+    variation_id: Int
+}
+
+type MinifyProduct {
+    id: Int
+    name: String
+    slug: String
+    product_thumbnail_id: Int
+    product_thumbnail: Attachment
+    categories: [Category]
+}
+
+type Wholesale {
+    min_qty: Int
+    max_qty: Int
+    value: Float
+    product_id: Int
+}
+
+input CreateProductInput {
+    name: String
+    product_type: String
+    short_description: String
+    description: String
+    type: String
+    is_external: Int
+    external_button_text: String
+    external_url: String
+    is_changeable: Int
+    unit: String
+    status: Int
+    video_provider: String
+    video_link: String
+    price: Float
+    sale_price: Float
+    quantity: Int
+    is_approved: Int
+    discount: Float
+    weight: Int
+    visible_time: String
+    slug: String
+    sku: String
+    stock_status: String
+    meta_title: String
+    meta_description: String
+    is_sale_enable: Int
+    sale_starts_at: String
+    sale_expired_at: String
+    is_trending: Int
+    is_cod: Int
+    is_free_shipping: Int
+    is_return: Int
+    is_featured: Int
+    show_stock_quantity: Int
+    shipping_days: Int
+    product_thumbnail_id: Int
+    product_meta_image_id: Int
+    product_galleries_id: [Int]
+    categories: [Int]
+    attributes_ids: [Int]
+    tags: [Int]
+    tax_id: Int
+    size_chart_image_id: Int
+    estimated_delivery_text: String
+    return_policy_text: String
+    safe_checkout:Int
+    secure_checkout: Int
+    social_share: Int
+    encourage_order: Int
+    encourage_view: Int
+    variants: [VariantsInput]
+    variations: [CreateVariationInput]
+    store_id: Int
+    total_in_approved_products: Int
+    is_random_related_products:Int
+    related_products: [Int]
+    cross_sell_products: [Int]
+    is_external: Int
+    external_url: String
+    watermark: Int
+    watermark_position: String
+    watermark_image_id: Int
+    is_licensekey_auto: Int
+    separator: String
+    license_key: String
+    preview_audio_file_id: Int
+    preview_video_file_id: Int
+    digital_file_ids: [Int]
+    external_button_text: String
+    wholesale_price_type: String
+}
+
+input UpdateProductInput {
+    id: Int!
+    name: String
+    product_type: String
+    short_description: String
+    is_external: Int
+    external_button_text: String
+    external_url: String
+    description: String
+    type: String
+    is_changeable: Int
+    unit: String
+    status: Int
+    video_provider: String
+    video_link: String
+    price: Float
+    is_approved: Int
+    sale_price: Float
+    quantity: Int
+    discount: Float
+    weight: Int
+    visible_time: String
+    slug: String
+    sku: String
+    stock_status: String
+    meta_title: String
+    meta_description: String
+    is_sale_enable: Int
+    sale_starts_at: String
+    sale_expired_at: String
+    is_trending: Int
+    is_cod: Int
+    is_free_shipping: Int
+    is_return: Int
+    is_featured: Int
+    show_stock_quantity: Int
+    shipping_days: Int
+    product_thumbnail_id: Int
+    product_meta_image_id: Int
+    product_galleries_id: [Int]
+    categories: [Int]
+    attributes_ids: [Int]
+    attribute_values: [Int]
+    size_chart_image_id: Int
+    estimated_delivery_text: String
+    return_policy_text: String
+    safe_checkout:Int
+    secure_checkout: Int
+    social_share: Int
+    encourage_order: Int
+    encourage_view: Int
+    tags: [Int]
+    tax_id: Int
+    variants: [VariantsInput]
+    variations: [UpdateVariationInput]
+    store_id: Int
+    is_random_related_products:Int
+    total_in_approved_products: Int
+    related_products: [Int]
+    cross_sell_products: [Int]
+    is_external: Int
+    external_url: String
+    watermark: Int
+    watermark_position: String
+    watermark_image_id: Int
+    is_licensekey_auto: Int
+    separator: String
+    license_key: String
+    preview_audio_file_id: Int
+    preview_video_file_id: Int
+    digital_file_ids: [Int]
+    external_button_text: String
+    wholesale_price_type: String
+}
+
+input DeleteProductInput {
+    id: Int!
+}
+
+input DeleteAllProductsInput {
+    ids: [Int]
+}
+
+input ReplicateProductsInput {
+    ids: [Int]
+}
+
+input StatusProductInput {
+    id: Int!
+    status: Int
+}
+
+input ApproveProductInput {
+    id: Int!
+    status: Int
+}
+
+input ImportProductsInput {
+    products: Upload
+}
+
+extend type Mutation {
+    createProduct(input: CreateProductInput @spread): Product
+        @can(ability: "product.create")
+        @field(resolver: "ProductMutator@store")
+
+    updateProduct(input: UpdateProductInput @spread): Product
+        @can(ability: "product.edit")
+        @field(resolver: "ProductMutator@update")
+
+    deleteProduct(input: DeleteProductInput @spread): Boolean!
+        @can(ability: "product.destroy", model: "App\\Models\\Product")
+        @field(resolver: "ProductMutator@destroy")
+
+    deleteAllProducts(input: DeleteAllProductsInput @spread): Boolean!
+        @can(ability: "product.destroy", model: "App\\Models\\Product")
+        @field(resolver: "ProductMutator@deleteAll")
+
+    statusProduct(input: StatusProductInput @spread): Product
+        @can(ability: "product.edit", model: "App\\Models\\Product")
+        @field(resolver: "ProductMutator@status")
+
+    approveProduct(input: ApproveProductInput @spread): Product
+        @can(ability: "product.edit", model: "App\\Models\\Product")
+        @field(resolver: "ProductMutator@approve")
+
+    importProducts(input: ImportProductsInput @spread): [Product]
+        @can(ability: "product.create", model: "App\\Models\\Product")
+        @field(resolver: "ProductMutator@importProducts")
+
+    replicateProducts(input: ReplicateProductsInput @spread): Boolean!
+        @can(ability: "product.create", model: "App\\Models\\Product")
+        @field(resolver: "ProductMutator@replicate")
+}
+
+extend type Query {
+    products(
+        ids: String
+        min:Int
+        max:Int
+        category: String
+        category_ids: String
+        type: String
+        tag: String
+        search: String @where(operator: "like", key: "name")
+        sort: String
+        field: String
+        status: Int
+        rating: String
+        store_id:Int
+        attribute: String
+        sortBy: String
+        price: String
+        paginate: Int
+        store_slug: String
+        trending:Boolean
+        top_selling: Int
+        filter_by: String
+        brand: String
+        brand_id: Int
+        category_id: Int
+        tag_id: Int
+        brand_ids: String
+        product_type: String
+        with_union_products:Int
+    ): [Product!]!
+    @paginate(resolver: "App\\GraphQL\\Queries\\ProductQuery@index" defaultCount:15)
+    product(id: Int @eq): Product  @find
+    getProductsExportUrl: String @field(resolver: "App\\GraphQL\\Queries\\ProductQuery@getProductsExportUrl") @guard
+    productBySlug(slug: String): Product @field(resolver: "App\\GraphQL\\Queries\\ProductQuery@getProductBySlug")
+    getMinifyProducts: [MinifyProduct] @field(resolver: "App\\GraphQL\\Queries\\ProductQuery@getMinifyProduct")
+}

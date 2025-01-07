@@ -1,0 +1,26 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'themes'">
+  <div class="row row-cols-xl-3 row-cols-lg-2 row-cols-md-3 row-cols-sm-2 row-cols-1 g-lg-5 g-4 layout-selection-sec ratio_square">
+    @for(theme of (themes$ | async)?.data; track theme; let i = $index){
+      <div>
+        <div class="theme-card" [class.active]="theme?.id == selectedTheme">
+          <div class="library-box">
+            <a href="javascript:void(0)" (click)="theme?.id == selectedTheme && themeRoute(theme.slug)">
+              <img [src]="storageURL + theme.image" class="img-fluid bg-img bg_size_content" alt="home-pages" />
+            </a>
+            <a href="javascript:void(0)" class="details-box" *hasPermission="'theme.edit'" (click)="themeRoute(theme.slug)">
+              {{ 'edit_theme' | translate }}
+            </a>
+          </div>
+          <div class="content-sec">
+            <h5>{{ theme.name }}</h5>
+            <a href="javascript:void(0)" *hasPermission="'theme.edit'" (click)="theme?.id != selectedTheme && ConfirmationModal.openModal('theme', theme)">
+              {{ theme?.id == selectedTheme ? 'Activated' : 'Active' }}
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</app-page-wrapper>
+<app-confirmation-modal #confirmationModal (confirmed)="activeTheme($event)">
+</app-confirmation-modal>

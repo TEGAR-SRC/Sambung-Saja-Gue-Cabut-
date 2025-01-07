@@ -1,0 +1,76 @@
+<ng-template #csvModal let-modal>
+   <div class="modal-header">
+      <h2>{{ 'import_csv' | translate }}</h2>
+      <app-button [class]="'btn btn-close'" [spinner]="false" [id]="'media_close_btn'" (click)="modal.dismiss('Cross click')">
+         <i class="ri-close-line"></i>
+      </app-button>
+   </div>
+   <div class="modal-body">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+         <li [ngbNavItem]="'upload'">
+            <a ngbNavLink>{{ 'upload' | translate }}</a>
+            <ng-template ngbNavContent>
+               <div class="content-section drop-files-sec" ngx-dropzone [accept]="'.csv'" [multiple]="false" (change)="onSelect($event)">
+                  <ngx-dropzone-label>
+                     <div>
+                        <h2>{{ 'drop_files_here' | translate }}</h2>
+                     </div>
+                  </ngx-dropzone-label>
+                  @for(f of files; track f){
+                     <ngx-dropzone-preview [removable]="true" (removed)="onRemove(f)">
+                        <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                     </ngx-dropzone-preview>
+                  }
+               </div>
+               <p>
+                  {{ "please_download_csv" |translate }}
+                  @if(module == 'user'){
+                     <a href="assets/csv/users.csv" download>{{ "here" | translate }}</a>
+                  }
+
+                  @if(module == 'product'){
+                     <a href="assets/csv/product.csv" download>{{ "here" | translate }}</a>
+                  }
+
+                  @if(module == 'attribute'){
+                     <a href="assets/csv/attributes.csv" download>{{ "here" | translate }}</a>
+                  }
+
+                  @if(module == 'tag'){
+                     <a href="assets/csv/tags.csv" download>{{ "here" | translate }}</a>
+                  }
+
+                  @if(module == 'category'){
+                     <a href="assets/csv/categories.csv" download>{{ "here" | translate }}</a>
+                  }
+
+                  @if(module == 'product' || module == 'attribute'){
+                     {{ "and_please_ensure_you" | translate }}
+                     @if(module == 'product'){
+                        <a href="assets/csv/product-bulk-upload-instructions.txt" download>{{ "read_the_instructions" | translate }}</a>
+                     }
+
+                     @if(module == 'attribute'){
+                        <a href="assets/csv/attributes-bulk-import-instructions.txt" download>{{ "read_the_instructions" | translate }}</a>
+                     }
+                     {{ "carefully_before_initiating_the_import" | translate }}
+                  }
+                  <ng-container>
+                  </ng-container>
+               </p>
+            </ng-template>
+         </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+   </div>
+   <div class="modal-footer">
+      <div class="left-part">
+
+      </div>
+      <div class="right-part">
+         <app-button [class]="'align-items-center btn btn-theme d-flex'" [id]="'upload_csv'" (click)="upload()">
+            {{ 'upload' | translate }}
+         </app-button>
+      </div>
+   </div>
+</ng-template>

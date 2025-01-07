@@ -1,0 +1,259 @@
+Instructions for bulk upload
+
+* You can keep fields blank which are optional
+-------------------------------------------------------------------
+Products Data
+-------------------------------------------------------------------
+
+1. name: (Required) Enter the name of the product. Maximum 255 characters allowed.
+
+2. product_type: (Required) Specify the type of product. Choose from: 'physical', 'digital', 'external'.
+
+3. description: (Required) Provide a detailed description of the product. Minimum 10 characters required.
+
+4. short_description: (Required) Briefly describe the product in a few words.
+
+5. type: (Required) Specify the product type. Choose from: 'simple', 'classified'.
+
+6. price: (Required for 'simple' type) Enter the price of the product.
+
+7. stock_status: (Required for 'simple' type) Specify the stock status as 'in_stock' or 'out_of_stock'.
+
+8. quantity: (Required for 'simple' type) Enter the quantity of the product available in stock.
+
+9. sku: (Required for 'simple' type) Unique Stock Keeping Unit (SKU) for the product.
+
+10. discount: (Optional) Enter a numeric discount value in percentage (e.g., 10.5 for 10.5%). Maximum two decimal places allowed.
+
+11. show_stock_quantity: (Optional) Set as '0' for inactive or '1' for active to display stock quantity.
+
+12. is_featured: (Optional) Set as '0' for inactive or '1' for active to mark as a featured product.
+
+13. secure_checkout: (Optional) Set as '0' for inactive or '1' for active to enable secure checkout.
+
+14. safe_checkout: (Optional) Set as '0' for inactive or '1' for active to enable safe checkout.
+
+15. social_share: (Optional) Set as '0' for inactive or '1' for active to enable social sharing.
+
+16. encourage_order: (Optional) Set as '0' for inactive or '1' for active to encourage orders.
+
+17. encourage_view: (Optional) Set as '0' for inactive or '1' for active to encourage views.
+
+18. is_cod: (Optional) Set as '0' for inactive or '1' for active to enable Cash on Delivery (COD).
+
+19. is_return: (Optional) Set as '0' for inactive or '1' for active to allow returns.
+
+20. is_free_shipping: (Optional) Set as '0' for inactive or '1' for active to enable free shipping.
+
+21. is_changeable: (Optional) Set as '0' for inactive or '1' for active to allow changes.
+
+22. is_sale_enable: (Optional) Set as '0' for inactive or '1' for active to enable sales.
+
+23. is_external: (Optional) Set as '0' for inactive or '1' for active if the product is external.
+
+24. external_url: (Required if 'is_external' is '1') Provide the URL of the external product.
+
+25. watermark: (Optional) Set as '0' for inactive or '1' for active to enable watermark.
+
+26. watermark_position: (Required if 'watermark' is '1') Specify the position of the watermark.
+
+27. is_licensable: (Required if 'product_type' is 'digital') Set as '0' for inactive or '1' for active to enable licensing.
+
+28. is_licensekey_auto: (Required if 'is_licensable' is '1') Specify if the license key is auto-generated.
+
+29. sale_starts_at: (Optional) Specify the start date of the sale (if applicable).
+
+30. store_id: (Optional) Enter the ID of the store the product belongs to (if applicable).
+
+31. brand_id: (Optional) Enter the ID of the brand the product belongs to (if applicable).
+
+32. sale_expired_at: (Optional) Specify the expiration date of the sale (if applicable).
+
+33. separator: (Required if 'license_key' is provided) Specify the separator used to separate license keys. Choose from: 'new_line', 'double_new_line', 'comma', 'semicolon', 'pipe'.
+
+34. status: (Required) Set as '0' for inactive or '1' for active to determine the product's status.
+
+35. visible_time: (Optional) Specify the visible time/date of the product.
+
+36. variations: (Required if 'type' is 'classified') Provide variations for the classified product.
+
+Instructions for Bulk Import - Categories, Attributes, and Tags
+
+-------------------------------------------------------------------
+Categories
+-------------------------------------------------------------------
+
+1. categories: (Required) Assign categories to products by providing their IDs separated by commas without spaces. For example: 1,2,3.
+
+-------------------------------------------------------------------
+Attributes
+-------------------------------------------------------------------
+
+2. attributes: (Required for 'classified' type) Attach attributes to products by specifying their IDs separated by commas without spaces. For instance: 4,5,6.
+
+-------------------------------------------------------------------
+Tags
+-------------------------------------------------------------------
+
+3. tags: (Optional) Associate tags with products using their IDs separated by commas without spaces. Example: 7,8,9.
+
+
+-------------------------------------------------------------------
+Product Images
+-------------------------------------------------------------------
+
+1. product_thumbnail_url: (Optional) Add the URL of the product's thumbnail image. Use 'http://' or 'https://' URLs only.
+
+2. product_meta_image_url: (Optional) Provide the URL for the product's meta image. Ensure it starts with 'http://' or 'https://'.
+
+3. size_chart_image_url: (Optional) Include the URL of the product's size chart image. URLs should start with 'http://' or 'https://'.
+
+
+-------------------------------------------------------------------
+Product Digital Files and Watermark Data
+-------------------------------------------------------------------
+
+1. preview_audio_file_url: (Optional) Provide the URL for the preview audio file. Ensure it's a valid audio file URL. Use 'http://' or 'https://' URLs only.
+
+2. watermark_image_url: (Required if 'preview_audio_file_url' is provided) URL of the watermark image. Must be a valid image URL. Use 'http://' or 'https://' URLs only.
+
+3. preview_video_file_url: (Optional) Specify the URL for the preview video file. Ensure it's a valid video file URL. Use 'http://' or 'https://' URLs only.
+
+4. digital_files_url: (Optional) Provide a comma-separated list of URLs for digital files associated with the product. Each URL should point to a valid digital file. Use 'http://' or 'https://' URLs only.
+
+5. watermark_position: (Optional) Specify the position of the watermark on the product images. Choose from available options: top-left, top, top-right, left, center, right, bottom-left, bottom, bottom-right.
+
+
+-------------------------------------------------------------------
+Wholesale Prices Data
+-------------------------------------------------------------------
+
+1. wholesale_prices: (Required) Provide an array of JSON objects, each representing a wholesale price tier. Each object should have the following keys:
+
+    - min_qty: (Required) Minimum quantity for this price tier.
+    - max_qty: (Required) Maximum quantity for this price tier.
+    - value: (Required) Wholesale price value for this tier.
+
+Example JSON format:
+
+	[
+	  {
+	    "min_qty": 10,
+	    "max_qty": 20,
+	    "value": 25
+	  },
+	  {
+	    "min_qty": 21,
+	    "max_qty": 30,
+	    "value": 22
+	  }
+	]
+
+
+
+-------------------------------------------------------------------
+Product Variations (JSON Format)
+-------------------------------------------------------------------
+
+1. Variations: Provide an array of JSON objects, each representing a product variation. Use the following structure for each variation:
+
+   {
+    "name": "Deliciously Sweet Watermelon 1 KG",
+    "price": 6,
+    "discount": 9,
+    "stock_status": "in_stock",
+    "sku": "FRUIT1KG08",
+    "quantity": 2,
+    "variation_image_url": "https://fastkart.webiots.co.in/storage/99/Watermelon_3.png",
+    "digital_files_url": [
+      "https://fastkart.webiots.co.in/storage/99/Watermelon_3.png",
+      "https://fastkart.webiots.co.in/storage/99/Watermelon_3.png"
+    ],
+    "attribute_values": [
+      1
+    ],
+    "is_licensable": 0,
+    "is_licensekey_auto": 0,
+    "license_key": "LicenseKey1,LicenseKey2",
+    "separator": ",",
+    "status": 1
+  }
+
+	1. name: (Required) Enter the name of the product.
+
+	2. price: (Required) Specify the price of the product.
+
+	3. discount: (Optional) Provide a discount percentage for the product.
+
+	4. stock_status: (Required) Specify the stock status as 'in_stock' or 'out_of_stock'.
+
+	5. sku: (Required) Unique Stock Keeping Unit (SKU) for the product.
+
+	6. quantity: (Required) Enter the quantity of the product available in stock.
+
+	7. variation_image_url: (Required) URL of the variation image for the product.
+
+	8. digital_files_url: (Optional) Provide an array of URLs for digital files associated with the product.
+
+	9. attribute_values: (Required) Array containing attribute value IDs associated with the product.
+
+	10. is_licensable: (Required) Set as '0' for products that are not licensable or '1' for licensable products.
+
+	11. is_licensekey_auto: (Required if 'is_licensable' is '1') Specify if the license keys are auto-generated.
+
+	12. license_key: (Required if 'is_licensable' is '1') Provide the license keys associated with the product. If multiple license keys are provided, separate them using the specified separator.
+
+	13. separator: (Required if 'license_key' is provided) Specify the separator used to separate license keys. Choose from: 'new_line', 'double_new_line', 'comma', 'semicolon', 'pipe'.
+
+	14. status: (Required) Set as '0' for inactive or '1' for active to determine the product's status.
+
+
+   Example JSON format:
+
+   [
+  {
+    "name": "Deliciously Sweet Watermelon 1 KG",
+    "price": 6,
+    "discount": 9,
+    "stock_status": "in_stock",
+    "sku": "FRUIT1KG08",
+    "quantity": 2,
+    "variation_image_url": "https://fastkart.webiots.co.in/storage/99/Watermelon_3.png",
+    "digital_files_url": [
+      "https://fastkart.webiots.co.in/storage/99/Watermelon_3.png",
+      "https://fastkart.webiots.co.in/storage/99/Watermelon_3.png"
+    ],
+    "attribute_values": [
+      1
+    ],
+    "is_licensable": 0,
+    "is_licensekey_auto": 0,
+    "license_key": "LicenseKey1,LicenseKey2",
+    "separator": ",",
+    "status": 1
+  },
+  {
+    "name": "Deliciously Sweet Watermelon 5 KG",
+    "price": 30,
+    "discount": 8,
+    "stock_status": "in_stock",
+    "sku": "FRUIT5KG08",
+    "quantity": 5,
+    "variation_image_url": "https://fastkart.webiots.co.in/storage/99/Watermelon_5.png",
+    "digital_files_url": [
+      "https://fastkart.webiots.co.in/storage/100/digital_Watermelon_5.png",
+      "https://fastkart.webiots.co.in/storage/100/digital_Watermelon_5.png"
+    ],
+    "attribute_values": [
+      1
+    ],
+    "is_licensable": 0,
+    "is_licensekey_auto": 0,
+    "license_key": "DigiLicenseKey1,DigiLicenseKey1",
+    "separator": ",",
+    "status": 1
+  }
+]
+
+
+

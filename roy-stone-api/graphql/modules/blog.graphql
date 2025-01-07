@@ -1,0 +1,106 @@
+type Blog {
+    id: Int!
+    title: String!
+    slug: String
+    description: String
+    content: String
+    blog_thumbnail_id: Int
+    blog_meta_image_id: Int
+    meta_title: String
+    meta_description: String
+    is_featured: Int
+    is_sticky: Int
+    status: Int
+    created_by: User
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    blog_thumbnail: Attachment
+    blog_meta_image: Attachment
+    categories: [Category]
+    tags: [Tag]
+}
+
+input CreateBlogInput {
+    title: String
+    description: String
+    content: String
+    image: String
+    meta_title: String
+    meta_description: String
+    blog_thumbnail_id: Int
+    blog_meta_image_id: Int
+    is_featured: Int
+    is_sticky: Int
+    status: Int
+    categories: [Int]
+    tags: [Int]
+}
+
+input UpdateBlogInput {
+    id: Int!
+    title: String
+    description: String
+    content: String
+    image: String
+    meta_title: String
+    meta_description: String
+    blog_thumbnail_id: Int
+    blog_meta_image_id: Int
+    is_featured: Int
+    is_sticky: Int
+    status: Int
+    categories: [Int]
+    tags: [Int]
+}
+
+input DeleteBlogInput {
+    id: Int!
+}
+
+input DeleteAllBlogsInput {
+    ids: [Int]
+}
+
+input StatusBlogInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation {
+    createBlog(input: CreateBlogInput @spread): Blog
+        @can(ability: "blog.create")
+        @field(resolver: "BlogMutator@store")
+
+    updateBlog(input: UpdateBlogInput @spread): Blog
+        @can(ability: "blog.edit")
+        @field(resolver: "BlogMutator@update")
+
+    deleteBlog(input: DeleteBlogInput @spread): Boolean!
+        @can(ability: "blog.destroy", model: "App\\Models\\Blog")
+        @field(resolver: "BlogMutator@destroy")
+
+    deleteAllBlogs(input: DeleteAllBlogsInput @spread): Boolean!
+        @can(ability: "blog.destroy", model: "App\\Models\\Blog")
+        @field(resolver: "BlogMutator@deleteAll")
+
+    statusBlog(input: StatusBlogInput @spread): Blog
+        @can(ability: "blog.edit", model: "App\\Models\\Blog")
+        @field(resolver: "BlogMutator@status")
+}
+
+extend type Query {
+    blogs(
+        search: String @where(operator: "like", key: "title")
+        type: String @where(operator: "like", key: "type")
+        sort: String
+        field: String
+        status: Int
+        paginate: Int
+        ids: String
+        category: String
+        tag: String
+    ): [Blog!]!
+    @paginate(resolver: "App\\GraphQL\\Queries\\BlogQuery@index" defaultCount:15)
+    blog(id: Int @eq): Blog @find
+    blogBySlug(slug: String): Blog @field(resolver: "App\\GraphQL\\Queries\\BlogQuery@getBlogsBySlug")
+}

@@ -1,0 +1,18 @@
+<div ngbDropdown class="quick-dropdown-box">
+   <button type="button" class="btn btn-light-bg btn-sm" id="dropdownBasic1" ngbDropdownToggle>{{ 'quick_links' | translate }}</button>
+   <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+      <div class="dropdown-title">
+         <h4>{{ 'quick_links' | translate }}</h4>
+      </div>
+      <ul class="dropdown-list">
+         @for(item of quickLink; track item){
+            <li *hasPermission="item?.permission">
+               <a ngbDropdownItem [routerLink]="[ item.path ]">
+                  <i class="{{ item.icon }}"></i>
+                  <span>{{ item.title | translate }}</span>
+               </a>
+            </li>
+         }
+      </ul>
+   </div>
+</div>

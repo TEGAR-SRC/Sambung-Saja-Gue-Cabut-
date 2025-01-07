@@ -1,0 +1,57 @@
+type AttributeValue {
+    id: Int
+    attribute_id: Int
+    attribute: Attribute
+    value: String
+    hex_color: String
+    slug: String
+    status: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateAttributeValueInput {
+    attribute_id: Int
+    value: String!
+    hex_color: String
+    slug: String
+}
+
+input UpdateAttributeValueInput {
+    id: Int!
+    attribute_id: Int
+    value: String!
+    hex_color: String
+    slug: String
+}
+
+input DeleteAttributeValueInput {
+    id: Int!
+}
+
+extend type Mutation {
+    createAttributeValue(
+        input: CreateAttributeValueInput @spread
+    ): AttributeValue
+        @can(ability: "attribute.create")
+        @field(resolver: "AttributeValueMutator@store")
+
+    updateAttributeValue(
+        input: UpdateAttributeValueInput @spread
+    ): AttributeValue
+        @can(ability: "attribute.edit")
+        @field(resolver: "AttributeValueMutator@update")
+
+    deleteAttributeValue(input: DeleteAttributeValueInput @spread): Boolean!
+        @can(ability: "attribute.destroy", model: "App\\Models\\AttributeValue")
+        @field(resolver: "AttributeValueMutator@destroy")
+}
+
+extend type Query {
+    attribute_values(
+        search: String @where(operator: "like", key: "value")
+        paginate: Int
+    ): [AttributeValue!]!
+        @paginate(resolver: "App\\GraphQL\\Queries\\AttributeValueQuery@index" defaultCount:15)
+    attributeValue(id: Int @eq): AttributeValue @find
+}

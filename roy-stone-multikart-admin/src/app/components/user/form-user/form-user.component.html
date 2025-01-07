@@ -1,0 +1,91 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+  <app-form-fields [label]="'name'" [for]="'name'" [required]="true">
+    <input class="form-control" type="text" placeholder="{{'enter_full_name' | translate}}" name="name" formControlName="name">
+    @if(form.controls['name'].touched && form.controls['name'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'name_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+  <app-form-fields [label]="'email'" [for]="'email'" [required]="true">
+    <input class="form-control" type="email" placeholder="{{ 'enter_email' | translate }}" name="email" formControlName="email">
+    @if(form.controls['email'].touched && form.controls['email'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'email_is_required' | translate }}
+      </div>
+    }
+    @if(form.controls['email'].touched && form.controls['email'].errors?.['email']){
+      <div class="invalid-feedback">
+        {{ 'enter_valid_email' | translate }}
+      </div>
+    }
+  </app-form-fields>
+  <app-form-fields [label]="'phone'" [for]="'phone'" [required]="true">
+    <select2 class="custom-select intl-tel-input" [templates]="template" [data]="codes" formControlName="country_code" noResultMessage="{{'no_data_found' | translate }}">
+      <ng-template #template let-data="data">
+        <div class="country">
+          <div class="flag-box">
+            <div class="iti-flag {{data?.class}}"></div>
+          </div>
+          <span class="dial-code">{{data.code}}</span>
+        </div>
+      </ng-template>
+    </select2>
+    <input type="number" class="form-control intl-input-padding" formControlName="phone" placeholder="{{ 'enter_phone' | translate }}" name="phone">
+    @if(form.controls['phone'].touched && form.controls['phone'].errors?.['required']){
+      <div class="invalid-feedback" autocomplete="false">
+        {{ 'phone_number_is_required' | translate }}
+      </div>
+    }
+
+    @if(form.controls['phone'].touched && form.controls['phone'].errors?.['pattern']){
+      <div class="invalid-feedback">
+        {{ 'phone_number_is_invalid' | translate }}
+      </div>
+    }
+  </app-form-fields>
+
+  @if(type != 'edit'){
+    <app-form-fields [label]="'password'" [for]="'password'" [required]="true">
+      <input class="form-control" type="password" placeholder="{{ 'enter_password' | translate}}" name="password" formControlName="password">
+      @if(form.controls['password'].touched && form.controls['password'].errors?.['required']){
+        <div class="invalid-feedback" autocomplete="false">
+          {{ 'password_is_required' | translate }}
+        </div>
+      }
+    </app-form-fields>
+
+    <app-form-fields [label]="'confirm_password'" [for]="'password_confirmation'" [required]="true">
+      <input class="form-control" type="password" placeholder="{{ 'enter_confirm_password' | translate }}" name="password_confirmation" formControlName="password_confirmation">
+      @if(form.controls['password_confirmation'].touched && form.controls['password_confirmation'].errors?.['required']){
+        <div class="invalid-feedback" autocomplete="false">
+          {{ 'confirm_password_is_required' | translate }}
+        </div>
+      }@else {
+        @if(passwordMatchError){
+          <div class="invalid-feedback">
+            {{ 'confirm_password_does_not_matched' | translate }}
+          </div>
+        }
+      }
+    </app-form-fields>
+  }
+  <app-form-fields [label]="'role'" [for]="'role'" [required]="true">
+    <select2 class="custom-select" [data]="(role$ | async)?.length ? (role$ | async) : []" [placeholder]="'select_role' | translate" formControlName="role_id" noResultMessage="{{'no_data_found' | translate }}">
+    </select2>
+    @if(form.controls['role_id'].touched && form.controls['role_id'].errors?.['required']){
+      <div class="invalid-feedback">
+        {{ 'role_is_required' | translate }}
+      </div>
+    }
+  </app-form-fields>
+  <app-form-fields [label]="'status'" [for]="'status'" [required]="false">
+    <div class="form-check form-switch ps-0">
+      <label class="switch">
+        <input type="checkbox" id="status" formControlName="status">
+        <span class="switch-state"></span>
+      </label>
+    </div>
+  </app-form-fields>
+  <app-button [id]="'user_btn'">{{ (type == 'create' ? 'save_user' : 'update_user') | translate }}</app-button>
+</form>

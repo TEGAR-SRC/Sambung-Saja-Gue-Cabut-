@@ -1,0 +1,22 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'Q&A'">
+    <app-table 
+        [tableConfig]="tableConfig"
+        [hasCheckbox]="true"
+        (tableChanged)="onTableChange($event)"
+        (action)="onActionClicked($event)">
+        <div advanceFilter class="show-box mb-4 d-block">
+            <ul class="order-tab-content">
+                <li  [class.active]="!selectedStatus">
+                    <a href="javascript:void(0)" (click)="filterOrder('')">{{ 'all' | translate}}</a>
+                </li>
+                <li  [class.active]="selectedStatus === 'pending' ? 'active' : ''">
+                    <a href="javascript:void(0)" (click)="filterOrder('pending')">{{'pending' | translate}}</a>
+                </li>
+                <li  [class.active]="selectedStatus === 'answered' ? 'active' : ''">
+                    <a href="javascript:void(0)" (click)="filterOrder('answered')">{{'answered' |translate}}</a>
+                </li>
+            </ul>
+        </div>
+    </app-table>
+</app-page-wrapper>
+<app-answers-modal #answersModal></app-answers-modal>

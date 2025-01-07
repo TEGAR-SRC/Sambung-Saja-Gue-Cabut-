@@ -1,0 +1,91 @@
+type Attribute {
+    id: Int
+    name: String
+    slug: String
+    style: String
+    status: Int
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+    attribute_values: [AttributeValue]
+}
+
+input CreateAttributeInput {
+    name: String!
+    slug: String
+    style: String
+    status: Int
+    value: [AttributeValueInput]
+}
+
+input AttributeValueInput {
+    id: Int
+    value: String
+    hex_color: String
+    slug: String
+    status: Int
+}
+
+input UpdateAttributeInput {
+    id: Int
+    name: String
+    style: String
+    slug: String
+    status: Int
+    value: [AttributeValueInput]
+}
+
+input DeleteAttributeInput {
+    id: Int!
+}
+
+input DeleteAllAttributesInput {
+    ids: [Int]
+}
+
+input StatusAttributeInput {
+    id: Int!
+    status: Int
+}
+
+input ImportAttributesInput {
+    attributes: Upload
+}
+
+extend type Mutation {
+    createAttribute(input: CreateAttributeInput @spread): Attribute
+        @can(ability: "attribute.create")
+        @field(resolver: "AttributeMutator@store")
+
+    updateAttribute(input: UpdateAttributeInput @spread): Attribute
+        @can(ability: "attribute.edit")
+        @field(resolver: "AttributeMutator@update")
+
+    deleteAttribute(input: DeleteAttributeInput @spread): Boolean!
+        @can(ability: "attribute.destroy", model: "App\\Models\\Attribute")
+        @field(resolver: "AttributeMutator@destroy")
+
+    deleteAllAttributes(input: DeleteAllAttributesInput @spread): Boolean!
+        @can(ability: "attribute.destroy", model: "App\\Models\\Attribute")
+        @field(resolver: "AttributeMutator@deleteAll")
+
+    statusAttribute(input: StatusAttributeInput @spread): Attribute
+        @can(ability: "attribute.edit", model: "App\\Models\\Attribute")
+        @field(resolver: "AttributeMutator@status")
+
+    importAttributes(input: ImportAttributesInput @spread): [Attribute]
+        @can(ability: "attribute.create", model: "App\\Models\\Attribute")
+        @field(resolver: "AttributeMutator@import")
+}
+
+extend type Query {
+    attributes(
+        search: String @where(operator: "like", key: "name")
+        paginate: Int
+        sort: String
+        field: String
+        store_slug: String
+    ): [Attribute!]!
+        @paginate(resolver: "App\\GraphQL\\Queries\\AttributeQuery@index" defaultCount:15)
+    attribute(id: Int @eq): Attribute @find
+    getAttributesExportUrl: String @field(resolver: "App\\GraphQL\\Queries\\AttributeQuery@getAttributesExportUrl") @guard
+}

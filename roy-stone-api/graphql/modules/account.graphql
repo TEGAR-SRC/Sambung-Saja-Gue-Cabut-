@@ -1,0 +1,49 @@
+input UpdateProfilePasswordInput {
+    current_password: String
+    password: String
+    password_confirmation: String
+}
+
+input UpdateProfileInput {
+    name: String
+    country_code: String
+    phone: String
+    status: Int
+    email: String
+    profile_image_id: Int
+    address: [UpdateAddressInput]
+}
+
+input UpdateStoreProfileInput {
+    store_name: String!
+    description: String
+    slug: String
+    status: Int
+    country_id: Int
+    state_id: Int
+    city: String
+    vendor_id: Int
+    address: String
+    pincode: String
+    facebook: String
+    twitter: String
+    instagram: String
+    youtube: String
+    pinterest: String
+    store_logo_id: Int
+    store_cover_id: Int
+    hide_vendor_email: Int
+    hide_vendor_phone: Int
+}
+
+extend type Mutation @guard {
+
+    updateProfile(input: UpdateProfileInput @spread): User
+        @field(resolver: "AccountMutator@updateProfile")
+
+    updateProfilePassword(input: UpdateProfilePasswordInput @spread): Boolean!
+        @field(resolver: "AccountMutator@updateProfilePassword")
+
+    updateStoreProfile(input: UpdateStoreProfileInput @spread): Store
+        @field(resolver: "AccountMutator@updateStoreProfile")
+}

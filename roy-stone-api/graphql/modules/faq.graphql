@@ -1,0 +1,69 @@
+type Faq {
+    id: Int
+    title: String
+    description: String
+    status: Int
+    created_by: User
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
+}
+
+input CreateFaqInput {
+    title: String
+    description: String
+    status: Int
+}
+
+input UpdateFaqInput {
+    id: Int!
+    title: String
+    description: String
+    status: Int
+}
+
+input DeleteFaqInput {
+    id: Int!
+}
+
+input DeleteAllFaqInput {
+    ids: [Int]
+}
+
+input StatusFaqInput {
+    id: Int!
+    status: Int
+}
+
+extend type Mutation @guard{
+    createFaq(input: CreateFaqInput @spread): Faq
+        @can(ability: "faq.create")
+        @field(resolver: "FaqMutator@store")
+
+    updateFaq(input: UpdateFaqInput @spread): Faq
+        @can(ability: "faq.edit")
+        @field(resolver: "FaqMutator@update")
+
+    deleteFaq(input: DeleteFaqInput @spread): Boolean!
+        @can(ability: "faq.destroy", model: "App\\Models\\Faq")
+        @field(resolver: "FaqMutator@destroy")
+
+    deleteAllFaqs(input: DeleteAllFaqInput @spread): Boolean!
+        @can(ability: "faq.destroy", model: "App\\Models\\Faq")
+        @field(resolver: "FaqMutator@deleteAll")
+
+    statusFaq(input: StatusFaqInput @spread): Faq
+        @can(ability: "faq.edit", model: "App\\Models\\Faq")
+        @field(resolver: "FaqMutator@status")
+}
+
+extend type Query {
+    faqs(
+        search: String @where(operator: "like", key: "title")
+        status: Int
+        paginate: Int
+        sort: String
+        field: String
+    ): [Faq!]!
+    @paginate(resolver: "App\\GraphQL\\Queries\\FaqQuery@index" defaultCount:15)
+    faq(id: Int @eq): Faq @find
+}

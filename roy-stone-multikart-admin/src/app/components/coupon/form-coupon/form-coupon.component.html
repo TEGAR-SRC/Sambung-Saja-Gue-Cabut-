@@ -1,0 +1,271 @@
+<form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="vertical-tabs">
+    <div class="row">
+      <div class="col-xl-3 col-lg-4">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills coupon-tab" orientation="vertical">
+          <li ngbNavItem="general" id="general" [class.is-invalid]="tabError.includes('general')">
+            <a ngbNavLink><i class="ri-settings-line"></i>{{ 'general' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="general">
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'title'" [required]="true">
+                  <input class="form-control" id="title" type="text" placeholder="{{ 'enter_coupon_title' | translate }}" formControlName="title">
+                  @if(form && form.controls['title'].touched && form.controls['title']?.errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'title_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'description'" [for]="'description'" [required]="true">
+                  <textarea class="form-control" id="description" type="text" placeholder="{{ 'enter_coupon_description' | translate }}" formControlName="description"></textarea>
+                  @if(form?.controls['description']?.touched && form.controls['description']?.errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'description_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'code'" [for]="'code'" [required]="true">
+                  <input class="form-control" id="code" type="text" placeholder="{{ 'enter_coupon_code' | translate }}" formControlName="code">
+                  @if(form?.controls['code']?.touched && form.controls['code']?.errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'code_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'type'" [for]="'type'" [required]="true">
+                  <select2 class="custom-select"
+                    [placeholder]="'select_type' | translate"
+                    [data]="couponType?.length ? couponType : []"
+                    id="type"
+                    formControlName="type">
+                  </select2>
+                  @if(form?.controls['type']?.touched && form?.controls['type']?.errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'type_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+
+                @if(form.get('type').value !== 'free_shipping'){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'amount'" [for]="'amount'" [required]="true">
+                    @if(form.get('type').value !== 'percentage'){
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                        </span>
+                        <input class="form-control" type="number" placeholder="{{ 'enter_amount' | translate }}" name="amount" formControlName="amount">
+                      </div>
+                    }
+
+                    @if(form.get('type').value === 'percentage'){
+                      <div class="input-group">
+                        <input class="form-control" type="number" min="0" max="100" oninput="if (value > 100) value = 100; if (value < 0) value = 0;" placeholder="{{'enter_amount' | translate }}" name="amount" formControlName="amount">
+                        <span class="input-group-text">%</span>
+                      </div>
+                    }
+
+                    @if(form?.controls['amount']?.touched && form?.controls['amount']?.errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'amount_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                }
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'is_expired'" [for]="'is_expired'" [required]="true">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="is_expired" formControlName="is_expired">
+                      <span class="switch-state"></span>
+                    </label>
+                  </div>
+                </app-form-fields>
+
+                @if(form.controls['is_expired'].value){
+                  <div>
+                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'start_date'" [for]="'start_date'" [required]="true">
+                      <div class="dp-hidden position-absolute custom-dp-dropdown">
+                        <div class="input-group">
+                          <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" id="start_date" tabindex="-1" readonly />
+                          <ng-template #t let-date let-focused="focused">
+                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)" [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+                              {{ date.day }}
+                            </span>
+                          </ng-template>
+                        </div>
+                      </div>
+                      <div class="input-group custom-dt-picker">
+                        <input #dpFromDate class="form-control" placeholder="{{'yyyy-mm-dd' | translate}}" name="dpFromDate" [value]="formatter.format(fromDate)" id="end_date" (input)="fromDate = validateInput(fromDate, dpFromDate.value)" readonly />
+                        <button class="btn btn-light-bg-secondary " (click)="datepicker.toggle()" type="button">
+                          <i class="ri-calendar-line"></i>
+                        </button>
+                      </div>
+
+                      @if(form?.controls['start_date']?.touched && form?.controls['start_date']?.errors?.['required']){
+                        <div class="invalid-feedback">
+                          {{ 'start_date_is_required' | translate }}
+                        </div>
+                      }
+                    </app-form-fields>
+
+                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'end_date'" [for]="'end_date'" [required]="true">
+                      <div class="input-group custom-dt-picker">
+                        <input #dpToDate class="form-control" placeholder="{{'yyyy-mm-dd' | translate}}" name="dpToDate" [value]="formatter.format(toDate)" (input)="toDate = validateInput(toDate, dpToDate.value)" readonly />
+                        <button class="btn btn-light-bg-secondary" (click)="datepicker.toggle()" type="button">
+                          <i class="ri-calendar-line"></i>
+                        </button>
+                      </div>
+                      @if(form?.controls['end_date']?.touched && form?.controls['end_date']?.errors?.['required']){
+                        <div class="invalid-feedback">
+                          {{ 'end_date_is_required' | translate }}
+                        </div>
+                      }
+                    </app-form-fields>
+
+                  </div>
+                }
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'is_first_order'" [for]="'is_first_order'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="is_first_order" formControlName="is_first_order">
+                      <span class="switch-state"></span>
+                    </label>
+                  </div>
+                </app-form-fields>
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'status'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="status" formControlName="status">
+                      <span class="switch-state"></span>
+                    </label>
+                  </div>
+                </app-form-fields>
+
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="restriction" id="restriction" [class.is-invalid]="tabError.includes('restriction')">
+            <a ngbNavLink><i class="ri-close-circle-line"></i> {{ 'restriction' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="restriction">
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'apply_to_all_products'" [for]="'is_apply_all'" [required]="false">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="is_apply_all" formControlName="is_apply_all">
+                      <span class="switch-state"></span>
+                    </label>
+                  </div>
+                </app-form-fields>
+
+                @if(form?.controls['is_apply_all']?.value){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'exclude_products'" [for]="'exclude_product'" [required]="false">
+                    <select2 class="custom-select"
+                      [data]="(product$ | async)?.length ? (product$ | async) : []"
+                      [templates]="template"
+                      [placeholder]="'select_product' | translate"
+                      formControlName="exclude_products"
+                      noResultMessage="{{ 'no_data_found' | translate }}"
+                      [customSearchEnabled]="true"
+                      (close)="productDropdown($event)"
+                      (search)="searchProduct($event)"
+                      id="exclude_product"
+                      [multiple]="true">
+                      <ng-template #template let-data="data">
+                        <div class="image">
+                          <img [src]="data.image" [class]="'img-fluid selection-image'">
+                        </div>
+                        {{ data.name }}
+                      </ng-template>
+                    </select2>
+                  </app-form-fields>
+                }@else {
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'include_products'" [for]="'include_product'" [required]="true">
+                    <select2 class="custom-select"
+                      [data]="(product$ | async)?.length ? (product$ | async) : []"
+                      [templates]="template"
+                      [placeholder]="'select_product' | translate"
+                      formControlName="products"
+                      id="products"
+                      noResultMessage="{{ 'no_data_found' | translate }}"
+                      [customSearchEnabled]="true"
+                      (close)="productDropdown($event)"
+                      (search)="searchProduct($event)"
+                      [multiple]="true">
+                    </select2>
+                    <ng-template #template let-data="data">
+                      <div class="image">
+                        <img [src]="data.image" [class]="'img-fluid selection-image'">
+                      </div>
+                      {{ data.name }}
+                    </ng-template>
+
+                    @if(form?.controls['products']?.touched && form?.controls['products']?.errors?.['required']){
+                      <div class="invalid-feedback">
+                        {{ 'products_is_required' | translate }}
+                      </div>
+                    }
+                  </app-form-fields>
+                }
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'minimum_spend'" [for]="'min_spend'" [required]="true">
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      {{(setting$ | async)?.general?.default_currency?.symbol ? (setting$ | async)?.general?.default_currency?.symbol : '$'}}
+                    </span>
+                    <input class="form-control" type="number" id="min_spend" placeholder="{{ 'enter_minimum_spend' | translate }}" name="min_spend" formControlName="min_spend">
+                  </div>
+                  <p class="help-text">{{ '*Define the minimum order value needed to utilize the coupon.' }}</p>
+                  @if(form?.controls['min_spend']?.touched && form?.controls['min_spend']?.errors?.['required']){
+                    <div class="invalid-feedback">
+                      {{ 'min_spend_is_required' | translate }}
+                    </div>
+                  }
+                </app-form-fields>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="usage" id="usage" [class.is-invalid]="tabError.includes('usage')">
+            <a ngbNavLink><i class="ri-pie-chart-line"></i>{{ 'usage' | translate }}</a>
+            <ng-template ngbNavContent>
+              <div class="tab" tab="usage">
+
+                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'is_unlimited'" [for]="'is_unlimited'" [required]="true">
+                  <div class="form-check form-switch ps-0">
+                    <label class="switch">
+                      <input type="checkbox" id="is_unlimited" formControlName="is_unlimited">
+                      <span class="switch-state"></span>
+                    </label>
+                  </div>
+                </app-form-fields>
+
+                @if(!form?.controls['is_unlimited']?.value){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'usage_per_coupon'" [for]="'usage_per_coupon'" [required]="false">
+                    <input class="form-control" type="number" id="usage_per_coupon" placeholder="{{ 'enter_value' | translate }}" name="usage_per_coupon" formControlName="usage_per_coupon">
+                    <p class="help-text">{{ '*Specify the maximum number of times a single coupon can be utilized.' }}</p>
+                  </app-form-fields>
+                }
+
+                @if(!form?.controls['is_unlimited']?.value){
+                  <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'usage_per_customer'" [for]="'usage_per_customer'" [required]="false">
+                    <input class="form-control" type="number" id="usage_per_customer" placeholder="{{ 'enter_value' | translate }}" name="usage_per_customer" formControlName="usage_per_customer">
+                    <p class="help-text">{{ '*Specify the maximum number of times a single customer can utilize the coupon.' }}</p>
+                  </app-form-fields>
+                }
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+      </div>
+      <div class="col-xl-7 col-lg-8">
+        <div [ngbNavOutlet]="nav"></div>
+      </div>
+    </div>
+    <app-button [id]="'coupon_btn'">
+      {{ (type == 'create' ? 'save_coupon' : 'update_coupon') | translate }}
+    </app-button>
+  </div>
+</form>

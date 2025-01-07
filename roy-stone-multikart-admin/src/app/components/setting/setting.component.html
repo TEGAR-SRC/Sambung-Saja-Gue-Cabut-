@@ -1,0 +1,1732 @@
+<app-page-wrapper [gridClass]="'col-sm-12'" [title]="'settings'">
+    <form class="theme-form theme-form-2 mega-form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="vertical-tabs">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4">
+                    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" orientation="vertical">
+                        <li ngbNavItem="general">
+                            <a ngbNavLink><i class="ri-settings-line"></i>{{ 'general' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="general">
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'light_logo'" [for]="'light_logo_image_id'">
+                                        <app-image-upload 
+                                            [accept]="[mediaConfig.image]"
+                                            [multipleImage]="false"
+                                            [helpText]="'*Upload image size 180x50px recommended'"
+                                            [image]="(setting$ | async)?.general?.light_logo_image"
+                                            (selectedFiles)="selectLightLogo($event)">
+                                        </app-image-upload>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'dark_logo'" [for]="'dark_logo_image_id'">
+                                        <app-image-upload 
+                                            [accept]="[mediaConfig.image]"
+                                            [multipleImage]="false"
+                                            [helpText]="'*Upload image size 180x50px recommended'"
+                                            [image]="(setting$ | async)?.general?.dark_logo_image"
+                                            (selectedFiles)="selectDarkLogo($event)">
+                                        </app-image-upload>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'tiny_logo'" [for]="'tiny_logo_image_id'">
+                                        <app-image-upload 
+                                            [accept]="[mediaConfig.image]"
+                                            [multipleImage]="false"
+                                            [helpText]="'*Upload image size 50x30px recommended'"
+                                            [image]="(setting$ | async)?.general?.tiny_logo_image"
+                                            (selectedFiles)="selectTinyLogo($event)">
+                                        </app-image-upload>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'favicon'" [for]="'favicon_image_id'">
+                                        <app-image-upload 
+                                            [accept]="[mediaConfig.image]"
+                                            [multipleImage]="false"
+                                            [helpText]="'*Upload image size 16x16px recommended'"
+                                            [image]="(setting$ | async)?.general?.favicon_image"
+                                            (selectedFiles)="selectFavicon($event)">
+                                        </app-image-upload>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'site_title'" [for]="'site_title'" [required]="true">
+                                        <input class="form-control" id="site_title" type="text" placeholder="{{ 'enter_site_title' | translate }}" formControlName="site_title">
+                                        @if(form.get('general.site_title').touched && form.get('general.site_title').errors?.['required']){
+                                            <div class="invalid-feedback">
+                                                {{ 'site_title_is_required' | translate }}
+                                            </div>
+                                        }
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'site_name'" [for]="'site_name'">
+                                        <input class="form-control" id="site_name" type="text" placeholder="{{ 'enter_site_name' | translate }}" formControlName="site_name">
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'site_url'" [for]="'site_url'">
+                                        <input class="form-control" id="site_url" type="text" placeholder="{{ 'enter_site_url' | translate }}" formControlName="site_url">
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'site_tagline'" [for]="'site_tagline'">
+                                        <input class="form-control" id="site_tagline" type="text" placeholder="{{ 'enter_site_tagline' | translate }}" formControlName="site_tagline">
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'timezone'" [for]="'default_timezone'">
+                                        <select2 
+                                            class="custom-select" 
+                                            [data]="time_zone?.length ? time_zone : []"
+                                            [placeholder]="'select_timezone' | translate " 
+                                            noResultMessage="{{ 'no_data_found' | translate }}"
+                                            formControlName="default_timezone">
+                                        </select2>
+                                        @if(form.get('general.default_timezone').touched && form.get('general.default_timezone').errors?.['required']){
+                                            <div class="invalid-feedback">
+                                                {{ 'timezone_is_required' | translate }}
+                                            </div>
+                                        }
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'currency'" [for]="'default_currency_id'">
+                                        <select2 
+                                            class="custom-select"
+                                            [data]="(currency$ | async)?.length ? (currency$ | async) : []"
+                                            [placeholder]="'select_currency' | translate "
+                                            noResultMessage="{{ 'no_data_found' | translate }}"
+                                            formControlName="default_currency_id">
+                                        </select2>
+                                        @if(form.get('general.default_currency_id').touched && form.get('general.default_currency_id').errors?.['required']){
+                                            <div class="invalid-feedback">
+                                                {{ 'currency_is_required' | translate }}
+                                            </div>
+                                        }
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'language_direction'"
+                                        [for]="'admin_site_language_direction'">
+                                        <select2 
+                                            class="custom-select"
+                                            [data]="language_direction?.length ? language_direction : []"
+                                            [placeholder]="'select_language_direction' | translate"
+                                            noResultMessage="{{ 'no_data_found' | translate }}"
+                                            formControlName="admin_site_language_direction">
+                                        </select2>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'min_order_amount'" [for]="'minimum_order'">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                                            </span>
+                                            <input class="form-control" id="minimum_order" type="number" placeholder="{{ 'enter_min_order_amount' | translate }}" formControlName="min_order_amount">
+                                        </div>
+                                        <p class="help-text">{{ '*Please enter the minimum amount required for an order to be processed.' }}</p>
+                                        @if(form.get('general.min_order_amount').touched && form.get('general.min_order_amount').errors?.['required']){
+                                            <div class="invalid-feedback">
+                                                {{ 'amount_is_required' | translate }}
+                                            </div>
+                                        }
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'min_order_free_shipping'" [for]="'min_order_free_shipping'">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                                            </span>
+                                            <input class="form-control" id="minimum_order_free_shipping" type="number" placeholder="{{ 'enter_min_order_free_shipping' | translate }}" formControlName="min_order_free_shipping">
+                                        </div>
+                                        <p class="help-text">{{ '*Please enter the minimum order amount for free shipping.' }}</p>
+                                        @if(form.get('general.min_order_free_shipping').touched && form.get('general.min_order_free_shipping').errors?.['required']){
+                                            <div class="invalid-feedback">
+                                                {{ 'min_order_free_shipping_is_required' | translate }}
+                                            </div>
+                                        }
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'store_prefix'" [for]="'store_prefix'">
+                                        <input class="form-control" id="store_prefix" type="text" placeholder="{{ 'enter_store_prefix' | translate }}" formControlName="product_sku_prefix">
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'mode'" [for]="'mode'">
+                                        <select2 
+                                            class="custom-select" 
+                                            [data]="mode?.length ? mode : []"
+                                            [placeholder]="'select_mode' | translate " 
+                                            noResultMessage="{{ 'no_data_found' | translate }}"
+                                            formControlName="mode">
+                                        </select2>
+                                        @if(form.get('general.mode').touched && form.get('general.mode').errors?.['required']){
+                                            <div class="invalid-feedback">
+                                                {{ 'mode_is_required' | translate }}
+                                            </div>
+                                        }
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'copyright_text'" [for]="'copyright'">
+                                        <input class="form-control" id="copyright" type="text" placeholder="{{ 'enter_copyright_text' | translate }}" formControlName="copyright">
+                                    </app-form-fields>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="activation">
+                            <a ngbNavLink><i class="ri-radio-button-line"></i> {{ 'activation' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="activation">
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'multivendor'" [for]="'multivendor'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="multivendor" formControlName="multivendor">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ ' *Enable or disable external vendors access to our online store.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'product_auto_approve'" [for]="'product_auto_approve'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="product_auto_approve" formControlName="product_auto_approve">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Enable automatic acceptance of vendor products without manual review.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'enable_wallet'" [for]="'wallet_enable'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="wallet_enable" formControlName="wallet_enable">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Enable the use of wallet balance for payment during checkout.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'enable_point'" [for]="'point_enable'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="point_enable" formControlName="point_enable">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Enable the use of points for payment during checkout.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'coupon_enable'" [for]="'coupon_enable'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="coupon_enable" formControlName="coupon_enable">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Allow customers to use coupons for payment at checkout.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'store_auto_approve'" [for]="'store_auto_approve'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="store_auto_approve" formControlName="store_auto_approve">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Admin approval is necessary for new stores, similar to product approval.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'hide_stock_product'" [for]="'hide_Stock_product'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="hide_Stock_product" formControlName="stock_product_hide">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Decide whether to show product stock or not.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'guest_checkout'" [for]="'guest_checkout'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="guest_checkout" formControlName="guest_checkout">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Allow customers to checkout as guest.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'track_order'" [for]="'track_order'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="track_order" formControlName="track_order">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Allow customers to track their orders.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'SMS login'" [for]="'login_number'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="login_number" formControlName="login_number">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Enable the SMS login to the user can login with the mobile number in store.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Send SMS'" [for]="'login_number'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="send_sms" formControlName="send_sms">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                            <p class="help-text">{{ '*Enable the Send SMS to true enables the system to send SMS notifications.' }}</p>
+                                        </div>
+                                    </app-form-fields>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="wallet_points">
+                            <a ngbNavLink><i class="ri-wallet-line"></i>{{ 'wallet_points' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="wallet_points">
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'signup_points'" [for]="'signup_points'">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="ri-copper-diamond-line"></i></span>
+                                            <input class="form-control" id="signup_points" type="number" placeholder="{{ 'enter_signup_points' | translate }}" formControlName="signup_points">
+                                        </div>
+                                        <p class="help-text">{{ '*Provide points to new users as a signup incentive.' }}</p>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'min_per_order_amount'" [for]="'min_per_order_amount'">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                                            </span>
+                                            <input class="form-control" id="min_per_order_amount" type="number" placeholder="{{ 'enter_min_per_order_amount' | translate }}" formControlName="min_per_order_amount">
+                                        </div>
+                                        <p class="help-text">{{ '*Collect points when orders meet or exceed the minimum value.' }}</p>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'point_currency_ratio'" [for]="'point_currency_ratio'">
+                                        <input class="form-control" id="point_currency_ratio" type="number" placeholder="{{ 'enter_point_currency_ratio' | translate }}" formControlName="point_currency_ratio">
+                                        <p class="help-text">{{ '*Determine the conversion factor from points to currency.' }}</p>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'reward_point_per_order'" [for]="'reward_per_order_amount'">
+                                        <input class="form-control" id="reward_per_order_amount" type="number" placeholder="{{ 'enter_reward_point_per_order' | translate }}" formControlName="reward_per_order_amount">
+                                        <p class="help-text">
+                                            {{ '*Earn reward points based on each orders value.' }} <br/> {{ '(Rewards Points = (Total Order Amount / Min Per Order Amount) * Reward Per Order Point)' }}
+                                        </p>
+                                    </app-form-fields>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="email_config">
+                            <a ngbNavLink><i class="ri-mail-open-line"></i>{{ 'email_configuration' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="email">
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'mailer'" [for]="'mail_mailer'">
+                                        <select2 class="custom-select" [data]="mail_mailer?.length ? mail_mailer : []" [placeholder]="'select_mailer' | translate " noResultMessage="{{ 'no_data_found' | translate }}" formControlName="mail_mailer">
+                                        </select2>
+                                    </app-form-fields>
+                                    <div *ngIf="form.get('email.mail_mailer').value == 'smtp' || form.get('email.mail_mailer').value == 'sendmail'">
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Host'" [for]="'mail_host'">
+                                            <input class="form-control" id="mail_host" type="text" placeholder="{{ 'enter_host' | translate }}" formControlName="mail_host">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'port'" [for]="'mail_port'">
+                                            <input class="form-control" id="mail_port" type="number" placeholder="{{ 'enter_port' | translate }}" formControlName="mail_port">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'encryption'" [for]="'mail_encryption'">
+                                            <select2 class="custom-select" [data]="encryption?.length ? encryption : []" [placeholder]="'select_encryption' | translate" noResultMessage="{{ 'no_data_found' | translate }}" formControlName="mail_encryption">
+                                            </select2>
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'username'" [for]="'mail_username'">
+                                            <input class="form-control" id="mail_username" type="text" placeholder="{{ 'enter_username' | translate }}" formControlName="mail_username">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'password'" [for]="'mail_password'">
+                                            <input class="form-control" id="mail_password" type="password" placeholder="{{ 'enter_password' | translate }}" formControlName="mail_password">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'email_from_name'" [for]="'mail_from_name'">
+                                            <input class="form-control" id="mail_from_name" type="text" placeholder="{{ 'enter_email_from_name' | translate }}" formControlName="mail_from_name">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'email_from_address'" [for]="'mail_from_address'">
+                                            <input class="form-control" id="mail_from_address" type="text" placeholder="{{ 'enter_email_from_address' | translate }}" formControlName="mail_from_address">
+                                        </app-form-fields>
+                                    </div>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'mailgun_domain'" [for]="'mailgun_domain'" *ngIf="form.get('email.mail_mailer').value == 'mailgun'">
+                                        <input class="form-control" id="mailgun_domain" type="text" placeholder="{{ 'enter_mailgun_domain' | translate }}" formControlName="mailgun_domain">
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'mailgun_secret'" [for]="'mailgun_secret'" *ngIf="form.get('email.mail_mailer').value == 'mailgun'">
+                                        <input class="form-control" id="mailgun_secret" type="text" placeholder="{{ 'enter_mailgun_secret' | translate }}" formControlName="mailgun_secret">
+                                    </app-form-fields>
+                                    <hr />
+                                    <h4 class="fw-semibold mb-3 txt-primary w-100">Test email</h4>
+                                    <div>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'to_mail'" [for]="'email'">
+                                            <input class="form-control" id="email" type="text" placeholder="{{ 'enter_email' | translate }}" formControlName="email">
+                                            <div *ngIf="form.get('email.email')?.touched && form.get('email.email')?.errors?.['required']" class="invalid-feedback">
+                                                {{ 'email_is_required' | translate }}
+                                            </div>
+                                            <div *ngIf="form.get('email.email')?.touched && form.get('email.email')?.errors?.['email']" class="invalid-feedback">
+                                                {{ 'invalid_email' | translate }}
+                                            </div>
+                                        </app-form-fields>
+                                    </div>
+                                    <app-button [type]="'button'" [id]="'test_email_setting_btn'" (click)="mailSubmit()">
+                                        {{ 'send_test_mail' | translate }}
+                                    </app-button>
+                        
+                                    <div class="instruction-box">
+                                        <div class="instruction-title">
+                                            <h4>Instruction</h4>
+                                            <p style="color: red">When setting up your email system (SMTP), make sure to do it carefully. If it's not done right, you'll encounter errors when placing orders, registering new users, or sending newsletters.</p>
+                                        </div>
+                                        <div class="list-box">
+                                            <h5>If you're not using SSL:</h5>
+                                            <ul>
+                                                <li>Choose "sendmail" for the Mail Driver if you run into problems with SMTP.</li>
+                                                <li>Use the Mail Host settings provided by your email service's manual.</li>
+                                                <li>Set the Mail port to 587.</li>
+                                                <li>If there are issues with TLS, set the Mail Encryption to SSL.</li>
+                                            </ul>
+                                        </div>
+                        
+                                        <div class="list-box">
+                                            <h5>If you're using SSL:</h5>
+                                            <ul>
+                                                <li>Again, choose "sendmail" if there are issues with SMTP.</li>
+                                                <li>Use the Mail Host settings provided by your email service's manual.</li>
+                                                <li>Set the Mail port to 465.</li>
+                                                <li>Set the Mail Encryption to SSL.</li>
+                                            </ul>
+                                        </div>
+                        
+                                        <div class="instruction-title mt-4">
+                                            <h4>Here's a list of emails grouped by category and their respective uses:</h4>
+                                        </div>
+                                        <div class="table-responsive email-table mb-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="3">User Account Management</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Template</th>
+                                                        <th>Description</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Send a One-Time Password (OTP) to users who request a password reset.</td>
+                                                        <td>Email the user a One-Time Password (OTP) when they request a password reset.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="password_reset_mail" formControlName="password_reset_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Signup Welcome</td>
+                                                        <td>Send a welcome email with information about the signup bonus or other perks to new users.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="signup_welcome_mail" formControlName="signup_welcome_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                        
+                        
+                        
+                        
+                                        </div>
+                                        <div class="table-responsive email-table mb-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="3">User Communication</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Template</th>
+                                                        <th>Description</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Visitor Inquiry</td>
+                                                        <td>Forward visitor messages to admin through email.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="visitor_inquiry_mail" formControlName="visitor_inquiry_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>System Test</td>
+                                                        <td>Send a test email to confirm email configuration settings.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="system_test_mail" formControlName="system_test_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="table-responsive email-table mb-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="3">Vendor Management</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Template</th>
+                                                        <th>Description</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>New Vendor Notification</td>
+                                                        <td>Notify admin when a new vendor registers on the platform.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="new_vendor_notification_mail" formControlName="new_vendor_notification_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Withdrawal Request</td>
+                                                        <td>Withdrawal Request</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="withdrawal_request_mail" formControlName="withdrawal_request_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Withdrawal Status Update</td>
+                                                        <td>Inform vendors when their withdrawal request has been processed and the status (approved or rejected).</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="withdrawal_status_update_mail" formControlName="withdrawal_status_update_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="table-responsive email-table mb-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="3">Order Management</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Template</th>
+                                                        <th>Description</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Order Confirmation</td>
+                                                        <td>Notify admin, vendor, and consumer when a new order is placed.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="order_confirmation_mail" formControlName="order_confirmation_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Order Cancellation</td>
+                                                        <td>Inform admin, vendor, and consumer if an order is canceled.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="cancel_order_mail" formControlName="cancel_order_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Refund Request</td>
+                                                        <td>Notify admin and vendor when a consumer requests a product return and refund.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="refund_request_mail" formControlName="refund_request_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Refund Decision</td>
+                                                        <td>Inform consumers about the outcome of their refund request (approved or denied).</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="refund_status_update_mail" formControlName="refund_status_update_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Order Status Update</td>
+                                                        <td>Notify consumers when the status of their order changes.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="order_status_update_mail" formControlName="order_status_update_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="table-responsive email-table mb-4">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="3">Order Monitoring</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Template</th>
+                                                        <th>Description</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Pending Order Alert</td>
+                                                        <td>Notify admin and vendor if an order remains unprocessed for more than 24 hours.</td>
+                                                        <td>
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="pending_order_alert_mail" formControlName="pending_order_alert_mail">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="sms_method">
+                            <a ngbNavLink><i class="ri-bank-card-line"></i>{{ 'sms_configuration' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div class="shipping-accordion variant-accordion">
+                                    <ng-container>
+                                        <div class="col-12" formGroupName="sms_methods">
+                                            <div ngbAccordion>
+                                                <div ngbAccordionItem [collapsed]="false">
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'twilio' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div formGroupName="twilio">
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'title'">
+                                                                        <input class="form-control" id="title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'twilio_status'">
+                                                                        <div class="form-check form-switch ps-0">
+                                                                            <label class="switch">
+                                                                                <input type="checkbox" id="twilio_status" formControlName="status">
+                                                                                <span class="switch-state"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Twilio sid'" [for]="'twilio_sid'">
+                                                                        <input class="form-control" id="twilio_sid" type="text" placeholder="{{ 'enter_twilio_sid' | translate }}" formControlName="twilio_sid">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Twilio auth token'" [for]="'twilio_auth_token'">
+                                                                        <input class="form-control" id="twilio_auth_token" type="text" placeholder="{{ 'enter_twilio_auth_token' | translate }}" formControlName="twilio_auth_token">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Twilio number'" [for]="'twilio_number'">
+                                                                        <input class="form-control" id="Twilio number" type="text" placeholder="{{ 'enter_twilio_number' | translate }}" formControlName="twilio_number">
+                                                                    </app-form-fields>
+                                                                </div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h4 class="mb-2">Here's a breakdown of each SMS key and its purpose:</h4>
+                                            <div formGroupName="config">
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Cancel order sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Cancel Order SMS Notification</td>
+                                                                <td>This SMS notification is sent when an order is canceled by either the admin or the consumer.</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="pending_order_alert_mail" formControlName="cancel_order_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Refund request sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Refund Request SMS Notification</td>
+                                                                <td>This SMS notification is sent when a consumer requests a product return and refund</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="refund_request_sms" formControlName="refund_request_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Withdraw request sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Withdrawal Request SMS Notification</td>
+                                                                <td>This SMS notification is sent when a vendor requests to withdraw funds from their wallet balance.</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="withdraw_request_sms" formControlName="withdraw_request_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Pending order sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Pending Order Reminder SMS Notification</td>
+                                                                <td>This SMS notification is sent when an order has been pending for more than 24 hours.</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="pending_order_sms" formControlName="pending_order_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Place order sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Order Placement SMS Notification</td>
+                                                                <td>This SMS notification is sent when a consumer places a new order.</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="place_order_sms" formControlName="place_order_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Signup bonus sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Signup Bonus SMS Notification</td>
+                                                                <td>This SMS notification is sent to notify users about bonus points or rewards received upon signing up.</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="signup_bonus_sms" formControlName="signup_bonus_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Update order status sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Order Status Update SMS Notification</td>
+                                                                <td>This SMS notification is sent to inform consumers about any changes in the status of their order.</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="update_order_status_sms" formControlName="update_order_status_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Update refund request sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Refund Request Update SMS Notification</td>
+                                                                <td>This SMS notification is sent to inform consumers about the status of their refund request (approved or rejected).</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="update_refund_request_sms" formControlName="update_refund_request_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Update withdraw request sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Withdrawal Request Update SMS Notification</td>
+                                                                <td>This SMS notification is sent to inform vendors about any updates to their withdrawal request (approval or rejection).</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="update_withdraw_request_sms" formControlName="update_withdraw_request_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="table-responsive email-table mb-4">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="3">Vendor register sms</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Description</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Vendor Registration SMS Notification</td>
+                                                                <td>This SMS notification is sent to notify admin when a new vendor registers on the platform.</td>
+                                                                <td>
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="vendor_register_sms" formControlName="vendor_register_sms">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="media_config">
+                            <a ngbNavLink><i class="ri-mail-open-line"></i>{{ 'media_configuration' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="media_configuration">
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'media'" [for]="'media'">
+                                        <select2 
+                                            class="custom-select" 
+                                            [data]="mediaDisk?.length ? mediaDisk : []"
+                                            [placeholder]="'select_media_disk' | translate "
+                                            noResultMessage="{{ 'no_data_found' | translate }}"
+                                            formControlName="media_disk">
+                                        </select2>
+                                    </app-form-fields>
+                                    @if(form.get('media_configuration.media_disk')?.value === 's3'){
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'aws_access_key_id'" [for]="'aws_access_key_id'">
+                                            <input class="form-control" id="aws_access_key_id" type="text" placeholder="{{ 'enter_aws_access_key_id' | translate }}" formControlName="aws_access_key_id">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'aws_secret_access_key'" [for]="'aws_secret_access_key'">
+                                            <input class="form-control" id="aws_secret_access_key" type="text" placeholder="{{ 'enter_aws_secret_access_key' | translate }}" formControlName="aws_secret_access_key">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'aws_bucket'" [for]="'aws_bucket'">
+                                            <input class="form-control" id="aws_bucket" type="text" placeholder="{{ 'enter_aws_bucket' | translate }}" formControlName="aws_bucket">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'aws_default_region'" [for]="'aws_default_region'">
+                                            <input class="form-control" id="aws_default_region" type="text" placeholder="{{ 'enter_aws_default_region' | translate }}" formControlName="aws_default_region">
+                                        </app-form-fields>
+                                    }
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="vendor_commissions">
+                            <a ngbNavLink><i class="ri-user-line"></i>{{ 'vendor_commissions' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="vendor_commissions">
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'commissions_status'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="commissions_status" formControlName="status">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                        </div>
+                                        <p class="help-text">{{ '*By activating vendor commissions, the admin earns a commission based on vendor earnings.' }}</p>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'min_withdraw_amount'" [for]="'min_withdraw_amount'">
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                {{(setting$ | async)?.general?.default_currency.symbol ? (setting$ | async)?.general?.default_currency.symbol : '$'}}
+                                            </span>
+                                            <input class="form-control" id="min_withdraw_amount" type="number" placeholder="{{ 'enter_min_withdraw_amount' | translate }}" formControlName="min_withdraw_amount">
+                                        </div>
+                                        <p class="help-text">{{ '*Payout Minimum for Vendors: Specify the min amount vendors can request for withdrawal.' }}</p>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'commission_rate'" [for]="'default_commission_rate'">
+                                        <div class="input-group">
+                                            <input class="form-control" id="default_commission_rate" min=0 max=100
+                                                oninput="if (value > 100) value = 100; if (value < 0) value = 0;"
+                                                type="number" placeholder="{{ 'enter_default_commission_rate' | translate }}"
+                                                formControlName="default_commission_rate">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <p class="help-text">{{ '*Set the rate at which admin receives a commission from vendor earnings.' }}</p>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'category_based_commission'" [for]="'is_category_based_commission'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="is_category_based_commission" formControlName="is_category_based_commission">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                        </div>
+                                        <p class="help-text">{{ '*Enable the functionality to apply commissions based on product categories. To configure, navigate to the Product Category module and set the respective commission rates.' }}</p>
+
+                                    </app-form-fields>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="refund">
+                            <a ngbNavLink><i class="ri-exchange-dollar-line"></i>{{ 'refund' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="refund">
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Status'" [for]="'refund_commissions_status'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="refund_commissions_status" formControlName="status">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'refundable_days'" [for]="'refundable_days'">
+                                        <input class="form-control" id="refundable_days" type="number" placeholder="{{ 'enter_refundable_days' | translate }}" formControlName="refundable_days">
+                                        <p class="help-text">{{ '*Define the period within which users can initiate refund requests for delivered items If left blank, this functionality will be disabled.' }}</p>
+                                    </app-form-fields>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="recaptcha">
+                            <a ngbNavLink><i class="ri-google-fill"></i>{{ 're-captcha' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="google_reCaptcha">
+                                    <app-form-fields [label]="'status'" [for]="'google_reCaptcha_status'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="google_reCaptcha_status"
+                                                    formControlName="status">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'secret'" [for]="'google_reCaptcha_secret'">
+                                        <input class="form-control" id="google_reCaptcha_secret" type="text"
+                                            placeholder="{{ 'enter_secret_key' | translate }}" formControlName="secret">
+                                    </app-form-fields>
+                                    <app-form-fields [label]="'site_key'" [for]="'google_reCaptcha_site_key'">
+                                        <input class="form-control" id="google_reCaptcha_site_key" type="text"
+                                            placeholder="{{ 'enter_site_key' | translate }}" formControlName="site_key">
+                                    </app-form-fields>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="delivery">
+                            <a ngbNavLink><i class="ri-truck-line"></i>{{ 'delivery' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="delivery">
+                                    <div formGroupName="default">
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'d_default_title'">
+                                            <input class="form-control" id="d_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                        </app-form-fields>
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'description' | translate" [for]="'default_description'">
+                                            <input class="form-control" id="default_description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description">
+                                        </app-form-fields>
+                                    </div>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'same_day_delivery'" [for]="'same_day_delivery'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="same_day_delivery" formControlName="same_day_delivery">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                        </div>
+                                    </app-form-fields>
+                                    @if(form.get('delivery.same_day_delivery').value == true){
+                                        <div formGroupName="same_day">
+                                            <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'same_day_title'">
+                                                <input class="form-control" id="same_day_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                            </app-form-fields>
+                                            <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'description' | translate" [for]="'same_day_description'">
+                                                <input class="form-control" id="same_day_description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description">
+                                            </app-form-fields>
+                                        </div>
+                                    }
+                                    @if(form.get('delivery.same_day_delivery').value == true){
+                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'default_delivery'" [for]="'same_day_intervals'">
+                                            <div formArrayName="same_day_intervals">
+                                                @for(val of sameDayIntervals.controls; track val; let index = $index){
+                                                    <div class="row mb-3" formGroupName="{{index}}">
+                                                        <div class="col-sm-10 row justify-content-between">
+                                                            <div class="col-6">
+                                                                <input type="text" class="form-control mb-2" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <input type="text" class="form-control" placeholder="{{ 'enter_description' | translate }}" formControlName="description">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <a href="javascript:void(0)" class="mt-custom d-block invalid-feedback cursor-pointer" (click)="remove(index)">
+                                                                {{ 'remove' | translate }}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                </div>
+                                            <app-button [class]="'btn btn-animation'" [spinner]="false" (click)="addDays($event)">
+                                                {{ 'add' | translate }}
+                                            </app-button>
+                                        </app-form-fields>
+                                    }
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="payment_method">
+                            <a ngbNavLink><i class="ri-bank-card-line"></i>{{ 'payment_method' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div class="shipping-accordion variant-accordion">
+                                    <ng-container>
+                                        <div class="col-12" formGroupName="payment_methods">
+                                            <div ngbAccordion>
+                                                <div ngbAccordionItem  [collapsed]="false">
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'cod' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div formGroupName="cod">
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'cod_status'">
+                                                                        <div class="form-check form-switch ps-0">
+                                                                            <label class="switch">
+                                                                                <input type="checkbox" id="cod_status" formControlName="status">
+                                                                                <span class="switch-state"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'cod_default_title'">
+                                                                        <input class="form-control" id="cod_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                    </app-form-fields>
+                                                                </div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'paypal' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                        <ng-template>
+                                                            <div formGroupName="paypal">
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'paypal_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="paypal_status" formControlName="status">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sandbox_mode'" [for]="'sandbox_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="sandbox_status" formControlName="sandbox_mode">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'py_default_title'">
+                                                                    <input class="form-control" id="py_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'client_id'" [for]="'client_id'">
+                                                                    <input class="form-control" id="client_id" type="text" placeholder="{{ 'enter_client_id' | translate }}" formControlName="client_id">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secret'" [for]="'client_secret'">
+                                                                    <input class="form-control" id="client_secret" type="text" placeholder="{{ 'enter_secret' | translate }}" formControlName="client_secret">
+                                                                </app-form-fields>
+                                                            </div>
+                                                        </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'stripe' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                        <ng-template>
+                                                            <div formGroupName="stripe">
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'stripe_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="stripe_status" formControlName="status">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'s_default_title'">
+                                                                    <input class="form-control" id="s_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'key'" [for]="'stripe_key'">
+                                                                    <input class="form-control" id="stripe_key" type="text" placeholder="{{ 'enter_key' | translate }}" formControlName="key">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secret'" [for]="'stripe_secret'">
+                                                                    <input class="form-control" id="stripe_secret" type="text" placeholder="{{ 'enter_secret' | translate }}" formControlName="secret">
+                                                                </app-form-fields>
+                                                            </div>
+                                                        </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'razorpay' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div formGroupName="razorpay">
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'razorpay_status'">
+                                                                        <div class="form-check form-switch ps-0">
+                                                                            <label class="switch">
+                                                                                <input type="checkbox" id="razorpay_status" formControlName="status">
+                                                                                <span class="switch-state"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'r_default_title'">
+                                                                        <input class="form-control" id="r_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'key'" [for]="'key'">
+                                                                        <input class="form-control" id="razorpay_key" type="text" placeholder="{{ 'enter_key' | translate }}" formControlName="key">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secret'" [for]="'razorpay_secret'">
+                                                                        <input class="form-control" id="razorpay_secret" type="text" placeholder="{{ 'enter_secret' | translate }}" formControlName="secret">
+                                                                    </app-form-fields>
+                                                                </div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'mollie' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div formGroupName="mollie">
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'mollie_status'">
+                                                                        <div class="form-check form-switch ps-0">
+                                                                            <label class="switch">
+                                                                                <input type="checkbox" id="mollie_status" formControlName="status">
+                                                                                <span class="switch-state"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'mollie_default_title'">
+                                                                        <input class="form-control" id="mollie_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secret'" [for]="'mollie_secret_key'">
+                                                                        <input class="form-control" id="mollie_secret_key" type="text" placeholder="{{ 'enter_secret' | translate }}" formControlName="secret_key">
+                                                                    </app-form-fields>
+                                                                </div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'phonepe' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div formGroupName="phonepe">
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'phonepe_status'">
+                                                                        <div class="form-check form-switch ps-0">
+                                                                            <label class="switch">
+                                                                                <input type="checkbox" id="phonepe_status" formControlName="status">
+                                                                                <span class="switch-state"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sandbox_mode'" [for]="'sandbox_status'">
+                                                                        <div class="form-check form-switch ps-0">
+                                                                            <label class="switch">
+                                                                                <input type="checkbox" id="sandbox_status" formControlName="sandbox_mode">
+                                                                                <span class="switch-state"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'p_default_title'">
+                                                                        <input class="form-control" id="p_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'merchant_id'" [for]="'merchant_id'">
+                                                                        <input class="form-control" id="merchant_id" type="text" placeholder="{{ 'enter_merchant_id' | translate }}" formControlName="merchant_id">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'salt_Key'" [for]="'phonepe_salt_key'">
+                                                                        <input class="form-control" id="phonepe_salt_key" type="text" placeholder="{{ 'enter_salt_Key' | translate }}" formControlName="salt_key">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'salt_index'" [for]="'salt_index'">
+                                                                        <input class="form-control" id="salt_index" type="text" placeholder="{{ 'enter_salt_index' | translate }}" formControlName="salt_index">
+                                                                    </app-form-fields>
+                                                                </div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'instamojo' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                            <ng-template>
+                                                                <div formGroupName="instamojo">
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'mollie_status'">
+                                                                        <div class="form-check form-switch ps-0">
+                                                                            <label class="switch">
+                                                                                <input type="checkbox" id="instamojo_status" formControlName="status">
+                                                                                <span class="switch-state"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sandbox_mode'" [for]="'sandbox_status'">
+                                                                        <div class="form-check form-switch ps-0">
+                                                                            <label class="switch">
+                                                                                <input type="checkbox" id="insta_sandbox_status" formControlName="sandbox_mode">
+                                                                                <span class="switch-state"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'i_default_title'">
+                                                                        <input class="form-control" id="i_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'client_id'" [for]="'phonepe_client_id'">
+                                                                        <input class="form-control" id="phonepe_client_id" type="text" placeholder="{{ 'enter_client_id' | translate }}" formControlName="client_id">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'client_secret'" [for]="'phonepe_client_secret'">
+                                                                        <input class="form-control" id="phonepe_client_secret" type="text" placeholder="{{ 'enter_client_secret' | translate }}" formControlName="client_secret">
+                                                                    </app-form-fields>
+                                                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'salt_Key'" [for]="'insta_salt_key'">
+                                                                        <input class="form-control" id="insta_salt_key" type="text" placeholder="{{ 'enter_salt_Key' | translate }}" formControlName="salt_key">
+                                                                    </app-form-fields>
+                                                                </div>
+                                                            </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'ccavenue' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                        <ng-template>
+                                                            <div formGroupName="ccavenue">
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'paypal_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="ccavenue_status" formControlName="status">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sandbox_mode'" [for]="'ccavenue_sandbox_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="ccavenue_sandbox_status" formControlName="sandbox_mode">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'c_default_title'">
+                                                                    <input class="form-control" id="c_default_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'merchant_id'" [for]="'c_merchant_id'">
+                                                                    <input class="form-control" id="c_merchant_id" type="text" placeholder="{{ 'enter_merchant_id' | translate }}" formControlName="merchant_id">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'working_key'" [for]="'working_key'">
+                                                                    <input class="form-control" id="working_key" type="text" placeholder="{{ 'enter_working_key' | translate }}" formControlName="working_key">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'access_code'" [for]="'access_code'">
+                                                                    <input class="form-control" id="access_code" type="text" placeholder="{{ 'enter_access_code' | translate }}" formControlName="access_code">
+                                                                </app-form-fields>
+                                                            </div>
+                                                        </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'bkash' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                        <ng-template>
+                                                            <div formGroupName="bkash">
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'bkash_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="bkash_status" formControlName="status">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sandbox_mode'" [for]="'bkash_sandbox_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="bkash_sandbox_status" formControlName="sandbox_mode">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'b_title'">
+                                                                    <input class="form-control" id="b_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'app_key'" [for]="'app_key'">
+                                                                    <input class="form-control" id="app_key" type="text" placeholder="{{ 'enter_app_key' | translate }}" formControlName="app_key">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'app_secret'" [for]="'app_secret'">
+                                                                    <input class="form-control" id="app_secret" type="text" placeholder="{{ 'enter_app_secret' | translate }}" formControlName="app_secret">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'username'" [for]="'username'">
+                                                                    <input class="form-control" id="username" type="text" placeholder="{{ 'enter_username' | translate }}" formControlName="username">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'password'" [for]="'b_password'">
+                                                                    <input class="form-control" id="b_password" type="text" placeholder="{{ 'enter_password' | translate }}" formControlName="password">
+                                                                </app-form-fields>
+                                                            </div>
+                                                        </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'flutter_wave' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                        <ng-template>
+                                                            <div formGroupName="flutter_wave">
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'flutter_wave_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="flutter_wave_status" formControlName="status">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sandbox_mode'" [for]="'bkash_sandbox_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="flutter_wave_sandbox_status" formControlName="sandbox_mode">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'flutter_wave_title'">
+                                                                    <input class="form-control" id="flutter_wave_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'public_key'" [for]="'public_key'">
+                                                                    <input class="form-control" id="public_key" type="text" placeholder="{{ 'enter_public_key' | translate }}" formControlName="public_key">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secret_key'" [for]="'secret_key'">
+                                                                    <input class="form-control" id="secret_key" type="text" placeholder="{{ 'enter_secret_key' | translate }}" formControlName="secret_key">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secret_hash'" [for]="'secret_hash'">
+                                                                    <input class="form-control" id="secret_hash" type="text" placeholder="{{ 'enter_secret_hash' | translate }}" formControlName="secret_hash">
+                                                                </app-form-fields>
+                                                            </div>
+                                                        </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'paystack' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                        <ng-template>
+                                                            <div formGroupName="paystack">
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'paystack_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="paystack_status" formControlName="status">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sandbox_mode'" [for]="'paystack_sandbox_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="paystack_sandbox_status" formControlName="sandbox_mode">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'paystack_title'">
+                                                                    <input class="form-control" id="paystack_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'public_key'" [for]="'paystack_public_key'">
+                                                                    <input class="form-control" id="paystack_public_key" type="text" placeholder="{{ 'enter_public_key' | translate }}" formControlName="public_key">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secret_key'" [for]="'paystack_secret_key'">
+                                                                    <input class="form-control" id="paystack_secret_key" type="text" placeholder="{{ 'enter_secret_key' | translate }}" formControlName="secret_key">
+                                                                </app-form-fields>
+                                                            </div>
+                                                        </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'sslcommerz' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                        <ng-template>
+                                                            <div formGroupName="sslcommerz">
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'sslcommerz_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="sslcommerz_status" formControlName="status">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'sandbox_mode'" [for]="'sslcommerz_sandbox_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="sslcommerz_sandbox_status" formControlName="sandbox_mode">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'sslcommerz_title'">
+                                                                    <input class="form-control" id="sslcommerz_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'store_id'" [for]="'store_id'">
+                                                                    <input class="form-control" id="store_id" type="text" placeholder="{{ 'enter_store_id' | translate }}" formControlName="store_id">
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'secret_key'" [for]="'store_password'">
+                                                                    <input class="form-control" id="store_password" type="text" placeholder="{{ 'enter_store_password' | translate }}" formControlName="store_password">
+                                                                </app-form-fields>
+                                                            </div>
+                                                        </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div ngbAccordionItem>
+                                                    <div ngbAccordionHeader>
+                                                        <button ngbAccordionButton>{{ 'bank_transfer' | translate }}</button>
+                                                    </div>
+                                                    <div ngbAccordionCollapse>
+                                                        <div ngbAccordionBody>
+                                                        <ng-template>
+                                                            <div formGroupName="bank_transfer">
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'bank_transfer_status'">
+                                                                    <div class="form-check form-switch ps-0">
+                                                                        <label class="switch">
+                                                                            <input type="checkbox" id="bank_transfer_status" formControlName="status">
+                                                                            <span class="switch-state"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </app-form-fields>
+                                                                <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'bank_transfer_title'">
+                                                                    <input class="form-control" id="bank_transfer_title" type="text" placeholder="{{ 'enter_title' | translate }}" formControlName="title">
+                                                                </app-form-fields>
+                                                            </div>
+                                                        </ng-template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="analytics">
+                            <a ngbNavLink><i class="ri-line-chart-line"></i>{{ 'analytics' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="analytics">
+                                    <div class="inside-horizontal-tabs">
+                                        <ul ngbNav #nav_analytics="ngbNav" [(activeId)]="active_analytics" class="nav-tabs">
+                                            <li ngbNavItem="facebook">
+                                                <a ngbNavLink><i class="ri-facebook-circle-line"></i>{{ 'facebook_pixel' | translate }}</a>
+                                                <ng-template ngbNavContent>
+                                                    <div formGroupName="facebook_pixel">
+                                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'facebook_pixel_status'">
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="facebook_pixel_status" formControlName="status">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </app-form-fields>
+                                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'Pixel Id'" [for]="'pixel_id'">
+                                                            <input class="form-control" id="pixel_id" type="text" placeholder="{{'enter_pixel_id' | translate }}" formControlName="pixel_id">
+                                                        </app-form-fields>
+                                                    </div>
+                                                </ng-template>
+                                            </li>
+                                            <li ngbNavItem="google">
+                                                <a ngbNavLink><i class="ri-google-line"></i>{{ 'google_analytics' | translate }}</a>
+                                                <ng-template ngbNavContent>
+                                                    <div formGroupName="google_analytics">
+                                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'status'" [for]="'google_analytics_status'">
+                                                            <div class="form-check form-switch ps-0">
+                                                                <label class="switch">
+                                                                    <input type="checkbox" id="google_analytics_status" formControlName="status">
+                                                                    <span class="switch-state"></span>
+                                                                </label>
+                                                            </div>
+                                                        </app-form-fields>
+                                                        <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'measurement_id'" [for]="'measurement_id'">
+                                                            <input class="form-control" id="measurement_id" type="text" placeholder="{{ 'enter_measurement_id' | translate }}" formControlName="measurement_id">
+                                                        </app-form-fields>
+                                                    </div>
+                                                </ng-template>
+                                            </li>
+                                        </ul>
+                                        <div [ngbNavOutlet]="nav_analytics" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li ngbNavItem="maintenance">
+                            <a ngbNavLink><i class="ri-alert-line"></i>{{ 'maintenance' | translate }}</a>
+                            <ng-template ngbNavContent>
+                                <div formGroupName="maintenance">
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'maintenance_mode'" [for]="'maintenance_mode'">
+                                        <div class="form-check form-switch ps-0">
+                                            <label class="switch">
+                                                <input type="checkbox" id="maintenance_mode" formControlName="maintenance_mode">
+                                                <span class="switch-state"></span>
+                                            </label>
+                                        </div>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'title'" [for]="'title'">
+                                        <input class="form-control" id="title" type="text" placeholder="{{ 'title' | translate }}" formControlName="title">
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'description'" [for]="'description'">
+                                        <input class="form-control" id="description" type="text" placeholder="{{ 'enter_description' | translate }}" formControlName="description">
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'date'" [for]="'date'">
+                                        <div class="dp-hidden position-absolute custom-dp-dropdown">
+                                            <div class="input-group">
+                                                <input name="datepicker" class="form-control" ngbDatepicker
+                                                    #datepicker="ngbDatepicker" [autoClose]="'outside'"
+                                                    (dateSelect)="onDateSelection($event)" [displayMonths]="2"
+                                                    [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!"
+                                                    [footerTemplate]="footerTemplate"
+                                                    id="start_date" tabindex="-1" readonly/>
+                                                <ng-template #t let-date let-focused="focused">
+                                                    <span class="custom-day" [class.focused]="focused"
+                                                        [class.range]="isRange(date)"
+                                                        [class.faded]="isHovered(date) || isInside(date)"
+                                                        (mouseenter)="hoveredDate = date"
+                                                        (mouseleave)="hoveredDate = null">
+                                                        {{ date.day }}
+                                                    </span>
+                                                </ng-template>
+                                            </div>
+                                        </div>
+                                        <div class="search-input d-flex">
+                                            <div class="input-group custom-dt-picker me-2">
+                                                <input #dpFromDate class="form-control" placeholder="{{'yyyy-mm-dd' | translate}}"
+                                                    name="dpFromDate" [value]="formatter.format(fromDate)" id="end_date"
+                                                    (input)="fromDate = validateInput(fromDate, dpFromDate.value)" readonly/>
+                                                <button class="btn btn-light-bg-secondary " (click)="datepicker.toggle()"
+                                                    type="button">
+                                                    <i class="ri-calendar-line"></i>
+                                                </button>
+                                            </div>
+                            
+                                            <div class="input-group custom-dt-picker">
+                                                <input #dpToDate class="form-control" placeholder="{{'yyyy-mm-dd' | translate}}"
+                                                    name="dpToDate" [value]="formatter.format(toDate)"
+                                                    (input)="toDate = validateInput(toDate, dpToDate.value)" readonly/>
+                                                <button class="btn btn-light-bg-secondary" (click)="datepicker.toggle()"
+                                                    type="button">
+                                                    <i class="ri-calendar-line"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                            
+                                        <ng-template #footerTemplate>
+                                            <hr class="my-0" />
+                                            <button class="btn btn-primary btn-sm m-2 float-start" (click)="clearDateRange(); datepicker.close()">{{'clear' | translate}}</button>
+                                            <button class="btn btn-secondary btn-sm m-2 float-end" (click)="datepicker.close()">{{'close' | translate}}</button>
+                                        </ng-template>
+                                    </app-form-fields>
+                                    <app-form-fields [labelClass]="'form-label-title col-sm-3 mb-0'" [gridClass]="'col-sm-9'" [label]="'image'" [for]="'maintenance_image_id'">
+                                        <app-image-upload 
+                                            [accept]="[mediaConfig.image]"
+                                            [multipleImage]="false"
+                                            [image]="(setting$ | async)?.maintenance?.maintenance_image!"
+                                            (selectedFiles)="selectMaintenance($event)">
+                                        </app-image-upload>
+                                    </app-form-fields>
+                                    
+                                </div>
+                            </ng-template>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xl-7 col-lg-8">
+                    <div [ngbNavOutlet]="nav"></div>
+                </div>
+            </div>
+            <app-button [id]="'setting_btn'" *hasPermission="'setting.edit'">
+                {{ 'save' | translate }}
+            </app-button>
+        </div>
+    </form>
+</app-page-wrapper>
